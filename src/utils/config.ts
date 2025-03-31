@@ -1,0 +1,1 @@
+export const MINIMUM_PLAYERS_TO_START_GAME = 4;
