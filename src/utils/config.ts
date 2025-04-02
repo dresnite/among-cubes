@@ -1,1 +1,2 @@
 export const MINIMUM_PLAYERS_TO_START_GAME = 4;
+export const COUNTDOWN_TO_START_WITHOUT_MINIMUM_PLAYERS = 20; // seconds
