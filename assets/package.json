@@ -1,0 +1,33 @@
+{
+  "name": "@hytopia.com/assets",
+  "version": "0.2.8",
+  "description": "A variety of default assets for HYTOPIA games.",
+  "main": "index.js",
+  "private": false,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hytopiagg/assets.git"
+  },
+  "keywords": [
+    "hytopia",
+    "gltf",
+    "models",
+    "assets",
+    "3d",
+    "game",
+    "builder",
+    "minecraft",
+    "roblox",
+    "tools",
+    "free"
+  ],
+  "author": "HYTOPIA <hytopia.com>",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/hytopiagg/assets/issues"
+  },
+  "homepage": "https://github.com/hytopiagg/assets#readme"
+}

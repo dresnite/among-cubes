@@ -1,0 +1,16 @@
+{
+  "name": "among-cubes",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@hytopia.com/assets": "^0.2.8",
+    "hytopia": "^0.3.28"
+  }
+}
