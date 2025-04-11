@@ -25,7 +25,7 @@ export class Main {
       const playerEntity = new PlayerEntity({
         player,
         name: 'Player',
-        modelUri: 'models/players/player.gltf',
+        modelUri: 'models/players/purple.gltf',
         modelLoopedAnimations: ['idle'],
         modelScale: 0.5,
       });
