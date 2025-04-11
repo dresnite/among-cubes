@@ -33,14 +33,21 @@ and also configure additional buttons for mobile compatibility.
   });
 </script>
 
-<!--
-  HYTOPIA allows you to build completely custom UI uses HTML, CSS and Javascript.
-  You can build simple UIs, to highly complex ones. UI capabilities are as powerful
-  as building a regaulr web page - there are no limitations on what you can do.
+<div class="game-ui">
+  <div class="top-right-ui">
+    <div class="top-right-display">
+      <img class="wh-24" src="{{CDN_ASSETS_URL}}/icons/coin.png" alt="Coins" />
+      <span class="golden-text">100</span>
 
-  Remember, HYTOPIA sandboxes your UI & UI scripts, so external network requests or
-  other unsafe actions likely won't work as you expect in production.
--->
+      <img class="wh-28" src="{{CDN_ASSETS_URL}}/icons/clock.png" alt="Time" />
+      <span class="white-text">10:00</span>
+    </div>
+  </div>
+
+  <div class="role-display">
+    <span class="role-text">INNOCENT</span>
+  </div>
+</div>
 
 <div class="mobile-controls">
   <a id="mobile-interact-button" class="mobile-button">
@@ -53,16 +60,89 @@ and also configure additional buttons for mobile compatibility.
 </div>
 
 <style>
-  /* By default, we hide the mobile controls */
+  /* Game UI Styles */
+  .game-ui {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .top-right-ui {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .top-right-display {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .wh-24 {
+    width: 24px;
+    height: 24px;
+  }
+
+  .wh-28 {
+    width: 28px;
+    height: 28px;
+  }
+
+  .golden-text {
+    color: #FFD700;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .white-text {
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .role-display {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    padding: 8px 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .role-text {
+    color: #4CAF50;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Existing mobile controls styles */
   .mobile-controls {
     display: none;
   }
 
-  /*
-    We can use the body.mobile class to detect if we're on a mobile device.
-    HYTOPIA will always add this class to the body element when running on a mobile device.
-  */
-  body.mobile .mobile-controls { /* If this css selector matches because we're on mobile, show the mobile controls */
+  body.mobile .mobile-controls {
     display: flex;
     gap: 14px;
     position: fixed;
@@ -70,7 +150,6 @@ and also configure additional buttons for mobile compatibility.
     right: 40px;
   }
 
-  /* You can configure and style your buttons however you'd like. This is a minimalistic starting point. */
   .mobile-button {
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 50%;
@@ -88,7 +167,7 @@ and also configure additional buttons for mobile compatibility.
     color: rgba(255, 255, 255, 0.8);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
   }
-  
+
   .mobile-button img {
     width: 22px;
     height: 22px;
@@ -98,5 +177,5 @@ and also configure additional buttons for mobile compatibility.
     transform: scale(0.92);
     background-color: rgba(0, 0, 0, 0.75);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  }  
+  }
 </style>
