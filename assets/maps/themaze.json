@@ -127,12 +127,6 @@
       "isCustom": false
     },
     {
-      "id": 22,
-      "name": "lava",
-      "textureUri": "blocks/lava.png",
-      "isCustom": false
-    },
-    {
       "id": 23,
       "name": "log",
       "textureUri": "blocks/log",
@@ -257,24 +251,6 @@
       "name": "water-still",
       "textureUri": "blocks/water-still.png",
       "isCustom": false
-    },
-    {
-      "id": 100,
-      "name": "cuadros",
-      "textureUri": "blocks/custom/cuadros.png",
-      "isCustom": true
-    },
-    {
-      "id": 101,
-      "name": "ChatGPT Image Apr 9, 2025, 08_40_06 PM",
-      "textureUri": "blocks/custom/ChatGPT Image Apr 9, 2025, 08_40_06 PM.png",
-      "isCustom": true
-    },
-    {
-      "id": 102,
-      "name": "red-wool",
-      "textureUri": "blocks/custom/red-wool.png",
-      "isCustom": true
     }
   ],
   "blocks": {
