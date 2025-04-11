@@ -34,6 +34,12 @@ export class Main {
 
       // Load our game UI for this player
       player.ui.load('ui/index.html');
+      player.ui.sendData({
+        coins: 100,
+        time: '10:00',
+        role: 'INNOCENT',
+        hideTopRightUI: false,
+      });
 
       // Send a nice welcome message that only the player who joined will see ;)
       world.chatManager.sendPlayerMessage(player, 'Welcome to Among Cubes!', 'FFE4E1');

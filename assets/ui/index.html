@@ -1,8 +1,3 @@
-<!--
-This is a basic boilerplate example of how to implement simple game UI,
-and also configure additional buttons for mobile compatibility.
--->
-
 <script>
   // Handle interact button touch / untouch
   const mobileInteractButton = document.getElementById('mobile-interact-button');
@@ -31,21 +26,43 @@ and also configure additional buttons for mobile compatibility.
     mobileJumpButton.classList.remove('active');
     hytopia.pressInput(' ', false);
   });
+
+  hytopia.onData(data => {
+    if (data.coins) {
+      document.getElementById('coins').textContent = data.coins;
+    }
+
+    if (data.time) {
+      document.getElementById('time').textContent = data.time;
+    }
+
+    if (data.role) {
+      document.getElementById('role').textContent = data.role;
+    }
+
+    if (data.hideTopRightUI) {
+      document.getElementById('top-right-ui').style.display = 'none';
+    }
+
+    if (data.hideTopRightUI === false) {
+      document.getElementById('top-right-ui').style.display = 'flex';
+    }
+  });
 </script>
 
 <div class="game-ui">
-  <div class="top-right-ui">
+  <div class="top-right-ui" id="top-right-ui">
     <div class="top-right-display">
       <img class="wh-24" src="{{CDN_ASSETS_URL}}/icons/coin.png" alt="Coins" />
-      <span class="golden-text">100</span>
+      <span class="golden-text" id="coins"></span>
 
       <img class="wh-28" src="{{CDN_ASSETS_URL}}/icons/clock.png" alt="Time" />
-      <span class="white-text">10:00</span>
+      <span class="white-text text-2xl underline" id="time"></span>
     </div>
   </div>
 
   <div class="role-display">
-    <span class="role-text">INNOCENT</span>
+    <span class="role-text" id="role"></span>
   </div>
 </div>
 
