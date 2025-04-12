@@ -13,12 +13,13 @@ import {
 import worldMap from '../assets/maps/themaze.json';
 import { PlayerSessionManager } from "./player/PlayerSessionManager";
 import { GameManager } from "./game/GameManager";
+import { Message } from "./messages/Message";
 
 export class Main {
-  
-  static instance: Main|null = null;
 
-  world: World|null = null;
+  static instance: Main | null = null;
+
+  world: World | null = null;
   gameManager: GameManager;
   playerSessionManager: PlayerSessionManager;
 
@@ -37,7 +38,7 @@ export class Main {
     return Main.instance;
   }
 
-  getWorld(): World|null {
+  getWorld(): World | null {
     return this.world;
   }
 
@@ -78,7 +79,7 @@ export class Main {
         modelUri: session.color!.getSkinPath(),
         modelLoopedAnimations: ['idle'],
         modelScale: 0.5,
-      });      
+      });
 
       playerEntity.spawn(world, { x: 0, y: 10, z: 0 });
 
@@ -105,15 +106,11 @@ export class Main {
         }
       });
 
-      player.ui.sendData({
-        title: "Hello world",
-        titleDuration: 5000 // optional, in milliseconds
-      });
+      session.title(Message.t('PLAYER_JOINED_GAME', { player: player.username, playerCount: "1", maxPlayerCount: "10" }))
 
       let n = 0
 
       setInterval(() => {
-        
         player.ui.sendData({
           title: n++,
           titleDuration: 1000
@@ -139,17 +136,17 @@ export class Main {
       }, 5000);
 
       // Setup a first person camera for the player
-    // set first person mode
-    player.camera.setMode(PlayerCameraMode.FIRST_PERSON); 
+      // set first person mode
+      player.camera.setMode(PlayerCameraMode.FIRST_PERSON);
 
-    // shift camrea up on Y axis so we see from "head" perspective.
-    player.camera.setOffset({ x: 0, y: 0.4, z: 0 }); 
+      // shift camrea up on Y axis so we see from "head" perspective.
+      player.camera.setOffset({ x: 0, y: 0.4, z: 0 });
 
-    // hide the head node from the model so we don't see it in the camera, this is just hidden for the controlling player.
-    player.camera.setModelHiddenNodes([ 'head', 'neck' ]); 
-    
-    // Shift the camera forward so we are looking slightly in front of where the player is looking.
-    player.camera.setForwardOffset(0.3); 
+      // hide the head node from the model so we don't see it in the camera, this is just hidden for the controlling player.
+      player.camera.setModelHiddenNodes(['head', 'neck']);
+
+      // Shift the camera forward so we are looking slightly in front of where the player is looking.
+      player.camera.setForwardOffset(0.3);
 
       // Send a nice welcome message that only the player who joined will see ;)
       world.chatManager.sendPlayerMessage(player, 'Welcome to Among Cubes!', 'FFE4E1');
