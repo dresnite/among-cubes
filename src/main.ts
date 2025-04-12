@@ -12,7 +12,7 @@ import {
 import worldMap from '../assets/maps/themaze.json';
 import { PlayerSessionManager } from "./player/PlayerSessionManager";
 import { GameManager } from "./game/GameManager";
-
+import { Broadcaster } from "./utils/Broadcaster";
 export class Main {
 
   static instance: Main | null = null;
@@ -20,12 +20,14 @@ export class Main {
   world: World | null = null;
   gameManager: GameManager;
   playerSessionManager: PlayerSessionManager;
+  broadcaster: Broadcaster;
 
   static initialize(world: World) {
     const loader = Main.getInstance();
 
     loader.loadGameWorld(world);
     loader.playBackgroundMusic(world);
+    loader.setupHeartbeat();
   }
 
   static getInstance(): Main {
@@ -60,6 +62,7 @@ export class Main {
     this.playBackgroundMusic = this.playBackgroundMusic.bind(this);
     this.gameManager = new GameManager();
     this.playerSessionManager = new PlayerSessionManager();
+    this.broadcaster = new Broadcaster();
   }
 
   loadGameWorld(world: World): void {
@@ -134,6 +137,16 @@ export class Main {
       loop: true,
       volume: 0.1,
     }).play(world);
+  }
+
+  setupHeartbeat(): void {
+    setInterval(() => {
+      for (const game of this.gameManager.getGames().values()) {
+          game.getPhase().handleHeartbeat();
+      }
+
+      this.broadcaster.handleHeartbeat();
+  }, 1000);
   }
 
 }
