@@ -100,21 +100,19 @@
       }, duration);
     }
 
-    let currentPopupTimeout;
-
     if (data.popup) {
       const popup = document.getElementById('popup-message');
       popup.textContent = data.popup;
       popup.classList.remove('fade-out');
       popup.classList.add('fade-in');
-      
+
       // Clear any existing timeout
-      if (currentPopupTimeout) {
-        clearTimeout(currentPopupTimeout);
+      if (window.currentPopupTimeout) {
+        clearTimeout(window.currentPopupTimeout);
       }
-      
+
       if (data.popupMilliseconds) {
-        currentPopupTimeout = setTimeout(() => {
+        window.currentPopupTimeout = setTimeout(() => {
           popup.classList.remove('fade-in');
           popup.classList.add('fade-out');
         }, data.popupMilliseconds);
@@ -190,7 +188,7 @@
     font-family: 'Arial', sans-serif;
     font-weight: bold;
     font-size: 48px;
-    text-shadow: 
+    text-shadow:
       0 0 10px rgba(255, 255, 255, 0.5),
       0 0 20px rgba(255, 255, 255, 0.3),
       0 0 30px rgba(255, 255, 255, 0.2),
