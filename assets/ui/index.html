@@ -47,10 +47,32 @@
     if (data.hideTopRightUI === false) {
       document.getElementById('top-right-ui').style.display = 'flex';
     }
+
+    let currentPopupTimeout;
+
+    if (data.popup) {
+      const popup = document.getElementById('popup-message');
+      popup.textContent = data.popup;
+      popup.classList.remove('fade-out');
+      popup.classList.add('fade-in');
+      
+      // Clear any existing timeout
+      if (currentPopupTimeout) {
+        clearTimeout(currentPopupTimeout);
+      }
+      
+      if (data.popupMilliseconds) {
+        currentPopupTimeout = setTimeout(() => {
+          popup.classList.remove('fade-in');
+          popup.classList.add('fade-out');
+        }, data.popupMilliseconds);
+      }
+    }
   });
 </script>
 
 <div class="game-ui">
+  <div class="popup-message" id="popup-message"></div>
   <div class="top-right-ui" id="top-right-ui">
     <div class="top-right-display">
       <img class="wh-24" src="{{CDN_ASSETS_URL}}/icons/coin.png" alt="Coins" />
@@ -194,5 +216,37 @@
     transform: scale(0.92);
     background-color: rgba(0, 0, 0, 0.75);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .popup-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #FFFFFF;
+    padding: 16px 24px;
+    border-radius: 12px;
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+    max-width: 80%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .fade-in {
+    opacity: 1;
+  }
+
+  .fade-out {
+    opacity: 0;
   }
 </style>

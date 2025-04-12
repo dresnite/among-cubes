@@ -91,6 +91,18 @@ export class Main {
         hideTopRightUI: false,
       });
 
+      player.ui.sendData({
+        popup: "Your message here",
+        popupMilliseconds: 10000  // Message will auto-dismiss after 3000ms (3 seconds)
+      });
+
+      setTimeout(() => {
+        player.ui.sendData({
+          popup: "Your messAge here",
+          popupMilliseconds: 10000  // Message will auto-dismiss after 3000ms (3 seconds)
+        });
+      }, 5000);
+
       // Setup a first person camera for the player
     // set first person mode
     player.camera.setMode(PlayerCameraMode.FIRST_PERSON); 

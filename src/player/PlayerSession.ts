@@ -39,4 +39,11 @@ export class PlayerSession {
         this.setColor(null)
     }
 
+    popup(message: string, milliseconds: number = 1000) {
+        this.player.ui.sendData({
+            popup: message,
+            popupMilliseconds: milliseconds
+        })
+    }
+
 }
