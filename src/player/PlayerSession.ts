@@ -46,4 +46,15 @@ export class PlayerSession {
         })
     }
 
+    achievement(title: string, subtitle: string, icon: string, milliseconds: number = 1000) {
+        this.player.ui.sendData({
+            achievement: {
+                title: title,
+                subtitle: subtitle,
+                icon: icon, 
+                duration: milliseconds
+            }
+        })
+    }
+
 }
