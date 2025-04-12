@@ -9,8 +9,8 @@ export class Message {
     id: string;
     args: Args;
 
-    static t(id: string, args: Args): string {
-        return new Message(id, args).toString();
+    static t(id: string, args?: Args): string {
+        return new Message(id, args ?? {}).toString();
     }
 
     constructor(id: string, args: Args) {
