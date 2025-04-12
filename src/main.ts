@@ -5,7 +5,6 @@ import {
   ColliderShape,
   Entity,
   EntityEvent,
-  PlayerCameraMode,
   PlayerEntity,
   PlayerEvent,
 } from 'hytopia';
@@ -13,7 +12,6 @@ import {
 import worldMap from '../assets/maps/themaze.json';
 import { PlayerSessionManager } from "./player/PlayerSessionManager";
 import { GameManager } from "./game/GameManager";
-import { Message } from "./messages/Message";
 
 export class Main {
 
@@ -85,71 +83,7 @@ export class Main {
 
       // Load our game UI for this player
       player.ui.load('ui/index.html');
-      player.ui.sendData({
-        coins: 100,
-        time: '10:00',
-        role: 'INNOCENT',
-        hideTopRightUI: false,
-      });
-
-      player.ui.sendData({
-        popup: "Your message here",
-        popupMilliseconds: 10000  // Message will auto-dismiss after 3000ms (3 seconds)
-      });
-
-      player.ui.sendData({
-        achievement: {
-          icon: "coin.png",
-          title: "Achievement Unlocked!",
-          subtitle: "You did something amazing!",
-          duration: 5000 // Optional, defaults to 3000ms
-        }
-      });
-
-      session.title(Message.t('PLAYER_JOINED_GAME', { player: player.username, playerCount: "1", maxPlayerCount: "10" }))
-
-      let n = 0
-
-      setInterval(() => {
-        player.ui.sendData({
-          title: n++,
-          titleDuration: 1000
-        });
-      }, 1000);
-
-      setTimeout(() => {
-        player.ui.sendData({
-          achievement: {
-            icon: "coin.png",
-            title: "Something amazing!",
-            subtitle: "You did something amazing!",
-            duration: 5000 // Optional, defaults to 3000ms
-          }
-        });
-      }, 2000);
-
-      setTimeout(() => {
-        player.ui.sendData({
-          popup: "Your messAge here",
-          popupMilliseconds: 10000  // Message will auto-dismiss after 3000ms (3 seconds)
-        });
-      }, 5000);
-
-      // Setup a first person camera for the player
-      // set first person mode
-      player.camera.setMode(PlayerCameraMode.FIRST_PERSON);
-
-      // shift camrea up on Y axis so we see from "head" perspective.
-      player.camera.setOffset({ x: 0, y: 0.4, z: 0 });
-
-      // hide the head node from the model so we don't see it in the camera, this is just hidden for the controlling player.
-      player.camera.setModelHiddenNodes(['head', 'neck']);
-
-      // Shift the camera forward so we are looking slightly in front of where the player is looking.
-      player.camera.setForwardOffset(0.3);
-
-      // Send a nice welcome message that only the player who joined will see ;)
-      world.chatManager.sendPlayerMessage(player, 'Welcome to Among Cubes!', 'FFE4E1');
+      session.setupCamera();
 
       const coinEntity = new Entity({
         modelUri: 'models/environment/coin2.glb',
