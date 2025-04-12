@@ -57,4 +57,11 @@ export class PlayerSession {
         })
     }
 
+    title(title: string, milliseconds: number = 1000) {
+        this.player.ui.sendData({
+            title: title,
+            titleDuration: milliseconds
+        })
+    }
+
 }

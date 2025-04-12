@@ -40,6 +40,30 @@
       document.getElementById('role').textContent = data.role;
     }
 
+    if (data.title) {
+      const titleDisplay = document.getElementById('title-display');
+      const titleText = document.getElementById('title-text');
+
+      // Clear any existing timeout
+      if (window.titleTimeout) {
+        clearTimeout(window.titleTimeout);
+      }
+
+      // Update title content
+      titleText.textContent = data.title;
+
+      // Show the title
+      titleDisplay.classList.remove('fade-out');
+      titleDisplay.classList.add('fade-in');
+
+      // Hide after specified duration or default to 3000ms
+      const duration = data.titleDuration || 3000;
+      window.titleTimeout = setTimeout(() => {
+        titleDisplay.classList.remove('fade-in');
+        titleDisplay.classList.add('fade-out');
+      }, duration);
+    }
+
     if (data.hideTopRightUI) {
       document.getElementById('top-right-ui').style.display = 'none';
     }
@@ -100,6 +124,9 @@
 </script>
 
 <div class="game-ui">
+  <div class="title-display" id="title-display">
+    <div class="title-text" id="title-text"></div>
+  </div>
   <div class="popup-message" id="popup-message"></div>
   <div class="achievement-display" id="achievement-display">
     <div class="achievement-icon">
@@ -143,6 +170,35 @@
     height: 100%;
     pointer-events: none;
     z-index: 1000;
+  }
+
+  .title-display {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+    max-width: 80%;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .title-text {
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 48px;
+    text-shadow: 
+      0 0 10px rgba(255, 255, 255, 0.5),
+      0 0 20px rgba(255, 255, 255, 0.3),
+      0 0 30px rgba(255, 255, 255, 0.2),
+      0 0 40px rgba(255, 255, 255, 0.1);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    letter-spacing: 1px;
+    text-transform: uppercase;
   }
 
   .top-right-ui {

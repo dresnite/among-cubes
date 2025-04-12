@@ -105,6 +105,21 @@ export class Main {
         }
       });
 
+      player.ui.sendData({
+        title: "Hello world",
+        titleDuration: 5000 // optional, in milliseconds
+      });
+
+      let n = 0
+
+      setInterval(() => {
+        
+        player.ui.sendData({
+          title: n++,
+          titleDuration: 1000
+        });
+      }, 1000);
+
       setTimeout(() => {
         player.ui.sendData({
           achievement: {
