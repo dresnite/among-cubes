@@ -19,8 +19,10 @@ export class PlayerSessionManager {
         return session
     }
 
-    openSession(player: Player) {
-        this.sessions.set(player.username, new PlayerSession(player))
+    openSession(player: Player): PlayerSession {
+        const session = new PlayerSession(player)
+        this.sessions.set(player.username, session)
+        return session
     }
 
     closeSession(player: Player) {
