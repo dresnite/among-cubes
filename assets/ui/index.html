@@ -48,6 +48,34 @@
       document.getElementById('top-right-ui').style.display = 'flex';
     }
 
+    if (data.achievement) {
+      const achievementDisplay = document.getElementById('achievement-display');
+      const achievementIcon = document.getElementById('achievement-icon');
+      const achievementTitle = document.getElementById('achievement-title');
+      const achievementSubtitle = document.getElementById('achievement-subtitle');
+
+      // Clear any existing timeout
+      if (window.achievementTimeout) {
+        clearTimeout(window.achievementTimeout);
+      }
+
+      // Update achievement content
+      achievementIcon.src = data.achievement.icon ? `{{CDN_ASSETS_URL}}/icons/${data.achievement.icon}` : '';
+      achievementTitle.textContent = data.achievement.title || '';
+      achievementSubtitle.textContent = data.achievement.subtitle || '';
+
+      // Show the achievement
+      achievementDisplay.classList.remove('fade-out');
+      achievementDisplay.classList.add('fade-in');
+
+      // Hide after specified duration or default to 3000ms
+      const duration = data.achievement.duration || 3000;
+      window.achievementTimeout = setTimeout(() => {
+        achievementDisplay.classList.remove('fade-in');
+        achievementDisplay.classList.add('fade-out');
+      }, duration);
+    }
+
     let currentPopupTimeout;
 
     if (data.popup) {
@@ -73,6 +101,15 @@
 
 <div class="game-ui">
   <div class="popup-message" id="popup-message"></div>
+  <div class="achievement-display" id="achievement-display">
+    <div class="achievement-icon">
+      <img id="achievement-icon" src="" alt="Achievement Icon" />
+    </div>
+    <div class="achievement-content">
+      <div class="achievement-title" id="achievement-title"></div>
+      <div class="achievement-subtitle" id="achievement-subtitle"></div>
+    </div>
+  </div>
   <div class="top-right-ui" id="top-right-ui">
     <div class="top-right-display">
       <img class="wh-24" src="{{CDN_ASSETS_URL}}/icons/coin.png" alt="Coins" />
@@ -240,6 +277,62 @@
     max-width: 80%;
     white-space: pre-wrap;
     word-wrap: break-word;
+  }
+
+  .achievement-display {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+    max-width: 300px;
+  }
+
+  .achievement-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .achievement-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .achievement-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .achievement-title {
+    color: #FFD700;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .achievement-subtitle {
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    opacity: 0.8;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   }
 
   .fade-in {

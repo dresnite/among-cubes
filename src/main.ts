@@ -96,6 +96,26 @@ export class Main {
         popupMilliseconds: 10000  // Message will auto-dismiss after 3000ms (3 seconds)
       });
 
+      player.ui.sendData({
+        achievement: {
+          icon: "coin.png",
+          title: "Achievement Unlocked!",
+          subtitle: "You did something amazing!",
+          duration: 5000 // Optional, defaults to 3000ms
+        }
+      });
+
+      setTimeout(() => {
+        player.ui.sendData({
+          achievement: {
+            icon: "coin.png",
+            title: "Something amazing!",
+            subtitle: "You did something amazing!",
+            duration: 5000 // Optional, defaults to 3000ms
+          }
+        });
+      }, 2000);
+
       setTimeout(() => {
         player.ui.sendData({
           popup: "Your messAge here",
