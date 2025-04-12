@@ -8,6 +8,7 @@ export class GameManager {
 
     constructor() {
         this.games = new Map();
+        this.setupHeartbeat();
     }
 
     getGames(): Map<string, Game> {
@@ -48,6 +49,14 @@ export class GameManager {
         suitableGame.handlePlayerSessionJoin(playerSession);
 
         return suitableGame;
+    }
+
+    setupHeartbeat() {
+        setInterval(() => {
+            for (const game of this.games.values()) {
+                game.heartbeat();
+            }
+        }, 1000);
     }
 
 }

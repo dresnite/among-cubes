@@ -1,8 +1,10 @@
 import { Main } from "../main";
+import { Message } from "../messages/Message";
 import type { PlayerSession } from "../player/PlayerSession";
 import { createUniqueId } from "../utils/math";
 import type { Color } from "./color/Color";
 import { ColorFactory } from "./color/ColorFactory";
+import { ColorType } from "./color/ColorType";
 import { GameStatus } from "./GameStatus";
 
 export class Game {
@@ -80,5 +82,16 @@ export class Game {
 
         this.availableColors.push(color);
         playerSession.reset();
+    }
+
+    heartbeat(): void {
+        for (const playerSession of this.playerSessions) {
+            if (this.status === GameStatus.WAITING_FOR_PLAYERS) {
+                playerSession.popup(Message.t('WAITING_FOR_PLAYERS', {
+                    playerCount: this.playerSessions.length.toString(),
+                    maxPlayers: Object.keys(ColorType).length.toString()
+                }), 10000);
+            }
+        }
     }
 }
