@@ -1,21 +1,23 @@
 import { Main } from "../main";
-import { Message } from "../messages/Message";
 import type { PlayerSession } from "../player/PlayerSession";
 import { createUniqueId } from "../utils/math";
 import type { Color } from "./color/Color";
 import { ColorFactory } from "./color/ColorFactory";
-import { ColorType } from "./color/ColorType";
-import { GameStatus } from "./GameStatus";
+import type { Phase } from "./phase/Phase";
+import { InProgressPhase } from "./phase/phases/InProgressPhase";
+import { WaitingForPlayersPhase } from "./phase/phases/WaitingForPlayersPhase";
 
 export class Game {
 
     uniqueId: string;
     playerSessions: PlayerSession[] = [];
     availableColors: Color[] = [];
-    status: GameStatus = GameStatus.WAITING_FOR_PLAYERS;
+    phase: Phase;
 
     constructor() {
         this.uniqueId = createUniqueId();
+        this.phase = new WaitingForPlayersPhase(this);
+
         this.handleGameRestart();
     }
 
@@ -27,8 +29,12 @@ export class Game {
         return this.playerSessions;
     }
 
-    getStatus(): GameStatus {
-        return this.status;
+    getPhase(): Phase {
+        return this.phase;
+    }
+
+    setPhase(phase: Phase): void {
+        this.phase = phase;
     }
 
     handleGameRestart(): void {
@@ -38,11 +44,12 @@ export class Game {
 
         this.playerSessions = [];
         this.availableColors = ColorFactory.createColors();
-        this.status = GameStatus.WAITING_FOR_PLAYERS;
+        
+        this.setPhase(new WaitingForPlayersPhase(this));
     }
 
     handleGameStart(): void {
-        this.status = GameStatus.IN_PROGRESS;
+        this.setPhase(new InProgressPhase(this));
     }
 
     handlePlayerSessionJoin(playerSession: PlayerSession): void {
@@ -59,8 +66,7 @@ export class Game {
         playerSession.setGame(this);
         playerSession.setColor(this.availableColors.shift()!);
 
-        const main = Main.getInstance();
-        main.getWorldOrThrow().chatManager.sendPlayerMessage(playerSession.getPlayer(), `Welcome to the game, you are the color ${playerSession.getColor()!.getType()}, your game id is ${this.getUniqueId()}. There are ${Array.from(main.getGameManager().getGames().values()).length} games in progress.`);
+        this.phase.handleJoin(playerSession);
 
         if (this.availableColors.length === 0) {
             this.handleGameStart();
@@ -82,16 +88,7 @@ export class Game {
 
         this.availableColors.push(color);
         playerSession.reset();
-    }
 
-    heartbeat(): void {
-        for (const playerSession of this.playerSessions) {
-            if (this.status === GameStatus.WAITING_FOR_PLAYERS) {
-                playerSession.popup(Message.t('WAITING_FOR_PLAYERS', {
-                    playerCount: this.playerSessions.length.toString(),
-                    maxPlayers: Object.keys(ColorType).length.toString()
-                }), 10000);
-            }
-        }
+        this.phase.handleLeave(playerSession);
     }
 }

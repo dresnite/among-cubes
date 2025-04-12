@@ -1,6 +1,6 @@
 import type { PlayerSession } from "../player/PlayerSession";
 import { Game } from "./Game";
-import { GameStatus } from "./GameStatus";
+import { PhaseType } from "./phase/PhaseType";
 
 export class GameManager {
 
@@ -16,7 +16,7 @@ export class GameManager {
     }
 
     getMostSuitableGame(): Game|null {
-        const openGames = Array.from(this.games.values()).filter(game => game.getStatus() === GameStatus.WAITING_FOR_PLAYERS);
+        const openGames = Array.from(this.games.values()).filter(game => game.getPhase().getPhaseType() === PhaseType.WAITING_FOR_PLAYERS);
 
         if (openGames.length === 0) {
             return null;
@@ -54,7 +54,7 @@ export class GameManager {
     setupHeartbeat() {
         setInterval(() => {
             for (const game of this.games.values()) {
-                game.heartbeat();
+                game.getPhase().handleHeartbeat();
             }
         }, 1000);
     }
