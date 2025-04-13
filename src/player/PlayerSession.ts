@@ -3,6 +3,7 @@ import type { Color } from "../game/color/Color";
 import type { Game } from "../game/Game";
 import { PlayerCameraMode } from "hytopia";
 import type { PlayerRole } from "./PlayerRole";
+import { Main } from "../main";
 
 export class PlayerSession {
 
@@ -61,6 +62,10 @@ export class PlayerSession {
         this.player.camera.setModelHiddenNodes(['head', 'neck']);
         // Shift the camera forward so we are looking slightly in front of where the player is looking.
         this.player.camera.setForwardOffset(0.3);
+    }
+
+    message(message: string) {
+        Main.getInstance().getWorldOrThrow().chatManager.sendPlayerMessage(this.player, message);
     }
 
     popup(message: string, milliseconds: number = 1000) {

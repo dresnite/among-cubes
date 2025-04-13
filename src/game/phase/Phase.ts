@@ -16,7 +16,19 @@ export abstract class Phase {
 
     abstract handleHeartbeat(): void;
 
+    handlePhaseStart(): void {
+        // Do nothing by default
+    }
+
     handleJoin(playerSession: PlayerSession): void {
+        // Do nothing by default
+    }
+
+    handleLeave(playerSession: PlayerSession): void {
+        // Do nothing by default
+    }
+
+    sendPlayerJoinAchievement(playerSession: PlayerSession): void {
         for (const gamePlayerSession of this.game.getPlayerSessions()) {
             if (gamePlayerSession.getPlayer().username === playerSession.getPlayer().username) {
                 continue;
@@ -33,10 +45,6 @@ export abstract class Phase {
                 4000
             );
         }
-    }
-
-    handleLeave(playerSession: PlayerSession): void {
-        // Do nothing by default
-    }
+    }   
 
 }
