@@ -14,6 +14,8 @@ import { PlayerSessionManager } from "./player/PlayerSessionManager";
 import { GameManager } from "./game/GameManager";
 import { Broadcaster } from "./utils/Broadcaster";
 import { BROADCASTER_FREQUENCY } from "./utils/config";
+import type { GameMap } from "./map/GameMap";
+import { TheMaze } from "./map/maps/TheMaze";
 
 export class Main {
 
@@ -23,6 +25,8 @@ export class Main {
   gameManager: GameManager;
   playerSessionManager: PlayerSessionManager;
   broadcaster: Broadcaster;
+  gameMap: GameMap;
+
 
   static initialize(world: World) {
     const loader = Main.getInstance();
@@ -60,11 +64,16 @@ export class Main {
     return this.playerSessionManager;
   }
 
+  getGameMap(): GameMap {
+    return this.gameMap;
+  }
+
   constructor() {
     this.playBackgroundMusic = this.playBackgroundMusic.bind(this);
     this.gameManager = new GameManager();
     this.playerSessionManager = new PlayerSessionManager();
     this.broadcaster = new Broadcaster(BROADCASTER_FREQUENCY);
+    this.gameMap = new TheMaze();
   }
 
   loadGameWorld(world: World): void {

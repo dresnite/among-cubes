@@ -78,8 +78,6 @@ export class PlayerSession {
         const world = Main.getInstance().getWorldOrThrow();
         const playerEntities = world.entityManager.getPlayerEntitiesByPlayer(this.player);
 
-        const coords = { x: 42 + (Math.random() * 10 - 5), y: 5, z: 34 + (Math.random() * 10 - 5) };
-
         if (playerEntities.length === 0) {
             this.playerEntity = new PlayerEntity({
                 player: this.player,
@@ -88,7 +86,10 @@ export class PlayerSession {
                 modelLoopedAnimations: ['idle'],
                 modelScale: 0.5,
             });
-            this.playerEntity.spawn(world, coords);
+            this.playerEntity.spawn(
+                world, 
+                Main.getInstance().getGameMap().getWaitingRoomCloseCoords()
+            );
 
             this.knife = new Entity({
                 name: 'sword',
@@ -191,6 +192,14 @@ export class PlayerSession {
             title: title,
             titleDuration: milliseconds
         })
+    }
+
+    teleportToWaitingRoom(): void {
+        this.playerEntity?.setPosition(Main.getInstance().getGameMap().getWaitingRoomCloseCoords());
+    }
+
+    teleportToSpawnCoords(): void {
+        this.playerEntity?.setPosition(Main.getInstance().getGameMap().getMapSpawnCoords());
     }
 
 }
