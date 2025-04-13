@@ -5,6 +5,7 @@ import { Message } from "../../../messages/Message";
 import { Main } from "../../../main";
 import type { PlayerSession } from "../../../player/PlayerSession";
 import { EndingPhase } from "./EndingPhase";
+import { KNIFE_USE_COOLDOWN } from "../../../utils/config";
 
 export class InProgressPhase extends Phase {
 
@@ -61,14 +62,13 @@ export class InProgressPhase extends Phase {
 
     handleHeartbeat(): void {
         for (const playerSession of this.game.getPlayerSessions()) {
+            playerSession.setKnifeUseCooldown(playerSession.getKnifeUseCooldown() - 1);
             playerSession.statusBar({
                 coins: playerSession.getCoins(),
                 milliseconds: 1000
             });
-            
-            playerSession.roleBar(
-                (playerSession.getRole() === PlayerRole.IMPOSTOR) ? 'Impostor' : 'Crew'
-            );
+
+            playerSession.sendRole();
         }
     }
 
@@ -86,9 +86,11 @@ export class InProgressPhase extends Phase {
         );
 
         victim.message(Message.t('YOU_WERE_KILLED_MESSAGE', { killer: killer.getPlayer().username }));
-
         victim.teleportToWaitingRoom();
-        this.game.handlePlayerSessionLeave(victim)
+        
+        this.game.handlePlayerSessionLeave(victim);
+
+        killer.setKnifeUseCooldown(KNIFE_USE_COOLDOWN);
 
         // Add victim to next game
         Main.getInstance().getGameManager().assignPlayerSessionToGame(victim);

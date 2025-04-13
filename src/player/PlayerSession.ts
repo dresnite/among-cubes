@@ -4,6 +4,7 @@ import type { Game } from "../game/Game";
 import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent } from "hytopia";
 import { PlayerRole } from "./PlayerRole";
 import { Main } from "../main";
+import { Message } from "../messages/Message";
 
 export class PlayerSession {
 
@@ -13,6 +14,7 @@ export class PlayerSession {
     role: PlayerRole | null
     knife: Entity | null
     knifeVisible: boolean
+    knifeUseCooldown: number
     playerEntity: PlayerEntity | null
     coins: number
 
@@ -23,6 +25,7 @@ export class PlayerSession {
         this.role = null
         this.knife = null
         this.knifeVisible = false
+        this.knifeUseCooldown = 0
         this.playerEntity = null
         this.coins = 0
     }
@@ -76,6 +79,7 @@ export class PlayerSession {
         this.setColor(null)
         this.setRole(PlayerRole.CREW)
         this.setKnifeVisible(false)
+        this.setKnifeUseCooldown(0)
         this.resetCoins()
     }
 
@@ -85,6 +89,14 @@ export class PlayerSession {
 
     setKnifeVisible(visible: boolean) {
         this.knifeVisible = visible
+    }
+
+    getKnifeUseCooldown(): number {
+        return this.knifeUseCooldown
+    }
+
+    setKnifeUseCooldown(cooldown: number) {
+        this.knifeUseCooldown = cooldown
     }
 
     setupCamera() {
@@ -146,7 +158,7 @@ export class PlayerSession {
             }
 
             // Handle left mouse click for impostor kills
-            if (input.ml && this.role === PlayerRole.IMPOSTOR && this.knifeVisible) {
+            if (input.ml && this.role === PlayerRole.IMPOSTOR && this.knifeVisible && this.knifeUseCooldown <= 0) {
                 // Cast a ray to detect clicked players
                 const ray = Main.getInstance().getWorldOrThrow().simulation.raycast(
                     playerEntity.position,
@@ -232,6 +244,15 @@ export class PlayerSession {
                 milliseconds
             }
         })
+    }
+
+    sendRole(): void {
+        const message = this.role === PlayerRole.IMPOSTOR ? 'IMPOSTOR_ROLE_BAR' : 'CREW_ROLE_BAR'
+        this.roleBar(
+            Message.t(message, {
+                cooldown: (this.knifeUseCooldown > 0) ? ` (${this.knifeUseCooldown.toString()})` : ' (Knife ready)'
+            })
+        )
     }
 
     teleportToWaitingRoom(): void {

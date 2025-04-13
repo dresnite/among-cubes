@@ -12,9 +12,9 @@ export const en_en = {
     MINIMUM_PLAYERS_REACHED_COUNTDOWN: "The game will start in {countdown} seconds",
     COULD_NOT_START_WITH_MINIMUM_PLAYERS: "» A player left the game. The game could not start with minimum players, so waiting for players again...",
     MINIMUM_PLAYERS_REACHED: "» We’ve got enough players — game starting soon!",
-    YOU_ARE_IMPOSTOR_CHAT: "» You are the Impostor! Kill the crew and sabotage the ship!",
+    YOU_ARE_IMPOSTOR_CHAT: "» You are the Impostor! Press F to take out your knife",
     YOU_ARE_IMPOSTOR: "You are the Impostor!",
-    YOU_ARE_IMPOSTOR_SUBTITLE: "Kill the crew and sabotage the ship!",
+    YOU_ARE_IMPOSTOR_SUBTITLE: "Press F to take out your knife",
     YOU_ARE_CREW_CHAT: "» You are the Crew! Find the Impostor and vote them out!",
     YOU_ARE_CREW: "You are the Crew!",
     YOU_ARE_CREW_SUBTITLE: "Find the Impostor and vote them out!",
@@ -26,5 +26,7 @@ export const en_en = {
     IMPOSTOR_WON: "The impostor won!",
     NEXT_GAME_STARTING_COUNTDOWN: "Next game in {countdown} seconds",
     CONGRATULATIONS_ON_WIN: "Congratulations on winning!",
-    TRY_HARDER_NEXT_TIME: "Try harder next time!"
+    TRY_HARDER_NEXT_TIME: "Try harder next time!",
+    IMPOSTOR_ROLE_BAR: "Impostor{cooldown}",
+    CREW_ROLE_BAR: "Crew"
 }
