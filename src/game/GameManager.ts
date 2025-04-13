@@ -14,7 +14,7 @@ export class GameManager {
         return this._games;
     }
 
-    private getMostSuitableGame(): Game|null {
+    private _getMostSuitableGame(): Game|null {
         const openGames = Array.from(this._games.values()).filter(game => game.getPhase().getPhaseType() === PhaseType.WAITING_FOR_PLAYERS);
 
         if (openGames.length === 0) {
@@ -32,17 +32,17 @@ export class GameManager {
         return mostSuitableGame;
     }
 
-    private createGame(): Game {
+    private _createGame(): Game {
         const game = new Game();
         this._games.set(game.getUniqueId(), game);
         return game;
     }
 
     public assignPlayerSessionToGame(playerSession: PlayerSession): Game {
-        let suitableGame = this.getMostSuitableGame();
+        let suitableGame = this._getMostSuitableGame();
 
         if (!suitableGame) {
-            suitableGame = this.createGame();
+            suitableGame = this._createGame();
         }
 
         suitableGame.handlePlayerSessionJoin(playerSession);

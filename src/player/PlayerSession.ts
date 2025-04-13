@@ -30,51 +30,51 @@ export class PlayerSession {
         this._coins = 0
     }
 
-    getPlayer(): Player {
+    public getPlayer(): Player {
         return this._player
     }
 
-    getGame(): Game | null {
+    public getGame(): Game | null {
         return this._game
     }
 
-    setGame(game: Game | null) {
+    public setGame(game: Game | null) {
         this._game = game
     }
 
-    getColor(): Color | null {
+    public getColor(): Color | null {
         return this._color
     }
 
-    setColor(color: Color | null) {
+    public setColor(color: Color | null) {
         this._color = color
     }
 
-    getRole(): PlayerRole | null {
+    public getRole(): PlayerRole | null {
         return this._role
     }
 
-    setRole(role: PlayerRole | null) {
+    public setRole(role: PlayerRole | null) {
         this._role = role
     }
 
-    getPlayerEntity(): PlayerEntity | null {
+    public getPlayerEntity(): PlayerEntity | null {
         return this._playerEntity
     }
 
-    getCoins(): number {
+    public getCoins(): number {
         return this._coins
     }
 
-    addCoin(): void {
+    public addCoin(): void {
         this._coins++
     }
 
-    resetCoins(): void {
+    public resetCoins(): void {
         this._coins = 0
     }
 
-    reset() {
+    public reset(): void {
         this.setGame(null)
         this.setColor(null)
         this.setRole(PlayerRole.CREW)
@@ -83,23 +83,23 @@ export class PlayerSession {
         this.resetCoins()
     }
 
-    getKnifeVisible(): boolean {
+    public getKnifeVisible(): boolean {
         return this._knifeVisible
     }
 
-    setKnifeVisible(visible: boolean) {
+    public setKnifeVisible(visible: boolean) {
         this._knifeVisible = visible
     }
 
-    getKnifeUseCooldown(): number {
+    public getKnifeUseCooldown(): number {
         return this._knifeUseCooldown
     }
 
-    setKnifeUseCooldown(cooldown: number) {
+    public setKnifeUseCooldown(cooldown: number) {
         this._knifeUseCooldown = cooldown
     }
 
-    setupCamera() {
+    public setupCamera() {
         // Setup a first person camera for the player
         // set first person mode
         this._player.camera.setMode(PlayerCameraMode.FIRST_PERSON);
@@ -111,7 +111,7 @@ export class PlayerSession {
         this._player.camera.setForwardOffset(0);
     }
 
-    setupEntity() {
+    public setupEntity() {
         const world = Main.getInstance().getWorldOrThrow();
         const playerEntities = world.entityManager.getPlayerEntitiesByPlayer(this._player);
 
@@ -145,7 +145,7 @@ export class PlayerSession {
         }
     }
 
-    setupPlayerEvents(playerEntity: PlayerEntity) {
+    public setupPlayerEvents(playerEntity: PlayerEntity) {
         playerEntity.controller?.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input }) => {
             if (input.f) {
                 // Only allow toggling knife visibility for impostors
@@ -182,7 +182,7 @@ export class PlayerSession {
         });
     }
 
-    setupKnifeVisibility() {
+    public setupKnifeVisibility() {
         if (!this._knife) {
             return;
         }
@@ -198,18 +198,18 @@ export class PlayerSession {
         }
     }
 
-    message(message: string) {
+    public message(message: string) {
         Main.getInstance().getWorldOrThrow().chatManager.sendPlayerMessage(this._player, message);
     }
 
-    popup(message: string, milliseconds: number = 1000) {
+    public popup(message: string, milliseconds: number = 1000) {
         this._player.ui.sendData({
             popup: message,
             popupMilliseconds: milliseconds
         })
     }
 
-    achievement(title: string, subtitle: string, icon: string, milliseconds: number = 1000) {
+    public achievement(title: string, subtitle: string, icon: string, milliseconds: number = 1000) {
         this._player.ui.sendData({
             achievement: {
                 title: title,
@@ -220,14 +220,14 @@ export class PlayerSession {
         })
     }
 
-    title(title: string, milliseconds: number = 1000) {
+    public title(title: string, milliseconds: number = 1000) {
         this._player.ui.sendData({
             title: title,
             titleDuration: milliseconds
         })
     }
 
-    statusBar({ coins, time, milliseconds }: { coins: number, time?: string, milliseconds: number }) {
+    public statusBar({ coins, time, milliseconds }: { coins: number, time?: string, milliseconds: number }) {
         this._player.ui.sendData({
             statusBar: {
                 coins,
@@ -237,7 +237,7 @@ export class PlayerSession {
         })
     }
 
-    roleBar(roleText: string, milliseconds: number = 1000) {
+    public roleBar(roleText: string, milliseconds: number = 1000) {
         this._player.ui.sendData({
             roleBar: {
                 role: roleText,
@@ -246,7 +246,7 @@ export class PlayerSession {
         })
     }
 
-    sendRole(): void {
+    public updateRoleBar(): void {
         const message = this._role === PlayerRole.IMPOSTOR ? 'IMPOSTOR_ROLE_BAR' : 'CREW_ROLE_BAR'
         this.roleBar(
             Message.t(message, {
@@ -255,15 +255,15 @@ export class PlayerSession {
         )
     }
 
-    teleportToWaitingRoom(): void {
+    public teleportToWaitingRoom(): void {
         this._playerEntity?.setPosition(Main.getInstance().getGameMap().getWaitingRoomCloseCoords());
     }
 
-    teleportToSpawnCoords(): void {
+    public teleportToSpawnCoords(): void {
         this._playerEntity?.setPosition(Main.getInstance().getGameMap().getMapSpawnCoords());
     }
 
-    teleportToVotingArea(): void {
+    public teleportToVotingArea(): void {
         this._playerEntity?.setPosition(Main.getInstance().getGameMap().getVotingAreaCloseCoords());
     }
 

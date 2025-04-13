@@ -9,13 +9,13 @@ import { WaitingForPlayersPhase } from "./WaitingForPlayersPhase";
 
 export class EndingPhase extends Phase {
 
-    timeToEnd: number;
-    isCrewWin: boolean;
+    private _timeToEnd: number;
+    private _isCrewWin: boolean;
 
     constructor(game: Game, isCrewWin: boolean) {
         super(game);
-        this.timeToEnd = ENDING_GAME_DURATION;
-        this.isCrewWin = isCrewWin;
+        this._timeToEnd = ENDING_GAME_DURATION;
+        this._isCrewWin = isCrewWin;
     }
 
     public getPhaseType(): PhaseType {
@@ -29,9 +29,9 @@ export class EndingPhase extends Phase {
     }
 
     public handleHeartbeat(): void {
-        this.timeToEnd--;
+        this._timeToEnd--;
 
-        if (this.timeToEnd <= 0) {
+        if (this._timeToEnd <= 0) {
             for (const playerSession of this._game.getPlayerSessions()) {
                 this._game.handlePlayerSessionLeave(playerSession);
                 Main.getInstance().getGameManager().assignPlayerSessionToGame(playerSession);
@@ -44,14 +44,14 @@ export class EndingPhase extends Phase {
         for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.popup(
                 Message.t('NEXT_GAME_STARTING_COUNTDOWN', {
-                    countdown: this.timeToEnd.toString()
+                    countdown: this._timeToEnd.toString()
                 })
             );
 
-            const isWinner = playerSession.getRole() === PlayerRole.CREW && this.isCrewWin || playerSession.getRole() === PlayerRole.IMPOSTOR && !this.isCrewWin;
+            const isWinner = playerSession.getRole() === PlayerRole.CREW && this._isCrewWin || playerSession.getRole() === PlayerRole.IMPOSTOR && !this._isCrewWin;
 
             playerSession.achievement(
-                Message.t(this.isCrewWin ? 'CREW_WON' : 'IMPOSTOR_WON'),
+                Message.t(this._isCrewWin ? 'CREW_WON' : 'IMPOSTOR_WON'),
                 Message.t(isWinner ? 'CONGRATULATIONS_ON_WIN' : 'TRY_HARDER_NEXT_TIME'),
                 'cup.png',
                 1000

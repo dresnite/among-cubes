@@ -11,7 +11,7 @@ export class Broadcaster {
         this._timeForNextBroadcast = interval;
     }
 
-    private getBroadcastableMessages(): string[] {
+    private _getBroadcastableMessages(): string[] {
         return [
             Message.t('BROADCAST_1'),
             Message.t('BROADCAST_2'),
@@ -26,13 +26,13 @@ export class Broadcaster {
         this._timeForNextBroadcast--;
 
         if (this._timeForNextBroadcast <= 0) {
-            this.broadcast();
+            this._sendBroadcast();
             this._timeForNextBroadcast = this._interval;
         }
     }
 
-    private broadcast(): void {
-        const randomMessage = this.getBroadcastableMessages()[Math.floor(Math.random() * this.getBroadcastableMessages().length)];
+    private _sendBroadcast(): void {
+        const randomMessage = this._getBroadcastableMessages()[Math.floor(Math.random() * this._getBroadcastableMessages().length)];
 
         if (!randomMessage) {
             return;

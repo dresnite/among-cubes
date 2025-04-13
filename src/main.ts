@@ -19,54 +19,13 @@ import { TheMaze } from "./map/maps/TheMaze";
 
 export class Main {
 
-  static instance: Main | null = null;
+  private static _instance: Main | null = null;
 
   private _world: World | null = null;
   private _gameManager: GameManager;
   private _playerSessionManager: PlayerSessionManager;
   private _broadcaster: Broadcaster;
   private _gameMap: GameMap;
-
-
-  static initialize(world: World) {
-    const loader = Main.getInstance();
-
-    loader.loadGameWorld(world);
-    loader.playBackgroundMusic(world);
-    loader.setupHeartbeat();
-  }
-
-  static getInstance(): Main {
-    if (!Main.instance) {
-      Main.instance = new Main();
-    }
-
-    return Main.instance;
-  }
-
-  getWorld(): World | null {
-    return this._world;
-  }
-
-  getWorldOrThrow(): World {
-    if (!this._world) {
-      throw new Error('World not loaded');
-    }
-
-    return this._world;
-  }
-
-  getGameManager(): GameManager {
-    return this._gameManager;
-  }
-
-  getPlayerSessionManager(): PlayerSessionManager {
-    return this._playerSessionManager;
-  }
-
-  getGameMap(): GameMap {
-    return this._gameMap;
-  }
 
   constructor() {
     this._gameManager = new GameManager();
@@ -75,14 +34,55 @@ export class Main {
     this._gameMap = new TheMaze();
   }
 
-  private loadGameWorld(world: World): void {
+
+  public static initialize(world: World) {
+    const loader = Main.getInstance();
+
+    loader._loadGameWorld(world);
+    loader._playBackgroundMusic(world);
+    loader._setupHeartbeat();
+  }
+
+  public static getInstance(): Main {
+    if (!Main._instance) {
+      Main._instance = new Main();
+    }
+
+    return Main._instance;
+  }
+
+  public getWorld(): World | null {
+    return this._world;
+  }
+
+  public getWorldOrThrow(): World {
+    if (!this._world) {
+      throw new Error('World not loaded');
+    }
+
+    return this._world;
+  }
+
+  public getGameManager(): GameManager {
+    return this._gameManager;
+  }
+
+  public getPlayerSessionManager(): PlayerSessionManager {
+    return this._playerSessionManager;
+  }
+
+  public getGameMap(): GameMap {
+    return this._gameMap;
+  }
+
+  private _loadGameWorld(world: World): void {
     this._world = world;
 
     world.loadMap(worldMap);
-    this.setupWorldEvents();
+    this._setupWorldEvents();
   }
 
-  private playBackgroundMusic(world: World): void {
+  private _playBackgroundMusic(world: World): void {
     new Audio({
       uri: 'audio/music/among-cubes-theme.mp3',
       loop: true,
@@ -90,7 +90,7 @@ export class Main {
     }).play(world);
   }
 
-  private setupHeartbeat(): void {
+  private _setupHeartbeat(): void {
     setInterval(() => {
       for (const game of this._gameManager.getGames().values()) {
         game.getPhase().handleHeartbeat();
@@ -100,7 +100,7 @@ export class Main {
     }, 1000);
   }
 
-  private setupWorldEvents(): void {
+  private _setupWorldEvents(): void {
     this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
       const session = this._playerSessionManager.openSession(player)
 
@@ -150,7 +150,7 @@ export class Main {
       this._world?.entityManager.getPlayerEntitiesByPlayer(player).forEach(entity => entity.despawn());
 
       const session = this._playerSessionManager.getSessionOrThrow(player)
-      session.game?.handlePlayerSessionLeave(session)
+      session.getGame()?.handlePlayerSessionLeave(session)
       this._playerSessionManager.closeSession(player)
     })
   }

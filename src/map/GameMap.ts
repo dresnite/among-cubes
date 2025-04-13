@@ -7,7 +7,7 @@ export abstract class GameMap {
     public abstract getWaitingRoomCoords(): Vector3Like;
 
     public getWaitingRoomCloseCoords(): Vector3Like {
-        return this.getRandomCoordsAround(this.getWaitingRoomCoords());
+        return this._getRandomCoordsAround(this.getWaitingRoomCoords());
     }
 
     public abstract getMapSpawnCoords(): Vector3Like;
@@ -15,12 +15,12 @@ export abstract class GameMap {
     public abstract getVotingAreaCoords(): Vector3Like;
 
     public getVotingAreaCloseCoords(): Vector3Like {
-        return this.getRandomCoordsAround(this.getVotingAreaCoords());
+        return this._getRandomCoordsAround(this.getVotingAreaCoords());
     }
 
     public abstract getVotingPodiumPositions(): Vector3Like[];
 
-    private getRandomCoordsAround(coords: Vector3Like): Vector3Like {
+    private _getRandomCoordsAround(coords: Vector3Like): Vector3Like {
         return {
             x: coords.x + (Math.random() * 10 - 5),
             y: coords.y,

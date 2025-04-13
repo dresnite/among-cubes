@@ -68,7 +68,7 @@ export class InProgressPhase extends Phase {
                 milliseconds: 1000
             });
 
-            playerSession.sendRole();
+            playerSession.updateRoleBar();
         }
     }
 
