@@ -2,6 +2,7 @@ import { Phase } from "../Phase";
 import { PhaseType } from "../PhaseType";
 import { PlayerRole } from "../../../player/PlayerRole";
 import { Message } from "../../../messages/Message";
+import { Main } from "../../../main";
 
 export class InProgressPhase extends Phase {
 
@@ -15,7 +16,7 @@ export class InProgressPhase extends Phase {
 
         // Calculate circle parameters so the players can spawn around the circle
         const radius = 5; // 5 units radius for the circle
-        const centerPoint = { x: 0, y: 3, z: 0 };
+        const centerPoint = Main.getInstance().getGameMap().getMapSpawnCoords();
         const angleStep = (2 * Math.PI) / playerSessions.length;
 
         playerSessions.forEach((playerSession, index) => {
