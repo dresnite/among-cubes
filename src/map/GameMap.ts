@@ -2,23 +2,23 @@ import type { Vector3Like } from "hytopia";
 
 export abstract class GameMap {
 
-    abstract getMapName(): string;
+    public abstract getMapName(): string;
 
-    abstract getWaitingRoomCoords(): Vector3Like;
+    public abstract getWaitingRoomCoords(): Vector3Like;
 
-    getWaitingRoomCloseCoords(): Vector3Like {
+    public getWaitingRoomCloseCoords(): Vector3Like {
         return this.getRandomCoordsAround(this.getWaitingRoomCoords());
     }
 
-    abstract getMapSpawnCoords(): Vector3Like;
+    public abstract getMapSpawnCoords(): Vector3Like;
 
-    abstract getVotingAreaCoords(): Vector3Like;
+    public abstract getVotingAreaCoords(): Vector3Like;
 
-    getVotingAreaCloseCoords(): Vector3Like {
+    public getVotingAreaCloseCoords(): Vector3Like {
         return this.getRandomCoordsAround(this.getVotingAreaCoords());
     }
 
-    abstract getVotingPodiumPositions(): Vector3Like[];
+    public abstract getVotingPodiumPositions(): Vector3Like[];
 
     private getRandomCoordsAround(coords: Vector3Like): Vector3Like {
         return {

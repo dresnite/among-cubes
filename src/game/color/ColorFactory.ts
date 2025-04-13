@@ -3,7 +3,7 @@ import { Color } from "./Color";
 
 export class ColorFactory {
 
-    static createColors() {
+    public static createColors(): Color[] {
         return [
             new Color(ColorType.Black),
             new Color(ColorType.Blue),

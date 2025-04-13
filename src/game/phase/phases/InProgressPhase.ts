@@ -9,12 +9,12 @@ import { KNIFE_USE_COOLDOWN } from "../../../utils/config";
 
 export class InProgressPhase extends Phase {
 
-    getPhaseType(): PhaseType {
+    public getPhaseType(): PhaseType {
         return PhaseType.IN_PROGRESS;
     }
 
-    handleStart(): void {
-        const playerSessions = this.game.getPlayerSessions();
+    public handleStart(): void {
+        const playerSessions = this._game.getPlayerSessions();
         const randomIndex = Math.floor(Math.random() * playerSessions.length);
 
         // Calculate circle parameters so the players can spawn around the circle
@@ -60,8 +60,8 @@ export class InProgressPhase extends Phase {
         });
     }
 
-    handleHeartbeat(): void {
-        for (const playerSession of this.game.getPlayerSessions()) {
+    public handleHeartbeat(): void {
+        for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.setKnifeUseCooldown(playerSession.getKnifeUseCooldown() - 1);
             playerSession.statusBar({
                 coins: playerSession.getCoins(),
@@ -72,7 +72,7 @@ export class InProgressPhase extends Phase {
         }
     }
 
-    handleDeath(victim: PlayerSession, killer: PlayerSession): void {
+    public handleDeath(victim: PlayerSession, killer: PlayerSession): void {
         killer.achievement(
             Message.t('KILLED_PLAYER', { victim: victim.getPlayer().username }),
             Message.t('KILLED_PLAYER_SUBTITLE'),
@@ -88,7 +88,7 @@ export class InProgressPhase extends Phase {
         victim.message(Message.t('YOU_WERE_KILLED_MESSAGE', { killer: killer.getPlayer().username }));
         victim.teleportToWaitingRoom();
         
-        this.game.handlePlayerSessionLeave(victim);
+        this._game.handlePlayerSessionLeave(victim);
 
         killer.setKnifeUseCooldown(KNIFE_USE_COOLDOWN);
 
@@ -96,17 +96,17 @@ export class InProgressPhase extends Phase {
         Main.getInstance().getGameManager().assignPlayerSessionToGame(victim);
     }
 
-    handleLeave(playerSession: PlayerSession): void {
-        const victimsAlive = this.game.getPlayerSessions().filter(session => session.getRole() === PlayerRole.CREW);
-        const impostorAlive = this.game.getPlayerSessions().filter(session => session.getRole() === PlayerRole.IMPOSTOR);
+    public handleLeave(playerSession: PlayerSession): void {
+        const victimsAlive = this._game.getPlayerSessions().filter(session => session.getRole() === PlayerRole.CREW);
+        const impostorAlive = this._game.getPlayerSessions().filter(session => session.getRole() === PlayerRole.IMPOSTOR);
         
         if (victimsAlive.length === 0) {
-            this.game.setPhase(new EndingPhase(this.game, false));
+            this._game.setPhase(new EndingPhase(this._game, false));
             return
         }
 
         if (impostorAlive.length === 0) {
-            this.game.setPhase(new EndingPhase(this.game, true));
+            this._game.setPhase(new EndingPhase(this._game, true));
             return
         }
     }

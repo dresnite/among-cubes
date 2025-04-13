@@ -6,27 +6,27 @@ type Args = {
 
 export class Message {
 
-    id: string;
-    args: Args;
+    private _id: string;
+    private _args: Args;
 
-    static t(id: string, args?: Args): string {
+    public static t(id: string, args?: Args): string {
         return new Message(id, args ?? {}).toString();
     }
 
     constructor(id: string, args: Args) {
-        this.id = id;
-        this.args = args;
+        this._id = id;
+        this._args = args;
     }
 
     toString(): string {
-        const translation = en_en[this.id as keyof typeof en_en];
+        const translation = en_en[this._id as keyof typeof en_en];
 
         if (!translation) {
-            throw new Error(`Translation for ${this.id} not found`);
+            throw new Error(`Translation for ${this._id} not found`);
         }
 
         return translation.replace(/{(\w+)}/g, (match, key) => {
-            return this.args[key] || match;
+            return this._args[key] || match;
         });
     }
     

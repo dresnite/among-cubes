@@ -10,44 +10,44 @@ import { WaitingForPlayersPhase } from "./WaitingForPlayersPhase";
 
 export class MinimumPlayersReachedPhase extends Phase {
 
-    countdown: number;
+    private _countdown: number;
 
     constructor(game: Game) {
         super(game);
-        this.countdown = COUNTDOWN_TO_START_WITH_MINIMUM_PLAYERS;
+        this._countdown = COUNTDOWN_TO_START_WITH_MINIMUM_PLAYERS;
     }
 
-    getPhaseType(): PhaseType {
+    public getPhaseType(): PhaseType {
         return PhaseType.MINIMUM_PLAYERS_REACHED;
     }
 
-    handleHeartbeat(): void {
-        this.countdown--;
+    public handleHeartbeat(): void {
+        this._countdown--;
 
-        if (this.countdown > 0) {
-            for (const playerSession of this.game.getPlayerSessions()) {
+        if (this._countdown > 0) {
+            for (const playerSession of this._game.getPlayerSessions()) {
                 playerSession.popup(Message.t('MINIMUM_PLAYERS_REACHED_COUNTDOWN', {
-                    countdown: (this.countdown + COUNTDOWN_START_GAME - 1).toString()
+                    countdown: (this._countdown + COUNTDOWN_START_GAME - 1).toString()
                 }));
             }
         } else {
-            this.game.setPhase(new CountdownPhase(this.game));
+            this._game.setPhase(new CountdownPhase(this._game));
         }
     }
 
-    handleJoin(playerSession: PlayerSession): void {
+    public handleJoin(playerSession: PlayerSession): void {
         this.sendPlayerJoinAchievement(playerSession);
         this.makeSurePlayersHaveNoKnife();
 
-        if (this.game.getAvailableColors().length === 0) {
-            this.game.setPhase(new CountdownPhase(this.game));
+        if (this._game.getAvailableColors().length === 0) {
+            this._game.setPhase(new CountdownPhase(this._game));
         }
     }
 
-    handleLeave(playerSession: PlayerSession): void {
-        if (this.game.getPlayerSessions().length < MINIMUM_PLAYERS_TO_START_GAME) {
+    public handleLeave(playerSession: PlayerSession): void {
+        if (this._game.getPlayerSessions().length < MINIMUM_PLAYERS_TO_START_GAME) {
             Main.getInstance().getWorld()?.chatManager.sendBroadcastMessage(Message.t('COULD_NOT_START_WITH_MINIMUM_PLAYERS'))
-            this.game.setPhase(new WaitingForPlayersPhase(this.game));
+            this._game.setPhase(new WaitingForPlayersPhase(this._game));
         }
     }
     

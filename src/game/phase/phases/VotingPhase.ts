@@ -3,12 +3,12 @@ import { PhaseType } from "../PhaseType";
 
 export class VotingPhase extends Phase {
 
-    getPhaseType(): PhaseType {
+    public getPhaseType(): PhaseType {
         return PhaseType.VOTING;
     }
 
-    handleStart(): void {
-        for (const playerSession of this.game.getPlayerSessions()) {
+    public handleStart(): void {
+        for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.teleportToVotingArea();
         }
     }

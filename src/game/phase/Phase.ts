@@ -7,36 +7,36 @@ import type { PhaseType } from "./PhaseType";
 
 export abstract class Phase {
 
-    game: Game;
+    protected _game: Game;
 
     constructor(game: Game) {
-        this.game = game;
+        this._game = game;
     }
 
-    abstract getPhaseType(): PhaseType;
+    public abstract getPhaseType(): PhaseType;
 
-    handleHeartbeat(): void {
+    public handleHeartbeat(): void {
         // do nothing by default
     }
 
-    handleStart(): void {
+    public handleStart(): void {
         // do nothing by default
     }
 
-    handleJoin(playerSession: PlayerSession): void {
+    public handleJoin(playerSession: PlayerSession): void {
         // do nothing by default
     }
 
-    handleLeave(playerSession: PlayerSession): void {
+    public handleLeave(playerSession: PlayerSession): void {
         // do nothing by default
     }
 
-    handleDeath(victim: PlayerSession, killer: PlayerSession): void {
+    public handleDeath(victim: PlayerSession, killer: PlayerSession): void {
         // do nothing by default
     }
 
-    sendPlayerJoinAchievement(playerSession: PlayerSession): void {
-        for (const gamePlayerSession of this.game.getPlayerSessions()) {
+    protected sendPlayerJoinAchievement(playerSession: PlayerSession): void {
+        for (const gamePlayerSession of this._game.getPlayerSessions()) {
             if (gamePlayerSession.getPlayer().username === playerSession.getPlayer().username) {
                 continue;
             }
@@ -46,7 +46,7 @@ export abstract class Phase {
                     player: playerSession.getPlayer().username
                 }), 
                 Message.t('JOINED_GAME_SUBTITLE', {
-                    playersLeftCount: (MINIMUM_PLAYERS_TO_START_GAME - this.game.getPlayerSessions().length).toString()
+                    playersLeftCount: (MINIMUM_PLAYERS_TO_START_GAME - this._game.getPlayerSessions().length).toString()
                 }),
                 'player.png',
                 4000
@@ -54,8 +54,8 @@ export abstract class Phase {
         }
     }
 
-    makeSurePlayersHaveNoKnife(): void {
-        for (const playerSession of this.game.getPlayerSessions()) {
+    protected makeSurePlayersHaveNoKnife(): void {
+        for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.setRole(PlayerRole.CREW);
             playerSession.setupKnifeVisibility();
         }

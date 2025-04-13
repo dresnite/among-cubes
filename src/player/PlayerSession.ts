@@ -8,70 +8,70 @@ import { Message } from "../messages/Message";
 
 export class PlayerSession {
 
-    player: Player
-    game: Game | null
-    color: Color | null
-    role: PlayerRole | null
-    knife: Entity | null
-    knifeVisible: boolean
-    knifeUseCooldown: number
-    playerEntity: PlayerEntity | null
-    coins: number
+    private _player: Player
+    private _game: Game | null
+    private _color: Color | null
+    private _role: PlayerRole | null
+    private _knife: Entity | null
+    private _knifeVisible: boolean
+    private _knifeUseCooldown: number
+    private _playerEntity: PlayerEntity | null
+    private _coins: number
 
     constructor(player: Player) {
-        this.player = player
-        this.game = null
-        this.color = null
-        this.role = null
-        this.knife = null
-        this.knifeVisible = false
-        this.knifeUseCooldown = 0
-        this.playerEntity = null
-        this.coins = 0
+        this._player = player
+        this._game = null
+        this._color = null
+        this._role = null
+        this._knife = null
+        this._knifeVisible = false
+        this._knifeUseCooldown = 0
+        this._playerEntity = null
+        this._coins = 0
     }
 
     getPlayer(): Player {
-        return this.player
+        return this._player
     }
 
     getGame(): Game | null {
-        return this.game
+        return this._game
     }
 
     setGame(game: Game | null) {
-        this.game = game
+        this._game = game
     }
 
     getColor(): Color | null {
-        return this.color
+        return this._color
     }
 
     setColor(color: Color | null) {
-        this.color = color
+        this._color = color
     }
 
     getRole(): PlayerRole | null {
-        return this.role
+        return this._role
     }
 
     setRole(role: PlayerRole | null) {
-        this.role = role
+        this._role = role
     }
 
     getPlayerEntity(): PlayerEntity | null {
-        return this.playerEntity
+        return this._playerEntity
     }
 
     getCoins(): number {
-        return this.coins
+        return this._coins
     }
 
     addCoin(): void {
-        this.coins++
+        this._coins++
     }
 
     resetCoins(): void {
-        this.coins = 0
+        this._coins = 0
     }
 
     reset() {
@@ -84,64 +84,64 @@ export class PlayerSession {
     }
 
     getKnifeVisible(): boolean {
-        return this.knifeVisible
+        return this._knifeVisible
     }
 
     setKnifeVisible(visible: boolean) {
-        this.knifeVisible = visible
+        this._knifeVisible = visible
     }
 
     getKnifeUseCooldown(): number {
-        return this.knifeUseCooldown
+        return this._knifeUseCooldown
     }
 
     setKnifeUseCooldown(cooldown: number) {
-        this.knifeUseCooldown = cooldown
+        this._knifeUseCooldown = cooldown
     }
 
     setupCamera() {
         // Setup a first person camera for the player
         // set first person mode
-        this.player.camera.setMode(PlayerCameraMode.FIRST_PERSON);
+        this._player.camera.setMode(PlayerCameraMode.FIRST_PERSON);
         // shift camrea up on Y axis so we see from "head" perspective.
-        this.player.camera.setOffset({ x: 0, y: 0.4, z: 0 });
+        this._player.camera.setOffset({ x: 0, y: 0.4, z: 0 });
         // hide the head node from the model so we don't see it in the camera, this is just hidden for the controlling player.
-        this.player.camera.setModelHiddenNodes(['head', 'neck', 'torso']);
+        this._player.camera.setModelHiddenNodes(['head', 'neck', 'torso']);
         // Shift the camera forward so we are looking slightly in front of where the player is looking.
-        this.player.camera.setForwardOffset(0);
+        this._player.camera.setForwardOffset(0);
     }
 
     setupEntity() {
         const world = Main.getInstance().getWorldOrThrow();
-        const playerEntities = world.entityManager.getPlayerEntitiesByPlayer(this.player);
+        const playerEntities = world.entityManager.getPlayerEntitiesByPlayer(this._player);
 
         if (playerEntities.length === 0) {
-            this.playerEntity = new PlayerEntity({
-                player: this.player,
+            this._playerEntity = new PlayerEntity({
+                player: this._player,
                 name: 'Player',
-                modelUri: this.color!.getSkinPath(),
+                modelUri: this._color!.getSkinPath(),
                 modelLoopedAnimations: ['idle'],
                 modelScale: 0.5,
             });
-            this.playerEntity.spawn(
+            this._playerEntity.spawn(
                 world, 
                 Main.getInstance().getGameMap().getWaitingRoomCloseCoords()
             );
 
-            this.knife = new Entity({
+            this._knife = new Entity({
                 name: 'sword',
                 modelUri: 'models/items/sword.gltf',
-                parent: this.playerEntity,
+                parent: this._playerEntity,
                 parentNodeName: 'hand_right_anchor', // attach it to the hand node of our parent model
             });
             
             // Initially hide the knife
-            this.knifeVisible = false;
+            this._knifeVisible = false;
             this.setupKnifeVisibility();
 
-            this.setupPlayerEvents(this.playerEntity)
+            this.setupPlayerEvents(this._playerEntity)
         } else {
-            this.playerEntity = playerEntities[0]!;
+            this._playerEntity = playerEntities[0]!;
         }
     }
 
@@ -149,8 +149,8 @@ export class PlayerSession {
         playerEntity.controller?.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input }) => {
             if (input.f) {
                 // Only allow toggling knife visibility for impostors
-                if (this.role === PlayerRole.IMPOSTOR) {
-                    this.knifeVisible = !this.knifeVisible;
+                if (this._role === PlayerRole.IMPOSTOR) {
+                    this._knifeVisible = !this._knifeVisible;
                     this.setupKnifeVisibility();
                 }
 
@@ -158,11 +158,11 @@ export class PlayerSession {
             }
 
             // Handle left mouse click for impostor kills
-            if (input.ml && this.role === PlayerRole.IMPOSTOR && this.knifeVisible && this.knifeUseCooldown <= 0) {
+            if (input.ml && this._role === PlayerRole.IMPOSTOR && this._knifeVisible && this._knifeUseCooldown <= 0) {
                 // Cast a ray to detect clicked players
                 const ray = Main.getInstance().getWorldOrThrow().simulation.raycast(
                     playerEntity.position,
-                    this.player.camera.facingDirection,
+                    this._player.camera.facingDirection,
                     3, // 3-meter range for kills
                     { filterExcludeRigidBody: playerEntity.rawRigidBody }
                 );
@@ -171,8 +171,8 @@ export class PlayerSession {
                     const hitPlayer = ray.hitEntity.player;
                     const hitSession = Main.getInstance().getPlayerSessionManager().getSession(hitPlayer);
                     
-                    if (this.game && hitSession?.role === PlayerRole.CREW && hitSession.getGame()?.getUniqueId() === this.game.getUniqueId()) {
-                        this.game.getPhase().handleDeath(hitSession, this);
+                    if (this._game && hitSession?._role === PlayerRole.CREW && hitSession.getGame()?.getUniqueId() === this._game.getUniqueId()) {
+                        this._game.getPhase().handleDeath(hitSession, this);
                     }
                 }
 
@@ -183,34 +183,34 @@ export class PlayerSession {
     }
 
     setupKnifeVisibility() {
-        if (!this.knife) {
+        if (!this._knife) {
             return;
         }
 
-        if (this.knifeVisible && !this.knife.isSpawned) {
-            this.knife.spawn(
+        if (this._knifeVisible && !this._knife.isSpawned) {
+            this._knife.spawn(
                 Main.getInstance().getWorldOrThrow(),
                 { x: 0, y: 0.3, z: 0.5 }, // spawn with a position relative to the parent node
                 { x: -Math.PI / 3, y: 0, z: 0, w: 1 } // spawn with a rotation
             );
-        } else if (!this.knifeVisible && this.knife.isSpawned) {
-            this.knife.despawn();
+        } else if (!this._knifeVisible && this._knife.isSpawned) {
+            this._knife.despawn();
         }
     }
 
     message(message: string) {
-        Main.getInstance().getWorldOrThrow().chatManager.sendPlayerMessage(this.player, message);
+        Main.getInstance().getWorldOrThrow().chatManager.sendPlayerMessage(this._player, message);
     }
 
     popup(message: string, milliseconds: number = 1000) {
-        this.player.ui.sendData({
+        this._player.ui.sendData({
             popup: message,
             popupMilliseconds: milliseconds
         })
     }
 
     achievement(title: string, subtitle: string, icon: string, milliseconds: number = 1000) {
-        this.player.ui.sendData({
+        this._player.ui.sendData({
             achievement: {
                 title: title,
                 subtitle: subtitle,
@@ -221,14 +221,14 @@ export class PlayerSession {
     }
 
     title(title: string, milliseconds: number = 1000) {
-        this.player.ui.sendData({
+        this._player.ui.sendData({
             title: title,
             titleDuration: milliseconds
         })
     }
 
     statusBar({ coins, time, milliseconds }: { coins: number, time?: string, milliseconds: number }) {
-        this.player.ui.sendData({
+        this._player.ui.sendData({
             statusBar: {
                 coins,
                 time,
@@ -238,7 +238,7 @@ export class PlayerSession {
     }
 
     roleBar(roleText: string, milliseconds: number = 1000) {
-        this.player.ui.sendData({
+        this._player.ui.sendData({
             roleBar: {
                 role: roleText,
                 milliseconds
@@ -247,24 +247,24 @@ export class PlayerSession {
     }
 
     sendRole(): void {
-        const message = this.role === PlayerRole.IMPOSTOR ? 'IMPOSTOR_ROLE_BAR' : 'CREW_ROLE_BAR'
+        const message = this._role === PlayerRole.IMPOSTOR ? 'IMPOSTOR_ROLE_BAR' : 'CREW_ROLE_BAR'
         this.roleBar(
             Message.t(message, {
-                cooldown: (this.knifeUseCooldown > 0) ? ` (${this.knifeUseCooldown.toString()})` : ' (Knife ready)'
+                cooldown: (this._knifeUseCooldown > 0) ? ` (${this._knifeUseCooldown.toString()})` : ' (Knife ready)'
             })
         )
     }
 
     teleportToWaitingRoom(): void {
-        this.playerEntity?.setPosition(Main.getInstance().getGameMap().getWaitingRoomCloseCoords());
+        this._playerEntity?.setPosition(Main.getInstance().getGameMap().getWaitingRoomCloseCoords());
     }
 
     teleportToSpawnCoords(): void {
-        this.playerEntity?.setPosition(Main.getInstance().getGameMap().getMapSpawnCoords());
+        this._playerEntity?.setPosition(Main.getInstance().getGameMap().getMapSpawnCoords());
     }
 
     teleportToVotingArea(): void {
-        this.playerEntity?.setPosition(Main.getInstance().getGameMap().getVotingAreaCloseCoords());
+        this._playerEntity?.setPosition(Main.getInstance().getGameMap().getVotingAreaCloseCoords());
     }
 
 }

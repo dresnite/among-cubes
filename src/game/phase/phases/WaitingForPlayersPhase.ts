@@ -9,30 +9,26 @@ import { MinimumPlayersReachedPhase } from "./MinimumPlayersReachedPhase";
 
 export class WaitingForPlayersPhase extends Phase {
 
-    getTimeToStartWithMinimumPlayers(): number {
-        return 20
-    }
-
-    getPhaseType(): PhaseType {
+    public getPhaseType(): PhaseType {
         return PhaseType.WAITING_FOR_PLAYERS;
     }
 
-    handleHeartbeat(): void {
-        for (const playerSession of this.game.getPlayerSessions()) {
+    public handleHeartbeat(): void {
+        for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.popup(Message.t('WAITING_FOR_PLAYERS', {
-                playerCount: this.game.getPlayerSessions().length.toString(),
+                playerCount: this._game.getPlayerSessions().length.toString(),
                 maxPlayers: Object.keys(ColorType).length.toString()
             }));
         }
     }
 
-    handleJoin(playerSession: PlayerSession): void {
+    public handleJoin(playerSession: PlayerSession): void {
         this.sendPlayerJoinAchievement(playerSession);
         this.makeSurePlayersHaveNoKnife();
         
-        if (this.game.getPlayerSessions().length >= MINIMUM_PLAYERS_TO_START_GAME) {
+        if (this._game.getPlayerSessions().length >= MINIMUM_PLAYERS_TO_START_GAME) {
             Main.getInstance().getWorld()?.chatManager.sendBroadcastMessage(Message.t('MINIMUM_PLAYERS_REACHED'))
-            this.game.setPhase(new MinimumPlayersReachedPhase(this.game));
+            this._game.setPhase(new MinimumPlayersReachedPhase(this._game));
         }
     }
 

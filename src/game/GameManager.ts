@@ -4,18 +4,18 @@ import { PhaseType } from "./phase/PhaseType";
 
 export class GameManager {
 
-    games: Map<string, Game> = new Map();
+    private _games: Map<string, Game> = new Map();
 
     constructor() {
-        this.games = new Map();
+        this._games = new Map();
     }
 
-    getGames(): Map<string, Game> {
-        return this.games;
+    public getGames(): Map<string, Game> {
+        return this._games;
     }
 
-    getMostSuitableGame(): Game|null {
-        const openGames = Array.from(this.games.values()).filter(game => game.getPhase().getPhaseType() === PhaseType.WAITING_FOR_PLAYERS);
+    private getMostSuitableGame(): Game|null {
+        const openGames = Array.from(this._games.values()).filter(game => game.getPhase().getPhaseType() === PhaseType.WAITING_FOR_PLAYERS);
 
         if (openGames.length === 0) {
             return null;
@@ -32,13 +32,13 @@ export class GameManager {
         return mostSuitableGame;
     }
 
-    createGame(): Game {
+    private createGame(): Game {
         const game = new Game();
-        this.games.set(game.getUniqueId(), game);
+        this._games.set(game.getUniqueId(), game);
         return game;
     }
 
-    assignPlayerSessionToGame(playerSession: PlayerSession): Game {
+    public assignPlayerSessionToGame(playerSession: PlayerSession): Game {
         let suitableGame = this.getMostSuitableGame();
 
         if (!suitableGame) {

@@ -8,32 +8,32 @@ import { WaitingForPlayersPhase } from "./WaitingForPlayersPhase";
 
 export class CountdownPhase extends Phase {
 
-    countdown: number;
+    private _countdown: number;
 
     constructor(game: Game) {
         super(game);
-        this.countdown = COUNTDOWN_START_GAME;
+        this._countdown = COUNTDOWN_START_GAME;
     }
 
-    getPhaseType(): PhaseType {
+    public getPhaseType(): PhaseType {
         return PhaseType.COUNTDOWN;
     }
 
-    handleHeartbeat(): void {
-        if (this.countdown > 0) {
-            this.countdown--;
+    public handleHeartbeat(): void {
+        if (this._countdown > 0) {
+            this._countdown--;
 
-            for (const playerSession of this.game.getPlayerSessions()) {
-                playerSession.title(this.countdown.toString());
+            for (const playerSession of this._game.getPlayerSessions()) {
+                playerSession.title(this._countdown.toString());
             }
         } else {
-            this.game.setPhase(new InProgressPhase(this.game));
+            this._game.setPhase(new InProgressPhase(this._game));
         }
     }
 
-    handleLeave(playerSession: PlayerSession): void {
-        if (this.game.getPlayerSessions().length < MINIMUM_PLAYERS_TO_START_GAME) {
-            this.game.setPhase(new WaitingForPlayersPhase(this.game));
+    public handleLeave(playerSession: PlayerSession): void {
+        if (this._game.getPlayerSessions().length < MINIMUM_PLAYERS_TO_START_GAME) {
+            this._game.setPhase(new WaitingForPlayersPhase(this._game));
         }
     }
 

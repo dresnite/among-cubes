@@ -3,15 +3,15 @@ import { Message } from "../messages/Message";
 
 export class Broadcaster {
 
-    interval: number;
-    timeForNextBroadcast: number;
+    private _interval: number;
+    private _timeForNextBroadcast: number;
     
     constructor(interval: number) {
-        this.interval = interval;
-        this.timeForNextBroadcast = interval;
+        this._interval = interval;
+        this._timeForNextBroadcast = interval;
     }
 
-    getBroadcastableMessages(): string[] {
+    private getBroadcastableMessages(): string[] {
         return [
             Message.t('BROADCAST_1'),
             Message.t('BROADCAST_2'),
@@ -22,16 +22,16 @@ export class Broadcaster {
         ];
     }
 
-    handleHeartbeat(): void {
-        this.timeForNextBroadcast--;
+    public handleHeartbeat(): void {
+        this._timeForNextBroadcast--;
 
-        if (this.timeForNextBroadcast <= 0) {
+        if (this._timeForNextBroadcast <= 0) {
             this.broadcast();
-            this.timeForNextBroadcast = this.interval;
+            this._timeForNextBroadcast = this._interval;
         }
     }
 
-    broadcast(): void {
+    private broadcast(): void {
         const randomMessage = this.getBroadcastableMessages()[Math.floor(Math.random() * this.getBroadcastableMessages().length)];
 
         if (!randomMessage) {

@@ -18,30 +18,30 @@ export class EndingPhase extends Phase {
         this.isCrewWin = isCrewWin;
     }
 
-    getPhaseType(): PhaseType {
+    public getPhaseType(): PhaseType {
         return PhaseType.ENDING;
     }
 
-    handleStart(): void {
-        for (const playerSession of this.game.getPlayerSessions()) {
+    public handleStart(): void {
+        for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.teleportToWaitingRoom();
         }
     }
 
-    handleHeartbeat(): void {
+    public handleHeartbeat(): void {
         this.timeToEnd--;
 
         if (this.timeToEnd <= 0) {
-            for (const playerSession of this.game.getPlayerSessions()) {
-                this.game.handlePlayerSessionLeave(playerSession);
+            for (const playerSession of this._game.getPlayerSessions()) {
+                this._game.handlePlayerSessionLeave(playerSession);
                 Main.getInstance().getGameManager().assignPlayerSessionToGame(playerSession);
             }
 
-            this.game.setPhase(new WaitingForPlayersPhase(this.game));
+            this._game.setPhase(new WaitingForPlayersPhase(this._game));
             return
         }
 
-        for (const playerSession of this.game.getPlayerSessions()) {
+        for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.popup(
                 Message.t('NEXT_GAME_STARTING_COUNTDOWN', {
                     countdown: this.timeToEnd.toString()

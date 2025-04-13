@@ -7,73 +7,73 @@ import { WaitingForPlayersPhase } from "./phase/phases/WaitingForPlayersPhase";
 
 export class Game {
 
-    uniqueId: string;
-    playerSessions: PlayerSession[] = [];
-    availableColors: Color[] = [];
-    phase: Phase;
+    private _uniqueId: string;
+    private _playerSessions: PlayerSession[] = [];
+    private _availableColors: Color[] = [];
+    private _phase: Phase;
 
     constructor() {
-        this.uniqueId = createUniqueId();
-        this.phase = new WaitingForPlayersPhase(this);
+        this._uniqueId = createUniqueId();
+        this._phase = new WaitingForPlayersPhase(this);
 
         this.handleGameRestart();
     }
 
-    getUniqueId(): string {
-        return this.uniqueId;
+    public getUniqueId(): string {
+        return this._uniqueId;
     }
 
-    getPlayerSessions(): PlayerSession[] {
-        return this.playerSessions;
+    public getPlayerSessions(): PlayerSession[] {
+        return this._playerSessions;
     }
 
-    getAvailableColors(): Color[] {
-        return this.availableColors;
+    public getAvailableColors(): Color[] {
+        return this._availableColors;
     }
 
-    getPhase(): Phase {
-        return this.phase;
+    public getPhase(): Phase {
+        return this._phase;
     }
 
-    setPhase(phase: Phase): void {
-        this.phase = phase;
-        this.phase.handleStart();
+    public setPhase(phase: Phase): void {
+        this._phase = phase;
+        this._phase.handleStart();
     }
 
-    handleGameRestart(): void {
-        for (const playerSession of this.playerSessions) {
+    public handleGameRestart(): void {
+        for (const playerSession of this._playerSessions) {
             this.handlePlayerSessionLeave(playerSession);
         }
 
-        this.playerSessions = [];
-        this.availableColors = ColorFactory.createColors();
+        this._playerSessions = [];
+        this._availableColors = ColorFactory.createColors();
         
         this.setPhase(new WaitingForPlayersPhase(this));
     }
 
-    handlePlayerSessionJoin(playerSession: PlayerSession): void {
+    public handlePlayerSessionJoin(playerSession: PlayerSession): void {
         if (playerSession.getGame() !== null) {
             throw new Error('Player session is already in a game');
         }
 
-        this.playerSessions.push(playerSession);
+        this._playerSessions.push(playerSession);
 
-        if (this.availableColors.length === 0) {
+        if (this._availableColors.length === 0) {
             throw new Error('No available colors');
         }
 
         playerSession.setGame(this);
-        playerSession.setColor(this.availableColors.shift()!);
+        playerSession.setColor(this._availableColors.shift()!);
 
-        this.phase.handleJoin(playerSession);
+        this._phase.handleJoin(playerSession);
     }
 
-    handlePlayerSessionLeave(playerSession: PlayerSession): void {
+    public handlePlayerSessionLeave(playerSession: PlayerSession): void {
         if (playerSession.getGame() !== this) {
             throw new Error('Player session is not in this game');
         }
 
-        this.playerSessions = this.playerSessions.filter(session => session !== playerSession);
+        this._playerSessions = this._playerSessions.filter(session => session !== playerSession);
 
         const color = playerSession.getColor();
 
@@ -81,9 +81,9 @@ export class Game {
             throw new Error('Player session has no color');
         }
 
-        this.availableColors.push(color);
+        this._availableColors.push(color);
         playerSession.reset();
 
-        this.phase.handleLeave(playerSession);
+        this._phase.handleLeave(playerSession);
     }
 }

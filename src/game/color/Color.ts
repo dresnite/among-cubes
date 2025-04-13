@@ -2,18 +2,18 @@ import { ColorType } from "./ColorType";
 
 export class Color {
 
-    type: ColorType;
+    private _type: ColorType;
 
     constructor(type: ColorType) {
-        this.type = type;
+        this._type = type;
     }
 
-    getType(): ColorType {
-        return this.type;
+    public getType(): ColorType {
+        return this._type;
     }
 
-    getSkinPath(): string {
-        return `models/players/${this.type}.gltf`;
+    public getSkinPath(): string {
+        return `models/players/${this._type}.gltf`;
     }
 
 }
