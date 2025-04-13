@@ -1,4 +1,5 @@
 import type { Vector3Like } from "hytopia";
+import type { ColorType } from "../game/color/ColorType";
 
 export abstract class GameMap {
 
@@ -7,18 +8,25 @@ export abstract class GameMap {
     abstract getWaitingRoomCoords(): Vector3Like;
 
     getWaitingRoomCloseCoords(): Vector3Like {
-        const spawnCoords = this.getWaitingRoomCoords();
-
-        // spawn in a random position around the spawn coords
-        const coords = { 
-            x: spawnCoords.x + (Math.random() * 10 - 5), 
-            y: spawnCoords.y, 
-            z: spawnCoords.z + (Math.random() * 10 - 5) 
-        };
-
-        return coords;
+        return this.getRandomCoordsAround(this.getWaitingRoomCoords());
     }
 
     abstract getMapSpawnCoords(): Vector3Like;
+
+    abstract getVotingAreaCoords(): Vector3Like;
+
+    getVotingAreaCloseCoords(): Vector3Like {
+        return this.getRandomCoordsAround(this.getVotingAreaCoords());
+    }
+
+    abstract getVotingPodiumPositions(): Vector3Like[];
+
+    private getRandomCoordsAround(coords: Vector3Like): Vector3Like {
+        return {
+            x: coords.x + (Math.random() * 10 - 5),
+            y: coords.y,
+            z: coords.z + (Math.random() * 10 - 5)
+        };
+    }
 
 }
