@@ -224,6 +224,16 @@ export class PlayerSession {
             }
         })
     }
+
+    roleBar(roleText: string, milliseconds: number = 1000) {
+        this.player.ui.sendData({
+            roleBar: {
+                role: roleText,
+                milliseconds
+            }
+        })
+    }
+
     teleportToWaitingRoom(): void {
         this.playerEntity?.setPosition(Main.getInstance().getGameMap().getWaitingRoomCloseCoords());
     }

@@ -59,6 +59,19 @@ export class InProgressPhase extends Phase {
         });
     }
 
+    handleHeartbeat(): void {
+        for (const playerSession of this.game.getPlayerSessions()) {
+            playerSession.statusBar({
+                coins: playerSession.getCoins(),
+                milliseconds: 1000
+            });
+            
+            playerSession.roleBar(
+                (playerSession.getRole() === PlayerRole.IMPOSTOR) ? 'Impostor' : 'Crew'
+            );
+        }
+    }
+
     handleDeath(victim: PlayerSession, killer: PlayerSession): void {
         killer.achievement(
             Message.t('KILLED_PLAYER', { victim: victim.getPlayer().username }),

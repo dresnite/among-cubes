@@ -28,6 +28,19 @@
   });
 
   hytopia.onData(data => {
+    if (data.roleBar) {
+      document.getElementById('role').textContent = data.roleBar.role || '';
+      document.getElementById('role-display').style.display = 'flex';
+
+      if (window.roleTimeout) {
+        clearTimeout(window.roleTimeout);
+      }
+
+      window.roleTimeout = setTimeout(() => {
+        document.getElementById('role-display').style.display = 'none';
+      }, data.roleBar.milliseconds || 1000);
+    }
+
     if (data.statusBar) {
       document.getElementById('coins').textContent = data.statusBar.coins || '0';
 
