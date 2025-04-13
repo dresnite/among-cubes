@@ -1,4 +1,5 @@
 import { Message } from "../../messages/Message";
+import { PlayerRole } from "../../player/PlayerRole";
 import type { PlayerSession } from "../../player/PlayerSession";
 import { MINIMUM_PLAYERS_TO_START_GAME } from "../../utils/config";
 import type { Game } from "../Game";
@@ -45,6 +46,13 @@ export abstract class Phase {
                 4000
             );
         }
-    }   
+    }
+
+    makeSurePlayersHaveNoKnife(): void {
+        for (const playerSession of this.game.getPlayerSessions()) {
+            playerSession.setRole(PlayerRole.CREW);
+            playerSession.setupKnifeVisibility();
+        }
+    }
 
 }

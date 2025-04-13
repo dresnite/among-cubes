@@ -6,7 +6,6 @@ import type { Game } from "../../Game";
 import { Phase } from "../Phase";
 import { PhaseType } from "../PhaseType";
 import { CountdownPhase } from "./CountdownPhase";
-import { InProgressPhase } from "./InProgressPhase";
 import { WaitingForPlayersPhase } from "./WaitingForPlayersPhase";
 
 export class MinimumPlayersReachedPhase extends Phase {
@@ -38,6 +37,7 @@ export class MinimumPlayersReachedPhase extends Phase {
 
     handleJoin(playerSession: PlayerSession): void {
         this.sendPlayerJoinAchievement(playerSession);
+        this.makeSurePlayersHaveNoKnife();
 
         if (this.game.getAvailableColors().length === 0) {
             this.game.setPhase(new CountdownPhase(this.game));

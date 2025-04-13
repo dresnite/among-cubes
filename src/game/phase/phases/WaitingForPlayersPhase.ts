@@ -1,5 +1,6 @@
 import { Main } from "../../../main";
 import { Message } from "../../../messages/Message";
+import { PlayerRole } from "../../../player/PlayerRole";
 import type { PlayerSession } from "../../../player/PlayerSession";
 import { MINIMUM_PLAYERS_TO_START_GAME } from "../../../utils/config";
 import { ColorType } from "../../color/ColorType";
@@ -28,6 +29,7 @@ export class WaitingForPlayersPhase extends Phase {
 
     handleJoin(playerSession: PlayerSession): void {
         this.sendPlayerJoinAchievement(playerSession);
+        this.makeSurePlayersHaveNoKnife();
         
         if (this.game.getPlayerSessions().length >= MINIMUM_PLAYERS_TO_START_GAME) {
             Main.getInstance().getWorld()?.chatManager.sendBroadcastMessage(Message.t('MINIMUM_PLAYERS_REACHED'))

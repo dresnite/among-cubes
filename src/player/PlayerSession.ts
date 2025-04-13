@@ -1,7 +1,7 @@
 import type { Player } from "hytopia";
 import type { Color } from "../game/color/Color";
 import type { Game } from "../game/Game";
-import { Entity, PlayerCameraMode, PlayerEntity } from "hytopia";
+import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent } from "hytopia";
 import { PlayerRole } from "./PlayerRole";
 import { Main } from "../main";
 
@@ -11,12 +11,16 @@ export class PlayerSession {
     game: Game | null
     color: Color | null
     role: PlayerRole | null
+    knife: Entity | null
+    knifeVisible: boolean
 
     constructor(player: Player) {
         this.player = player
         this.game = null
         this.color = null
         this.role = null
+        this.knife = null
+        this.knifeVisible = false
     }
 
     getPlayer(): Player {
@@ -79,23 +83,51 @@ export class PlayerSession {
                 modelScale: 0.5,
             });
             playerEntity.spawn(world, coords);
-        } else {
-            playerEntity = playerEntities[0]!;
-        }
 
-        if (this.role === PlayerRole.IMPOSTOR) {
-            const swordChildEntity = new Entity({
+            this.knife = new Entity({
                 name: 'sword',
                 modelUri: 'models/items/sword.gltf',
                 parent: playerEntity,
                 parentNodeName: 'hand_right_anchor', // attach it to the hand node of our parent model
             });
+            
+            // Initially hide the knife
+            this.knifeVisible = false;
+            this.setupKnifeVisibility();
 
-            swordChildEntity.spawn(
-                world,
+            this.setupPlayerEvents(playerEntity)
+        } else {
+            playerEntity = playerEntities[0]!;
+        }
+    }
+
+    setupPlayerEvents(playerEntity: PlayerEntity) {
+        playerEntity.controller?.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input }) => {
+            if (input.f) {
+                // Only allow toggling knife visibility for impostors
+                if (this.role === PlayerRole.IMPOSTOR) {
+                    this.knifeVisible = !this.knifeVisible;
+                    this.setupKnifeVisibility();
+                }
+
+                input.f = false; // Consume the input
+            }
+        });
+    }
+
+    setupKnifeVisibility() {
+        if (!this.knife) {
+            throw new Error("Knife is not set");
+        }
+
+        if (this.knifeVisible && !this.knife.isSpawned) {
+            this.knife.spawn(
+                Main.getInstance().getWorldOrThrow(),
                 { x: 0, y: 0.3, z: 0.5 }, // spawn with a position relative to the parent node
                 { x: -Math.PI / 3, y: 0, z: 0, w: 1 } // spawn with a rotation
             );
+        } else if (!this.knifeVisible && this.knife.isSpawned) {
+            this.knife.despawn();
         }
     }
 

@@ -33,8 +33,6 @@ export class InProgressPhase extends Phase {
                 );
                 playerSession.message(Message.t('YOU_ARE_CREW_CHAT'));
             }
-
-            playerSession.setupEntity();
         });
     }
 
