@@ -2,17 +2,20 @@ import type { Player } from "hytopia";
 import type { Color } from "../game/color/Color";
 import type { Game } from "../game/Game";
 import { PlayerCameraMode } from "hytopia";
+import type { PlayerRole } from "./PlayerRole";
 
 export class PlayerSession {
 
     player: Player
     game: Game | null
     color: Color | null
+    role: PlayerRole | null
 
     constructor(player: Player) {
         this.player = player
         this.game = null
         this.color = null
+        this.role = null
     }
 
     getPlayer(): Player {
@@ -33,6 +36,14 @@ export class PlayerSession {
 
     setColor(color: Color | null) {
         this.color = color
+    }
+
+    getRole(): PlayerRole | null {
+        return this.role
+    }
+
+    setRole(role: PlayerRole | null) {
+        this.role = role
     }
 
     reset() {

@@ -1,9 +1,17 @@
+import { Main } from "../../../main";
 import { Message } from "../../../messages/Message";
+import type { PlayerSession } from "../../../player/PlayerSession";
+import { MINIMUM_PLAYERS_TO_START_GAME } from "../../../utils/config";
 import { ColorType } from "../../color/ColorType";
 import { Phase } from "../Phase";
 import { PhaseType } from "../PhaseType";
+import { MinimumPlayersReachedPhase } from "./MinimumPlayersReachedPhase";
 
 export class WaitingForPlayersPhase extends Phase {
+
+    getTimeToStartWithMinimumPlayers(): number {
+        return 20
+    }
 
     getPhaseType(): PhaseType {
         return PhaseType.WAITING_FOR_PLAYERS;
@@ -14,7 +22,16 @@ export class WaitingForPlayersPhase extends Phase {
             playerSession.popup(Message.t('WAITING_FOR_PLAYERS', {
                 playerCount: this.game.getPlayerSessions().length.toString(),
                 maxPlayers: Object.keys(ColorType).length.toString()
-            }), 10000);
+            }));
+        }
+    }
+
+    handleJoin(playerSession: PlayerSession): void {
+        this.sendPlayerJoinAchievement(playerSession);
+        
+        if (this.game.getPlayerSessions().length >= MINIMUM_PLAYERS_TO_START_GAME) {
+            Main.getInstance().getWorld()?.chatManager.sendBroadcastMessage(Message.t('MINIMUM_PLAYERS_REACHED'))
+            this.game.setPhase(new MinimumPlayersReachedPhase(this.game));
         }
     }
 

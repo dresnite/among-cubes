@@ -9,4 +9,7 @@ export const en_en = {
     BROADCAST_4: "» If you are the Impostor, don't forget to hide your knife! Others can see it too!",
     BROADCAST_5: "» Saying GG at the end of the match gets you extra XP points!",
     BROADCAST_6: "» If the game ends before the impostor is found, the crew loses!",
+    MINIMUM_PLAYERS_REACHED_COUNTDOWN: "The game will start in {countdown} seconds",
+    COULD_NOT_START_WITH_MINIMUM_PLAYERS: "» A player left the game. The game could not start with minimum players, so waiting for players again...",
+    MINIMUM_PLAYERS_REACHED: "» We’ve got enough players — game starting soon!"
 }

@@ -1,10 +1,8 @@
-import { Main } from "../main";
 import type { PlayerSession } from "../player/PlayerSession";
 import { createUniqueId } from "../utils/math";
 import type { Color } from "./color/Color";
 import { ColorFactory } from "./color/ColorFactory";
 import type { Phase } from "./phase/Phase";
-import { InProgressPhase } from "./phase/phases/InProgressPhase";
 import { WaitingForPlayersPhase } from "./phase/phases/WaitingForPlayersPhase";
 
 export class Game {
@@ -29,12 +27,17 @@ export class Game {
         return this.playerSessions;
     }
 
+    getAvailableColors(): Color[] {
+        return this.availableColors;
+    }
+
     getPhase(): Phase {
         return this.phase;
     }
 
     setPhase(phase: Phase): void {
         this.phase = phase;
+        this.phase.handlePhaseStart();
     }
 
     handleGameRestart(): void {
@@ -46,10 +49,6 @@ export class Game {
         this.availableColors = ColorFactory.createColors();
         
         this.setPhase(new WaitingForPlayersPhase(this));
-    }
-
-    handleGameStart(): void {
-        this.setPhase(new InProgressPhase(this));
     }
 
     handlePlayerSessionJoin(playerSession: PlayerSession): void {
@@ -67,10 +66,6 @@ export class Game {
         playerSession.setColor(this.availableColors.shift()!);
 
         this.phase.handleJoin(playerSession);
-
-        if (this.availableColors.length === 0) {
-            this.handleGameStart();
-        }
     }
 
     handlePlayerSessionLeave(playerSession: PlayerSession): void {
