@@ -117,7 +117,7 @@ export class PlayerSession {
 
     setupKnifeVisibility() {
         if (!this.knife) {
-            throw new Error("Knife is not set");
+            return;
         }
 
         if (this.knifeVisible && !this.knife.isSpawned) {
