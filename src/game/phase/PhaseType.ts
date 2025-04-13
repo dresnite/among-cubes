@@ -3,5 +3,6 @@ export enum PhaseType {
     MINIMUM_PLAYERS_REACHED = 'minimum_players_reached',
     COUNTDOWN = 'countdown',
     IN_PROGRESS = 'in_progress',
+    VOTING = 'voting',
     ENDING = 'ending',
 }
