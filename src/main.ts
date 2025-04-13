@@ -13,6 +13,8 @@ import worldMap from '../assets/maps/themaze.json';
 import { PlayerSessionManager } from "./player/PlayerSessionManager";
 import { GameManager } from "./game/GameManager";
 import { Broadcaster } from "./utils/Broadcaster";
+import { BROADCASTER_FREQUENCY } from "./utils/config";
+
 export class Main {
 
   static instance: Main | null = null;
@@ -62,7 +64,7 @@ export class Main {
     this.playBackgroundMusic = this.playBackgroundMusic.bind(this);
     this.gameManager = new GameManager();
     this.playerSessionManager = new PlayerSessionManager();
-    this.broadcaster = new Broadcaster();
+    this.broadcaster = new Broadcaster(BROADCASTER_FREQUENCY);
   }
 
   loadGameWorld(world: World): void {

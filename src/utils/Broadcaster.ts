@@ -6,7 +6,7 @@ export class Broadcaster {
     interval: number;
     timeForNextBroadcast: number;
     
-    constructor(interval: number = 30) {
+    constructor(interval: number) {
         this.interval = interval;
         this.timeForNextBroadcast = interval;
     }
