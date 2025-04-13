@@ -1,3 +1,4 @@
+import { Main } from "../../main";
 import { Message } from "../../messages/Message";
 import { PlayerRole } from "../../player/PlayerRole";
 import type { PlayerSession } from "../../player/PlayerSession";
@@ -15,18 +16,24 @@ export abstract class Phase {
 
     abstract getPhaseType(): PhaseType;
 
-    abstract handleHeartbeat(): void;
+    handleHeartbeat(): void {
+        // do nothing by default
+    }
 
-    handlePhaseStart(): void {
-        // Do nothing by default
+    handleStart(): void {
+        // do nothing by default
     }
 
     handleJoin(playerSession: PlayerSession): void {
-        // Do nothing by default
+        // do nothing by default
     }
 
     handleLeave(playerSession: PlayerSession): void {
-        // Do nothing by default
+        // do nothing by default
+    }
+
+    handleDeath(victim: PlayerSession, killer: PlayerSession): void {
+        // do nothing by default
     }
 
     sendPlayerJoinAchievement(playerSession: PlayerSession): void {

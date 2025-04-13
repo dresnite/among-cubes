@@ -37,7 +37,7 @@ export class Game {
 
     setPhase(phase: Phase): void {
         this.phase = phase;
-        this.phase.handlePhaseStart();
+        this.phase.handleStart();
     }
 
     handleGameRestart(): void {

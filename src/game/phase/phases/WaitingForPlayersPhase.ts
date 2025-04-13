@@ -1,6 +1,5 @@
 import { Main } from "../../../main";
 import { Message } from "../../../messages/Message";
-import { PlayerRole } from "../../../player/PlayerRole";
 import type { PlayerSession } from "../../../player/PlayerSession";
 import { MINIMUM_PLAYERS_TO_START_GAME } from "../../../utils/config";
 import { ColorType } from "../../color/ColorType";

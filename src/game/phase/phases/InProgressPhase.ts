@@ -3,6 +3,8 @@ import { PhaseType } from "../PhaseType";
 import { PlayerRole } from "../../../player/PlayerRole";
 import { Message } from "../../../messages/Message";
 import { Main } from "../../../main";
+import type { PlayerSession } from "../../../player/PlayerSession";
+import { EndingPhase } from "./EndingPhase";
 
 export class InProgressPhase extends Phase {
 
@@ -10,7 +12,7 @@ export class InProgressPhase extends Phase {
         return PhaseType.IN_PROGRESS;
     }
 
-    handlePhaseStart(): void {
+    handleStart(): void {
         const playerSessions = this.game.getPlayerSessions();
         const randomIndex = Math.floor(Math.random() * playerSessions.length);
 
@@ -35,17 +37,17 @@ export class InProgressPhase extends Phase {
             if (index === randomIndex) {
                 playerSession.setRole(PlayerRole.IMPOSTOR);
                 playerSession.achievement(
-                    Message.t('YOU_ARE_IMPOSTOR'), 
-                    Message.t('YOU_ARE_IMPOSTOR_SUBTITLE'), 
+                    Message.t('YOU_ARE_IMPOSTOR'),
+                    Message.t('YOU_ARE_IMPOSTOR_SUBTITLE'),
                     'impostor.png',
                     5000
                 );
                 playerSession.message(Message.t('YOU_ARE_IMPOSTOR_CHAT'));
             } else {
-                playerSession.setRole(PlayerRole.CREW); 
+                playerSession.setRole(PlayerRole.CREW);
                 playerSession.achievement(
-                    Message.t('YOU_ARE_CREW'), 
-                    Message.t('YOU_ARE_CREW_SUBTITLE'), 
+                    Message.t('YOU_ARE_CREW'),
+                    Message.t('YOU_ARE_CREW_SUBTITLE'),
                     'crew.png',
                     5000
                 );
@@ -57,8 +59,41 @@ export class InProgressPhase extends Phase {
         });
     }
 
-    handleHeartbeat(): void {
-        // TODO: Implement heartbeat for in progress phase
+    handleDeath(victim: PlayerSession, killer: PlayerSession): void {
+        killer.achievement(
+            Message.t('KILLED_PLAYER', { victim: victim.getPlayer().username }),
+            Message.t('KILLED_PLAYER_SUBTITLE'),
+            'swords.png',
+            5000
+        );
+
+        victim.title(
+            Message.t('YOU_WERE_KILLED', { killer: killer.getPlayer().username }),
+            5000
+        );
+
+        victim.message(Message.t('YOU_WERE_KILLED_MESSAGE', { killer: killer.getPlayer().username }));
+
+        victim.teleportToWaitingRoom();
+        this.game.handlePlayerSessionLeave(victim)
+
+        // Add victim to next game
+        Main.getInstance().getGameManager().assignPlayerSessionToGame(victim);
+    }
+
+    handleLeave(playerSession: PlayerSession): void {
+        const victimsAlive = this.game.getPlayerSessions().filter(session => session.getRole() === PlayerRole.CREW);
+        const impostorAlive = this.game.getPlayerSessions().filter(session => session.getRole() === PlayerRole.IMPOSTOR);
+        
+        if (victimsAlive.length === 0) {
+            this.game.setPhase(new EndingPhase(this.game, false));
+            return
+        }
+
+        if (impostorAlive.length === 0) {
+            this.game.setPhase(new EndingPhase(this.game, true));
+            return
+        }
     }
 
 }

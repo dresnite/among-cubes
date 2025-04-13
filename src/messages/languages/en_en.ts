@@ -17,5 +17,14 @@ export const en_en = {
     YOU_ARE_IMPOSTOR_SUBTITLE: "Kill the crew and sabotage the ship!",
     YOU_ARE_CREW_CHAT: "» You are the Crew! Find the Impostor and vote them out!",
     YOU_ARE_CREW: "You are the Crew!",
-    YOU_ARE_CREW_SUBTITLE: "Find the Impostor and vote them out!"
+    YOU_ARE_CREW_SUBTITLE: "Find the Impostor and vote them out!",
+    KILLED_PLAYER: "You killed {victim}!",
+    KILLED_PLAYER_SUBTITLE: "You earned XP points!",
+    YOU_WERE_KILLED: "You were killed by {killer}!",
+    YOU_WERE_KILLED_MESSAGE: "» You were killed by the impostor! ({killer})",
+    CREW_WON: "The crew won!",
+    IMPOSTOR_WON: "The impostor won!",
+    NEXT_GAME_STARTING_COUNTDOWN: "Next game in {countdown} seconds",
+    CONGRATULATIONS_ON_WIN: "Congratulations on winning!",
+    TRY_HARDER_NEXT_TIME: "Try harder next time!"
 }

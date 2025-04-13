@@ -60,6 +60,16 @@ export class PlayerSession {
     reset() {
         this.setGame(null)
         this.setColor(null)
+        this.setRole(PlayerRole.CREW)
+        this.setKnifeVisible(false)
+    }
+
+    getKnifeVisible(): boolean {
+        return this.knifeVisible
+    }
+
+    setKnifeVisible(visible: boolean) {
+        this.knifeVisible = visible
     }
 
     setupCamera() {
@@ -134,12 +144,8 @@ export class PlayerSession {
                     const hitPlayer = ray.hitEntity.player;
                     const hitSession = Main.getInstance().getPlayerSessionManager().getSession(hitPlayer);
                     
-                    if (hitSession?.role === PlayerRole.CREW) {
-                        // Send a message when an impostor with knife clicks on a crew member
-                        Main.getInstance().getWorldOrThrow().chatManager.sendBroadcastMessage(
-                            `${this.player.username} clicked on ${hitPlayer.username}!`,
-                            'FF0000'
-                        );
+                    if (this.game && hitSession?.role === PlayerRole.CREW && hitSession.getGame()?.getUniqueId() === this.game.getUniqueId()) {
+                        this.game.getPhase().handleDeath(hitSession, this);
                     }
                 }
 
