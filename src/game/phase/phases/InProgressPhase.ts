@@ -20,7 +20,8 @@ export class InProgressPhase extends Phase {
                 playerSession.achievement(
                     Message.t('YOU_ARE_IMPOSTOR'), 
                     Message.t('YOU_ARE_IMPOSTOR_SUBTITLE'), 
-                    'impostor.png'
+                    'impostor.png',
+                    5000
                 );
                 playerSession.message(Message.t('YOU_ARE_IMPOSTOR_CHAT'));
             } else {
@@ -28,7 +29,8 @@ export class InProgressPhase extends Phase {
                 playerSession.achievement(
                     Message.t('YOU_ARE_CREW'), 
                     Message.t('YOU_ARE_CREW_SUBTITLE'), 
-                    'crew.png'
+                    'crew.png',
+                    5000
                 );
                 playerSession.message(Message.t('YOU_ARE_CREW_CHAT'));
             }

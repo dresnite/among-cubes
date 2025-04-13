@@ -41,7 +41,7 @@ export abstract class Phase {
                 Message.t('JOINED_GAME_SUBTITLE', {
                     playersLeftCount: (MINIMUM_PLAYERS_TO_START_GAME - this.game.getPlayerSessions().length).toString()
                 }),
-                'achievement_join_game',
+                'player.png',
                 4000
             );
         }
