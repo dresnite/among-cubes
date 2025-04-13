@@ -14,6 +14,7 @@ export class PlayerSession {
     knife: Entity | null
     knifeVisible: boolean
     playerEntity: PlayerEntity | null
+    coins: number
 
     constructor(player: Player) {
         this.player = player
@@ -23,6 +24,7 @@ export class PlayerSession {
         this.knife = null
         this.knifeVisible = false
         this.playerEntity = null
+        this.coins = 0
     }
 
     getPlayer(): Player {
@@ -57,11 +59,24 @@ export class PlayerSession {
         return this.playerEntity
     }
 
+    getCoins(): number {
+        return this.coins
+    }
+
+    addCoin(): void {
+        this.coins++
+    }
+
+    resetCoins(): void {
+        this.coins = 0
+    }
+
     reset() {
         this.setGame(null)
         this.setColor(null)
         this.setRole(PlayerRole.CREW)
         this.setKnifeVisible(false)
+        this.resetCoins()
     }
 
     getKnifeVisible(): boolean {
@@ -200,12 +215,25 @@ export class PlayerSession {
         })
     }
 
+    statusBar({ coins, time, milliseconds }: { coins: number, time?: string, milliseconds: number }) {
+        this.player.ui.sendData({
+            statusBar: {
+                coins,
+                time,
+                milliseconds
+            }
+        })
+    }
     teleportToWaitingRoom(): void {
         this.playerEntity?.setPosition(Main.getInstance().getGameMap().getWaitingRoomCloseCoords());
     }
 
     teleportToSpawnCoords(): void {
         this.playerEntity?.setPosition(Main.getInstance().getGameMap().getMapSpawnCoords());
+    }
+
+    teleportToVotingArea(): void {
+        this.playerEntity?.setPosition(Main.getInstance().getGameMap().getVotingAreaCloseCoords());
     }
 
 }

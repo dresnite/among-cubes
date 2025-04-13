@@ -28,12 +28,28 @@
   });
 
   hytopia.onData(data => {
-    if (data.coins) {
-      document.getElementById('coins').textContent = data.coins;
-    }
+    if (data.statusBar) {
+      document.getElementById('coins').textContent = data.statusBar.coins || '0';
 
-    if (data.time) {
-      document.getElementById('time').textContent = data.time;
+      if (data.statusBar.time) {
+        document.getElementById('time').textContent = data.statusBar.time || '';
+        document.getElementById('time').style.display = 'inline';
+        document.getElementById('time-icon').style.display = 'inline';
+      } else {
+        document.getElementById('time').textContent = '';
+        document.getElementById('time').style.display = 'none';
+        document.getElementById('time-icon').style.display = 'none';
+      }
+
+      document.getElementById('status-bar-container').style.display = 'flex';
+
+      if (window.statusBarTimeout) {
+        clearTimeout(window.statusBarTimeout);
+      }
+
+      window.statusBarTimeout = setTimeout(() => {
+        document.getElementById('status-bar-container').style.display = 'none';
+      }, data.statusBar.milliseconds || 1000);
     }
 
     if (data.role) {
@@ -62,14 +78,6 @@
         titleDisplay.classList.remove('fade-in');
         titleDisplay.classList.add('fade-out');
       }, duration);
-    }
-
-    if (data.hideTopRightUI) {
-      document.getElementById('top-right-ui').style.display = 'none';
-    }
-
-    if (data.hideTopRightUI === false) {
-      document.getElementById('top-right-ui').style.display = 'flex';
     }
 
     if (data.achievement) {
@@ -135,12 +143,12 @@
       <div class="achievement-subtitle" id="achievement-subtitle"></div>
     </div>
   </div>
-  <div class="top-right-ui" id="top-right-ui">
-    <div class="top-right-display">
+  <div class="status-bar-container" id="status-bar-container">
+    <div class="status-bar-display">
       <img class="wh-24" src="{{CDN_ASSETS_URL}}/icons/coin.png" alt="Coins" />
       <span class="golden-text" id="coins"></span>
 
-      <img class="wh-28" src="{{CDN_ASSETS_URL}}/icons/clock.png" alt="Time" />
+      <img class="wh-28" src="{{CDN_ASSETS_URL}}/icons/clock.png" alt="Time" id="time-icon" />
       <span class="white-text text-2xl underline" id="time"></span>
     </div>
   </div>
@@ -199,17 +207,17 @@
     text-transform: uppercase;
   }
 
-  .top-right-ui {
+  .status-bar-container {
     position: fixed;
     top: 20px;
     right: 20px;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 10px;
     align-items: flex-end;
   }
 
-  .top-right-display {
+  .status-bar-display {
     background: rgba(0, 0, 0, 0.7);
     border-radius: 8px;
     padding: 8px 12px;
