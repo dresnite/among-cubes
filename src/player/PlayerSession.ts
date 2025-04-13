@@ -63,9 +63,9 @@ export class PlayerSession {
         // shift camrea up on Y axis so we see from "head" perspective.
         this.player.camera.setOffset({ x: 0, y: 0.4, z: 0 });
         // hide the head node from the model so we don't see it in the camera, this is just hidden for the controlling player.
-        this.player.camera.setModelHiddenNodes(['head', 'neck']);
+        this.player.camera.setModelHiddenNodes(['head', 'neck', 'torso']);
         // Shift the camera forward so we are looking slightly in front of where the player is looking.
-        this.player.camera.setForwardOffset(0.3);
+        this.player.camera.setForwardOffset(0);
     }
 
     setupEntity() {
