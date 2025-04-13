@@ -1,4 +1,4 @@
-import { Main } from "../main";
+import { Main } from "../Main";
 import { Message } from "../messages/Message";
 
 export class Broadcaster {

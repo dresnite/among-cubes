@@ -3,7 +3,7 @@ import type { Color } from "../game/color/Color";
 import type { Game } from "../game/Game";
 import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent } from "hytopia";
 import { PlayerRole } from "./PlayerRole";
-import { Main } from "../main";
+import { Main } from "../Main";
 import { Message } from "../messages/Message";
 
 export class PlayerSession {

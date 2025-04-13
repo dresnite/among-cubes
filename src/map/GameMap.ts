@@ -1,5 +1,4 @@
 import type { Vector3Like } from "hytopia";
-import type { ColorType } from "../game/color/ColorType";
 
 export abstract class GameMap {
 

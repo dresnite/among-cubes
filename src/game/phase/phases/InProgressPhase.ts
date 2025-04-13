@@ -2,7 +2,7 @@ import { Phase } from "../Phase";
 import { PhaseType } from "../PhaseType";
 import { PlayerRole } from "../../../player/PlayerRole";
 import { Message } from "../../../messages/Message";
-import { Main } from "../../../main";
+import { Main } from "../../../Main";
 import type { PlayerSession } from "../../../player/PlayerSession";
 import { EndingPhase } from "./EndingPhase";
 import { KNIFE_USE_COOLDOWN } from "../../../utils/config";
