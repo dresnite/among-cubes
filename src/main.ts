@@ -21,11 +21,11 @@ export class Main {
 
   static instance: Main | null = null;
 
-  world: World | null = null;
-  gameManager: GameManager;
-  playerSessionManager: PlayerSessionManager;
-  broadcaster: Broadcaster;
-  gameMap: GameMap;
+  private _world: World | null = null;
+  private _gameManager: GameManager;
+  private _playerSessionManager: PlayerSessionManager;
+  private _broadcaster: Broadcaster;
+  private _gameMap: GameMap;
 
 
   static initialize(world: World) {
@@ -45,46 +45,66 @@ export class Main {
   }
 
   getWorld(): World | null {
-    return this.world;
+    return this._world;
   }
 
   getWorldOrThrow(): World {
-    if (!this.world) {
+    if (!this._world) {
       throw new Error('World not loaded');
     }
 
-    return this.world;
+    return this._world;
   }
 
   getGameManager(): GameManager {
-    return this.gameManager;
+    return this._gameManager;
   }
 
   getPlayerSessionManager(): PlayerSessionManager {
-    return this.playerSessionManager;
+    return this._playerSessionManager;
   }
 
   getGameMap(): GameMap {
-    return this.gameMap;
+    return this._gameMap;
   }
 
   constructor() {
-    this.playBackgroundMusic = this.playBackgroundMusic.bind(this);
-    this.gameManager = new GameManager();
-    this.playerSessionManager = new PlayerSessionManager();
-    this.broadcaster = new Broadcaster(BROADCASTER_FREQUENCY);
-    this.gameMap = new TheMaze();
+    this._gameManager = new GameManager();
+    this._playerSessionManager = new PlayerSessionManager();
+    this._broadcaster = new Broadcaster(BROADCASTER_FREQUENCY);
+    this._gameMap = new TheMaze();
   }
 
-  loadGameWorld(world: World): void {
-    this.world = world;
+  private loadGameWorld(world: World): void {
+    this._world = world;
 
     world.loadMap(worldMap);
+    this.setupWorldEvents();
+  }
 
-    world.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
-      const session = this.playerSessionManager.openSession(player)
-      
-      this.gameManager.assignPlayerSessionToGame(session);
+  private playBackgroundMusic(world: World): void {
+    new Audio({
+      uri: 'audio/music/among-cubes-theme.mp3',
+      loop: true,
+      volume: 0.1,
+    }).play(world);
+  }
+
+  private setupHeartbeat(): void {
+    setInterval(() => {
+      for (const game of this._gameManager.getGames().values()) {
+        game.getPhase().handleHeartbeat();
+      }
+
+      this._broadcaster.handleHeartbeat();
+    }, 1000);
+  }
+
+  private setupWorldEvents(): void {
+    this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
+      const session = this._playerSessionManager.openSession(player)
+
+      this._gameManager.assignPlayerSessionToGame(session);
 
       session.setupEntity();
       session.setupCamera();
@@ -108,7 +128,7 @@ export class Main {
               tag: 'aggro-sensor',
               onCollision: (other: BlockType | Entity, started: boolean) => {
                 if (started && other instanceof PlayerEntity) {
-                  world.chatManager.sendPlayerMessage(other.player, 'You found a coin!!', 'FFE4E1');
+                  this._world?.chatManager.sendPlayerMessage(other.player, 'You found a coin!!', 'FFE4E1');
                   //coinEntity.despawn();
                 }
               },
@@ -116,41 +136,23 @@ export class Main {
           ]
         },
       });
-      coinEntity.spawn(world, { x: 10, y: 10, z: 0 });
+      coinEntity.spawn(this._world!, { x: 10, y: 10, z: 0 });
 
       coinEntity.on(EntityEvent.ENTITY_COLLISION, ({ otherEntity }) => {
         if (otherEntity instanceof PlayerEntity) {
-          world.chatManager.sendPlayerMessage(otherEntity.player, 'You found a coin!', 'FFE4E1');
+          this._world?.chatManager.sendPlayerMessage(otherEntity.player, 'You found a coin!', 'FFE4E1');
           coinEntity.despawn();
         }
       });
     });
 
-    world.on(PlayerEvent.LEFT_WORLD, ({ player }) => {
-      world.entityManager.getPlayerEntitiesByPlayer(player).forEach(entity => entity.despawn());
+    this._world?.on(PlayerEvent.LEFT_WORLD, ({ player }) => {
+      this._world?.entityManager.getPlayerEntitiesByPlayer(player).forEach(entity => entity.despawn());
 
-      const session = this.playerSessionManager.getSessionOrThrow(player)
+      const session = this._playerSessionManager.getSessionOrThrow(player)
       session.game?.handlePlayerSessionLeave(session)
-      this.playerSessionManager.closeSession(player)
+      this._playerSessionManager.closeSession(player)
     })
-  }
-
-  playBackgroundMusic(world: World): void {
-    new Audio({
-      uri: 'audio/music/among-cubes-theme.mp3',
-      loop: true,
-      volume: 0.1,
-    }).play(world);
-  }
-
-  setupHeartbeat(): void {
-    setInterval(() => {
-      for (const game of this.gameManager.getGames().values()) {
-          game.getPhase().handleHeartbeat();
-      }
-
-      this.broadcaster.handleHeartbeat();
-  }, 1000);
   }
 
 }
