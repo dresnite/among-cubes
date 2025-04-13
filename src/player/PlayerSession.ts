@@ -1,8 +1,8 @@
 import type { Player } from "hytopia";
 import type { Color } from "../game/color/Color";
 import type { Game } from "../game/Game";
-import { PlayerCameraMode } from "hytopia";
-import type { PlayerRole } from "./PlayerRole";
+import { Entity, PlayerCameraMode, PlayerEntity } from "hytopia";
+import { PlayerRole } from "./PlayerRole";
 import { Main } from "../main";
 
 export class PlayerSession {
@@ -62,6 +62,41 @@ export class PlayerSession {
         this.player.camera.setModelHiddenNodes(['head', 'neck']);
         // Shift the camera forward so we are looking slightly in front of where the player is looking.
         this.player.camera.setForwardOffset(0.3);
+    }
+
+    setupEntity() {
+        const world = Main.getInstance().getWorldOrThrow();
+        const playerEntities = world.entityManager.getPlayerEntitiesByPlayer(this.player);
+
+        const coords = { x: 0, y: 10, z: 0 };
+        let playerEntity: PlayerEntity;
+        if (playerEntities.length === 0) {
+            playerEntity = new PlayerEntity({
+                player: this.player,
+                name: 'Player',
+                modelUri: this.color!.getSkinPath(),
+                modelLoopedAnimations: ['idle'],
+                modelScale: 0.5,
+            });
+            playerEntity.spawn(world, coords);
+        } else {
+            playerEntity = playerEntities[0]!;
+        }
+
+        if (this.role === PlayerRole.IMPOSTOR) {
+            const swordChildEntity = new Entity({
+                name: 'sword',
+                modelUri: 'models/items/sword.gltf',
+                parent: playerEntity,
+                parentNodeName: 'hand_right_anchor', // attach it to the hand node of our parent model
+            });
+
+            swordChildEntity.spawn(
+                world,
+                { x: 0, y: 0.3, z: 0.5 }, // spawn with a position relative to the parent node
+                { x: -Math.PI / 3, y: 0, z: 0, w: 1 } // spawn with a rotation
+            );
+        }
     }
 
     message(message: string) {

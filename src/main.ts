@@ -74,21 +74,14 @@ export class Main {
 
     world.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
       const session = this.playerSessionManager.openSession(player)
+      
       this.gameManager.assignPlayerSessionToGame(session);
 
-      const playerEntity = new PlayerEntity({
-        player,
-        name: 'Player',
-        modelUri: session.color!.getSkinPath(),
-        modelLoopedAnimations: ['idle'],
-        modelScale: 0.5,
-      });
-
-      playerEntity.spawn(world, { x: 0, y: 10, z: 0 });
+      session.setupEntity();
+      session.setupCamera();
 
       // Load our game UI for this player
       player.ui.load('ui/index.html');
-      session.setupCamera();
 
       const coinEntity = new Entity({
         modelUri: 'models/environment/coin2.glb',
