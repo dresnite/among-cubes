@@ -1,7 +1,7 @@
 import { Main } from "../../../main";
 import { Message } from "../../../messages/Message";
 import type { PlayerSession } from "../../../player/PlayerSession";
-import { MINIMUM_PLAYERS_TO_START_GAME } from "../../../utils/config";
+import { COUNTDOWN_TO_START_WITH_MINIMUM_PLAYERS, MINIMUM_PLAYERS_TO_START_GAME } from "../../../utils/config";
 import type { Game } from "../../Game";
 import { Phase } from "../Phase";
 import { PhaseType } from "../PhaseType";
@@ -15,11 +15,7 @@ export class MinimumPlayersReachedPhase extends Phase {
 
     constructor(game: Game) {
         super(game);
-        this.countdown = this.getCountdownInitialValue();
-    }
-
-    getCountdownInitialValue(): number {
-        return 20;
+        this.countdown = COUNTDOWN_TO_START_WITH_MINIMUM_PLAYERS;
     }
 
     getPhaseType(): PhaseType {
@@ -54,4 +50,5 @@ export class MinimumPlayersReachedPhase extends Phase {
             this.game.setPhase(new WaitingForPlayersPhase(this.game));
         }
     }
+    
 }   

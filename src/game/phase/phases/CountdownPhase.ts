@@ -1,5 +1,5 @@
 import type { PlayerSession } from "../../../player/PlayerSession";
-import { MINIMUM_PLAYERS_TO_START_GAME } from "../../../utils/config";
+import { COUNTDOWN_START_GAME, MINIMUM_PLAYERS_TO_START_GAME } from "../../../utils/config";
 import type { Game } from "../../Game";
 import { Phase } from "../Phase";
 import { PhaseType } from "../PhaseType";
@@ -12,7 +12,7 @@ export class CountdownPhase extends Phase {
 
     constructor(game: Game) {
         super(game);
-        this.countdown = 10;
+        this.countdown = COUNTDOWN_START_GAME;
     }
 
     getPhaseType(): PhaseType {
