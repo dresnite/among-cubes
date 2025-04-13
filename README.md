@@ -24,3 +24,6 @@ The game progresses through rounds of action and discussion. When a player disco
 
 During these meetings, players share information, defend themselves, and ultimately vote on who they believe is the Impostor. The player with the most votes is eliminated - choose wisely, as voting out a fellow Crew member only helps the Impostor's cause!
 
+## Developer documentation
+
+If you want to contribute or understand how the project works internally, go to the [Developer Documentation](docs/README.md).
