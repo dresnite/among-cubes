@@ -13,7 +13,24 @@ export class InProgressPhase extends Phase {
         const playerSessions = this.game.getPlayerSessions();
         const randomIndex = Math.floor(Math.random() * playerSessions.length);
 
+        // Calculate circle parameters so the players can spawn around the circle
+        const radius = 5; // 5 units radius for the circle
+        const centerPoint = { x: 0, y: 3, z: 0 };
+        const angleStep = (2 * Math.PI) / playerSessions.length;
+
         playerSessions.forEach((playerSession, index) => {
+            // Calculate position on the circle for the player
+            const angle = angleStep * index;
+            const position = {
+                x: centerPoint.x + radius * Math.cos(angle),
+                y: centerPoint.y,
+                z: centerPoint.z + radius * Math.sin(angle)
+            };
+
+            // Set player position
+            playerSession.getPlayerEntity()?.setPosition(position);
+
+            // Set player role and show appropriate message
             if (index === randomIndex) {
                 playerSession.setRole(PlayerRole.IMPOSTOR);
                 playerSession.achievement(
@@ -33,6 +50,9 @@ export class InProgressPhase extends Phase {
                 );
                 playerSession.message(Message.t('YOU_ARE_CREW_CHAT'));
             }
+
+            // Make players face the center
+            //playerSession.getPlayer().camera.lookAtPosition(centerPoint);
         });
     }
 

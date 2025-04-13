@@ -13,6 +13,7 @@ export class PlayerSession {
     role: PlayerRole | null
     knife: Entity | null
     knifeVisible: boolean
+    playerEntity: PlayerEntity | null
 
     constructor(player: Player) {
         this.player = player
@@ -21,6 +22,7 @@ export class PlayerSession {
         this.role = null
         this.knife = null
         this.knifeVisible = false
+        this.playerEntity = null
     }
 
     getPlayer(): Player {
@@ -51,6 +53,10 @@ export class PlayerSession {
         this.role = role
     }
 
+    getPlayerEntity(): PlayerEntity | null {
+        return this.playerEntity
+    }
+
     reset() {
         this.setGame(null)
         this.setColor(null)
@@ -73,21 +79,21 @@ export class PlayerSession {
         const playerEntities = world.entityManager.getPlayerEntitiesByPlayer(this.player);
 
         const coords = { x: 0, y: 10, z: 0 };
-        let playerEntity: PlayerEntity;
+
         if (playerEntities.length === 0) {
-            playerEntity = new PlayerEntity({
+            this.playerEntity = new PlayerEntity({
                 player: this.player,
                 name: 'Player',
                 modelUri: this.color!.getSkinPath(),
                 modelLoopedAnimations: ['idle'],
                 modelScale: 0.5,
             });
-            playerEntity.spawn(world, coords);
+            this.playerEntity.spawn(world, coords);
 
             this.knife = new Entity({
                 name: 'sword',
                 modelUri: 'models/items/sword.gltf',
-                parent: playerEntity,
+                parent: this.playerEntity,
                 parentNodeName: 'hand_right_anchor', // attach it to the hand node of our parent model
             });
             
@@ -95,9 +101,9 @@ export class PlayerSession {
             this.knifeVisible = false;
             this.setupKnifeVisibility();
 
-            this.setupPlayerEvents(playerEntity)
+            this.setupPlayerEvents(this.playerEntity)
         } else {
-            playerEntity = playerEntities[0]!;
+            this.playerEntity = playerEntities[0]!;
         }
     }
 
