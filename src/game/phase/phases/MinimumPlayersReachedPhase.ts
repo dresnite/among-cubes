@@ -1,7 +1,7 @@
 import { Main } from "../../../main";
 import { Message } from "../../../messages/Message";
 import type { PlayerSession } from "../../../player/PlayerSession";
-import { COUNTDOWN_TO_START_WITH_MINIMUM_PLAYERS, MINIMUM_PLAYERS_TO_START_GAME } from "../../../utils/config";
+import { COUNTDOWN_START_GAME, COUNTDOWN_TO_START_WITH_MINIMUM_PLAYERS, MINIMUM_PLAYERS_TO_START_GAME } from "../../../utils/config";
 import type { Game } from "../../Game";
 import { Phase } from "../Phase";
 import { PhaseType } from "../PhaseType";
@@ -27,7 +27,7 @@ export class MinimumPlayersReachedPhase extends Phase {
         if (this.countdown > 0) {
             for (const playerSession of this.game.getPlayerSessions()) {
                 playerSession.popup(Message.t('MINIMUM_PLAYERS_REACHED_COUNTDOWN', {
-                    countdown: this.countdown.toString()
+                    countdown: (this.countdown + COUNTDOWN_START_GAME - 1).toString()
                 }));
             }
         } else {
