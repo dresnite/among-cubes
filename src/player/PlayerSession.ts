@@ -112,6 +112,33 @@ export class PlayerSession {
 
                 input.f = false; // Consume the input
             }
+
+            // Handle left mouse click for impostor kills
+            if (input.ml && this.role === PlayerRole.IMPOSTOR && this.knifeVisible) {
+                // Cast a ray to detect clicked players
+                const ray = Main.getInstance().getWorldOrThrow().simulation.raycast(
+                    playerEntity.position,
+                    this.player.camera.facingDirection,
+                    3, // 3-meter range for kills
+                    { filterExcludeRigidBody: playerEntity.rawRigidBody }
+                );
+
+                if (ray?.hitEntity instanceof PlayerEntity) {
+                    const hitPlayer = ray.hitEntity.player;
+                    const hitSession = Main.getInstance().getPlayerSessionManager().getSession(hitPlayer);
+                    
+                    if (hitSession?.role === PlayerRole.CREW) {
+                        // Send a message when an impostor with knife clicks on a crew member
+                        Main.getInstance().getWorldOrThrow().chatManager.sendBroadcastMessage(
+                            `${this.player.username} clicked on ${hitPlayer.username}!`,
+                            'FF0000'
+                        );
+                    }
+                }
+
+                //do not consume the input, so the player click animation plays
+                //input.ml = false;
+            }
         });
     }
 
