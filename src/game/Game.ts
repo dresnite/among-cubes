@@ -16,7 +16,7 @@ export class Game {
         this._uniqueId = createUniqueId();
         this._phase = new WaitingForPlayersPhase(this);
 
-        this.handleGameRestart();
+        this.restart();
     }
 
     public getUniqueId(): string {
@@ -37,12 +37,12 @@ export class Game {
 
     public setPhase(phase: Phase): void {
         this._phase = phase;
-        this._phase.handleStart();
+        this._phase.onStart();
     }
 
-    public handleGameRestart(): void {
+    public restart(): void {
         for (const playerSession of this._playerSessions) {
-            this.handlePlayerSessionLeave(playerSession);
+            this.removePlayer(playerSession);
         }
 
         this._playerSessions = [];
@@ -51,7 +51,7 @@ export class Game {
         this.setPhase(new WaitingForPlayersPhase(this));
     }
 
-    public handlePlayerSessionJoin(playerSession: PlayerSession): void {
+    public addPlayer(playerSession: PlayerSession): void {
         if (playerSession.getGame() !== null) {
             throw new Error('Player session is already in a game');
         }
@@ -65,10 +65,10 @@ export class Game {
         playerSession.setGame(this);
         playerSession.setColor(this._availableColors.shift()!);
 
-        this._phase.handleJoin(playerSession);
+        this._phase.onJoin(playerSession);
     }
 
-    public handlePlayerSessionLeave(playerSession: PlayerSession): void {
+    public removePlayer(playerSession: PlayerSession): void {
         if (playerSession.getGame() !== this) {
             throw new Error('Player session is not in this game');
         }
@@ -84,6 +84,7 @@ export class Game {
         this._availableColors.push(color);
         playerSession.reset();
 
-        this._phase.handleLeave(playerSession);
+        this._phase.onLeave(playerSession);
     }
+
 }

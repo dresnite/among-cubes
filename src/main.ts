@@ -93,7 +93,7 @@ export class Main {
   private _setupHeartbeat(): void {
     setInterval(() => {
       for (const game of this._gameManager.getGames().values()) {
-        game.getPhase().handleHeartbeat();
+        game.getPhase().onHeartbeat();
       }
 
       this._broadcaster.handleHeartbeat();
@@ -150,7 +150,7 @@ export class Main {
       this._world?.entityManager.getPlayerEntitiesByPlayer(player).forEach(entity => entity.despawn());
 
       const session = this._playerSessionManager.getSessionOrThrow(player)
-      session.getGame()?.handlePlayerSessionLeave(session)
+      session.getGame()?.removePlayer(session)
       this._playerSessionManager.closeSession(player)
     })
   }

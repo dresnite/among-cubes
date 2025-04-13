@@ -7,7 +7,7 @@ export class VotingPhase extends Phase {
         return PhaseType.VOTING;
     }
 
-    public handleStart(): void {
+    public onStart(): void {
         for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.teleportToVotingArea();
         }

@@ -172,7 +172,7 @@ export class PlayerSession {
                     const hitSession = Main.getInstance().getPlayerSessionManager().getSession(hitPlayer);
                     
                     if (this._game && hitSession?._role === PlayerRole.CREW && hitSession.getGame()?.getUniqueId() === this._game.getUniqueId()) {
-                        this._game.getPhase().handleDeath(hitSession, this);
+                        this._game.getPhase().onDeath(hitSession, this);
                     }
                 }
 

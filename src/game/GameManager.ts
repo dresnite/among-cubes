@@ -45,7 +45,7 @@ export class GameManager {
             suitableGame = this._createGame();
         }
 
-        suitableGame.handlePlayerSessionJoin(playerSession);
+        suitableGame.addPlayer(playerSession);
 
         return suitableGame;
     }

@@ -22,18 +22,18 @@ export class EndingPhase extends Phase {
         return PhaseType.ENDING;
     }
 
-    public handleStart(): void {
+    public onStart(): void {
         for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.teleportToWaitingRoom();
         }
     }
 
-    public handleHeartbeat(): void {
+    public onHeartbeat(): void {
         this._timeToEnd--;
 
         if (this._timeToEnd <= 0) {
             for (const playerSession of this._game.getPlayerSessions()) {
-                this._game.handlePlayerSessionLeave(playerSession);
+                this._game.removePlayer(playerSession);
                 Main.getInstance().getGameManager().assignPlayerSessionToGame(playerSession);
             }
 

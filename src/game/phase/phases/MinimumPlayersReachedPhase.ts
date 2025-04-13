@@ -21,7 +21,7 @@ export class MinimumPlayersReachedPhase extends Phase {
         return PhaseType.MINIMUM_PLAYERS_REACHED;
     }
 
-    public handleHeartbeat(): void {
+    public onHeartbeat(): void {
         this._countdown--;
 
         if (this._countdown > 0) {
@@ -35,7 +35,7 @@ export class MinimumPlayersReachedPhase extends Phase {
         }
     }
 
-    public handleJoin(playerSession: PlayerSession): void {
+    public onJoin(playerSession: PlayerSession): void {
         this.sendPlayerJoinAchievement(playerSession);
         this.makeSurePlayersHaveNoKnife();
 
@@ -44,7 +44,7 @@ export class MinimumPlayersReachedPhase extends Phase {
         }
     }
 
-    public handleLeave(playerSession: PlayerSession): void {
+    public onLeave(playerSession: PlayerSession): void {
         if (this._game.getPlayerSessions().length < MINIMUM_PLAYERS_TO_START_GAME) {
             Main.getInstance().getWorld()?.chatManager.sendBroadcastMessage(Message.t('COULD_NOT_START_WITH_MINIMUM_PLAYERS'))
             this._game.setPhase(new WaitingForPlayersPhase(this._game));

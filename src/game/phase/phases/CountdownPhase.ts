@@ -19,7 +19,7 @@ export class CountdownPhase extends Phase {
         return PhaseType.COUNTDOWN;
     }
 
-    public handleHeartbeat(): void {
+    public onHeartbeat(): void {
         if (this._countdown > 0) {
             this._countdown--;
 
@@ -31,7 +31,7 @@ export class CountdownPhase extends Phase {
         }
     }
 
-    public handleLeave(playerSession: PlayerSession): void {
+    public onLeave(playerSession: PlayerSession): void {
         if (this._game.getPlayerSessions().length < MINIMUM_PLAYERS_TO_START_GAME) {
             this._game.setPhase(new WaitingForPlayersPhase(this._game));
         }

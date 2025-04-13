@@ -13,7 +13,7 @@ export class InProgressPhase extends Phase {
         return PhaseType.IN_PROGRESS;
     }
 
-    public handleStart(): void {
+    public onStart(): void {
         const playerSessions = this._game.getPlayerSessions();
         const randomIndex = Math.floor(Math.random() * playerSessions.length);
 
@@ -60,7 +60,7 @@ export class InProgressPhase extends Phase {
         });
     }
 
-    public handleHeartbeat(): void {
+    public onHeartbeat(): void {
         for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.setKnifeUseCooldown(playerSession.getKnifeUseCooldown() - 1);
             playerSession.statusBar({
@@ -72,7 +72,7 @@ export class InProgressPhase extends Phase {
         }
     }
 
-    public handleDeath(victim: PlayerSession, killer: PlayerSession): void {
+    public onDeath(victim: PlayerSession, killer: PlayerSession): void {
         killer.achievement(
             Message.t('KILLED_PLAYER', { victim: victim.getPlayer().username }),
             Message.t('KILLED_PLAYER_SUBTITLE'),
@@ -88,7 +88,7 @@ export class InProgressPhase extends Phase {
         victim.message(Message.t('YOU_WERE_KILLED_MESSAGE', { killer: killer.getPlayer().username }));
         victim.teleportToWaitingRoom();
         
-        this._game.handlePlayerSessionLeave(victim);
+        this._game.removePlayer(victim);
 
         killer.setKnifeUseCooldown(KNIFE_USE_COOLDOWN);
 
@@ -96,7 +96,7 @@ export class InProgressPhase extends Phase {
         Main.getInstance().getGameManager().assignPlayerSessionToGame(victim);
     }
 
-    public handleLeave(playerSession: PlayerSession): void {
+    public onLeave(playerSession: PlayerSession): void {
         const victimsAlive = this._game.getPlayerSessions().filter(session => session.getRole() === PlayerRole.CREW);
         const impostorAlive = this._game.getPlayerSessions().filter(session => session.getRole() === PlayerRole.IMPOSTOR);
         

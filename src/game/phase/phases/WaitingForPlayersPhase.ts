@@ -13,7 +13,7 @@ export class WaitingForPlayersPhase extends Phase {
         return PhaseType.WAITING_FOR_PLAYERS;
     }
 
-    public handleHeartbeat(): void {
+    public onHeartbeat(): void {
         for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.popup(Message.t('WAITING_FOR_PLAYERS', {
                 playerCount: this._game.getPlayerSessions().length.toString(),
@@ -22,7 +22,7 @@ export class WaitingForPlayersPhase extends Phase {
         }
     }
 
-    public handleJoin(playerSession: PlayerSession): void {
+    public onJoin(playerSession: PlayerSession): void {
         this.sendPlayerJoinAchievement(playerSession);
         this.makeSurePlayersHaveNoKnife();
         

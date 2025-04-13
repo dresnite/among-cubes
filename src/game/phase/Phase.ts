@@ -15,23 +15,23 @@ export abstract class Phase {
 
     public abstract getPhaseType(): PhaseType;
 
-    public handleHeartbeat(): void {
+    public onHeartbeat(): void {
         // do nothing by default
     }
 
-    public handleStart(): void {
+    public onStart(): void {
         // do nothing by default
     }
 
-    public handleJoin(playerSession: PlayerSession): void {
+    public onJoin(playerSession: PlayerSession): void {
         // do nothing by default
     }
 
-    public handleLeave(playerSession: PlayerSession): void {
+    public onLeave(playerSession: PlayerSession): void {
         // do nothing by default
     }
 
-    public handleDeath(victim: PlayerSession, killer: PlayerSession): void {
+    public onDeath(victim: PlayerSession, killer: PlayerSession): void {
         // do nothing by default
     }
 
