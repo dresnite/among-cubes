@@ -78,7 +78,7 @@ export class PlayerSession {
         const world = Main.getInstance().getWorldOrThrow();
         const playerEntities = world.entityManager.getPlayerEntitiesByPlayer(this.player);
 
-        const coords = { x: 0, y: 10, z: 0 };
+        const coords = { x: 42 + (Math.random() * 10 - 5), y: 5, z: 34 + (Math.random() * 10 - 5) };
 
         if (playerEntities.length === 0) {
             this.playerEntity = new PlayerEntity({
