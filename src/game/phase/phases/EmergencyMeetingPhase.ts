@@ -65,7 +65,7 @@ export class EmergencyMeetingPhase extends Phase {
     private _endEmergencyMeeting(): void {
         // kick the most voted player here
 
-        this._game.setPhase(new InProgressPhase(this._game));
+        this._game.setPhase(new InProgressPhase(this._game, false));
     }
 
     private _setupEmergencyMeeting(): void {
