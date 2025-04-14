@@ -13,7 +13,7 @@ import { GameManager } from "./game/GameManager";
 import { Broadcaster } from "./utils/Broadcaster";
 import type { GameMap } from "./map/GameMap";
 import { TheMaze } from "./map/maps/TheMaze";
-import { EMERGENCY_BUTTON_ENTITY_NAME } from "./utils/config";
+import { EMERGENCY_BUTTON_ENTITY_NAME, SKIP_VOTE_ENTITY_NAME } from "./utils/config";
 import { ColorType } from "./game/color/ColorType";
 
 export class Main {
@@ -25,7 +25,7 @@ export class Main {
   private _playerSessionManager: PlayerSessionManager;
   private _broadcaster: Broadcaster;
   private _gameMap: GameMap;
-  private _voteEntities: Entity[] = []
+  private _voteEntitiesNameToColorMap: Map<string, ColorType> = new Map()
 
   constructor() {
     this._gameManager = new GameManager();
@@ -73,6 +73,10 @@ export class Main {
 
   public getGameMap(): GameMap {
     return this._gameMap;
+  }
+
+  public getVoteEntitiesNameToColorMap(): Map<string, ColorType> {
+    return this._voteEntitiesNameToColorMap;
   }
 
   private _loadGameWorld(world: World): void {
@@ -154,7 +158,7 @@ export class Main {
     const skipVoteEntity = new Entity({
       modelUri: 'models/environment/x.glb',
       modelScale: 1,
-      name: 'skip-entity',
+      name: SKIP_VOTE_ENTITY_NAME,
       opacity: 0.99,
       rigidBodyOptions: {
         type: RigidBodyType.FIXED, // This makes the entity not move
@@ -211,7 +215,7 @@ export class Main {
 
       npcMessageUI.load(this._world!);
 
-      this._voteEntities.push(voteEntity);
+      this._voteEntitiesNameToColorMap.set(voteEntity.name, color);
     }
   }
 

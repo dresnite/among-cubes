@@ -5,7 +5,8 @@ import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent } fro
 import { PlayerRole } from "./PlayerRole";
 import { Main } from "../Main";
 import { Message } from "../messages/Message";
-import { EMERGENCY_BUTTON_ENTITY_NAME } from "../utils/config";
+import { EMERGENCY_BUTTON_ENTITY_NAME, SKIP_VOTE_ENTITY_NAME } from "../utils/config";
+import { EmergencyMeetingPhase } from "../game/phase/phases/EmergencyMeetingPhase";
 
 export class PlayerSession {
 
@@ -189,11 +190,24 @@ export class PlayerSession {
                         this._game.getPhase().onDeath(hitSession, this);
                     }
                 } else {
+                    const phase = this._game?.getPhase();
+                    
                     switch (ray?.hitEntity?.name) {
                         case EMERGENCY_BUTTON_ENTITY_NAME:
                             this._game?.getPhase().onEmergencyButtonPressed(this);
                             break;
+                        case SKIP_VOTE_ENTITY_NAME:
+                            if (phase instanceof EmergencyMeetingPhase) {
+                                phase.getPoll().vote(this, 'skip');
+                            }
+                            break;
                         default:
+                            const voteEntityNameToColorMap = Main.getInstance().getVoteEntitiesNameToColorMap();
+
+                            if (voteEntityNameToColorMap.has(ray?.hitEntity?.name || '') && phase instanceof EmergencyMeetingPhase) {
+                                const color = voteEntityNameToColorMap.get(ray!.hitEntity!.name)!;
+                                phase.getPoll().vote(this, color.toString());
+                            }
                             break;
                     }
                 }

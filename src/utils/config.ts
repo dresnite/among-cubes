@@ -8,3 +8,4 @@ export const TIME_TO_HIDE_EMERGENCY_MEETING_MESSAGE = 5; // seconds
 export const TIME_TO_END_EMERGENCY_MEETING = 10; // seconds
 
 export const EMERGENCY_BUTTON_ENTITY_NAME = 'emergency-button-entity';
+export const SKIP_VOTE_ENTITY_NAME = 'skip-entity';

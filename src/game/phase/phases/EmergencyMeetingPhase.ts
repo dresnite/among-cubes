@@ -27,6 +27,10 @@ export class EmergencyMeetingPhase extends Phase {
         return PhaseType.EMERGENCY_MEETING;
     }
 
+    public getPoll(): Poll {
+        return this._poll;
+    }
+
     public onHeartbeat(): void {
         this._timeToHideEmergencyMeetingMessage--;
 
