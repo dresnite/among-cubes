@@ -13,7 +13,6 @@ import worldMap from '../assets/maps/themaze.json';
 import { PlayerSessionManager } from "./player/PlayerSessionManager";
 import { GameManager } from "./game/GameManager";
 import { Broadcaster } from "./utils/Broadcaster";
-import { BROADCASTER_FREQUENCY } from "./utils/config";
 import type { GameMap } from "./map/GameMap";
 import { TheMaze } from "./map/maps/TheMaze";
 
@@ -30,7 +29,7 @@ export class Main {
   constructor() {
     this._gameManager = new GameManager();
     this._playerSessionManager = new PlayerSessionManager();
-    this._broadcaster = new Broadcaster(BROADCASTER_FREQUENCY);
+    this._broadcaster = new Broadcaster();
     this._gameMap = new TheMaze();
   }
 
