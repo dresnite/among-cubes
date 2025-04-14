@@ -32,4 +32,8 @@ export abstract class GameMap {
 
     public abstract getEmergencyButtonCoords(): Vector3Like;
 
+    public abstract getSkipVoteCoords(): Vector3Like;
+
+    public abstract getSkipVoteRotation(): QuaternionLike;
+
 }

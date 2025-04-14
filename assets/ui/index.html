@@ -57,6 +57,19 @@
     });
   })
 
+  hytopia.registerSceneUITemplate(`skip-entity`, () => {
+      const template = document.getElementById('basic-scene-ui');
+      const clone = template.content.cloneNode(true);
+
+      const h1 = clone.querySelector('.basic-scene-ui h1');
+      h1.textContent = 'Skip vote';
+
+      const p = clone.querySelector('.basic-scene-ui p');
+      p.textContent = 'Tap to not vote'
+
+      return clone;
+    });
+
   hytopia.onData(data => {
     if (data.roleBar) {
       document.getElementById('role').textContent = data.roleBar.role || '';

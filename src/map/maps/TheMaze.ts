@@ -40,4 +40,12 @@ export class TheMaze extends GameMap {
         return { x: 1, y: 1.5, z: 1 };
     }
 
+    public getSkipVoteCoords(): Vector3Like {
+        return { x: 48, y: 1, z: -24 };
+    }
+
+    public getSkipVoteRotation(): QuaternionLike {
+        return { x: 0, y: 0.7, z: 0, w: 0.7 };
+    }
+
 }

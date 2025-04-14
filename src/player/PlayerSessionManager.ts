@@ -5,6 +5,10 @@ export class PlayerSessionManager {
 
     private _sessions = new Map<string, PlayerSession>()
 
+    public getSessions(): Map<string, PlayerSession> {
+        return this._sessions
+    }
+
     public getSession(player: Player): PlayerSession|null {
         return this._sessions.get(player.username) ?? null
     }

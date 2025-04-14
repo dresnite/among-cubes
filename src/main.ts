@@ -102,6 +102,12 @@ export class Main {
   }
 
   private _setupWorldEvents(): void {
+    setInterval(() => {
+      for (const player of this._playerSessionManager.getSessions().values()) {
+        player.message(`Your rotation is x ${player.getPlayerEntity()?.rotation.x} y ${player.getPlayerEntity()?.rotation.y} z ${player.getPlayerEntity()?.rotation.z} w ${player.getPlayerEntity()?.rotation.w}`)
+      }
+    }, 1000);
+
     this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
       const session = this._playerSessionManager.openSession(player)
 
@@ -144,6 +150,33 @@ export class Main {
     });
 
     npcMessageUI.load(this._world!);
+
+    const skipVoteEntity = new Entity({
+      modelUri: 'models/environment/x.glb',
+      modelScale: 1,
+      name: 'skip-entity',
+      opacity: 0.99,
+      rigidBodyOptions: {
+        type: RigidBodyType.FIXED, // This makes the entity not move
+        rotation: this._gameMap.getSkipVoteRotation(),
+      },
+    });
+
+    const skipVoteCoords = this._gameMap.getSkipVoteCoords();
+    skipVoteEntity.spawn(this._world!, {
+      x: skipVoteCoords.x,
+      y: skipVoteCoords.y + 1,
+      z: skipVoteCoords.z,
+    });
+
+    const skipVoteUI = new SceneUI({
+      templateId: 'skip-entity',
+      attachedToEntity: skipVoteEntity,
+      offset: { x: 0, y: 1, z: 0 },
+    });
+
+    skipVoteUI.load(this._world!);
+    
 
     const podiums = this._gameMap.getVotingPodiumPositions();
     for (const color of Object.values(ColorType)) {
