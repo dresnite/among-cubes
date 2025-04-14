@@ -1,8 +1,6 @@
-import type { BlockType, World } from "hytopia";
+import type { World } from "hytopia";
 import {
   Audio,
-  Collider,
-  ColliderShape,
   Entity,
   PlayerEntity,
   PlayerEvent,
@@ -17,6 +15,7 @@ import { Broadcaster } from "./utils/Broadcaster";
 import type { GameMap } from "./map/GameMap";
 import { TheMaze } from "./map/maps/TheMaze";
 import { EMERGENCY_BUTTON_ENTITY_NAME } from "./utils/config";
+import { ColorType } from "./game/color/ColorType";
 
 export class Main {
 
@@ -27,6 +26,7 @@ export class Main {
   private _playerSessionManager: PlayerSessionManager;
   private _broadcaster: Broadcaster;
   private _gameMap: GameMap;
+  private _voteEntities: Entity[] = []
 
   constructor() {
     this._gameManager = new GameManager();
@@ -103,6 +103,12 @@ export class Main {
   }
 
   private _setupWorldEvents(): void {
+    setInterval(() => {
+      this._world?.entityManager.getAllPlayerEntities().forEach((entity: PlayerEntity) => {
+        this._world?.chatManager.sendPlayerMessage(entity.player, `Your rotation is x: ${entity.rotation.x}, y: ${entity.rotation.y}, z: ${entity.rotation.z}, w: ${entity.rotation.w}`);
+      });
+    }, 1000);
+
     this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
       const session = this._playerSessionManager.openSession(player)
 
@@ -135,7 +141,7 @@ export class Main {
       },
     });
 
-    emergencyButtonEntity.spawn(this._world!, { x: 1, y: 1.3, z: 1 });
+    emergencyButtonEntity.spawn(this._world!, { x: 1, y: 3, z: 1 });
 
     // Create the Scene UI over the NPC
     const npcMessageUI = new SceneUI({
@@ -145,6 +151,33 @@ export class Main {
     });
 
     npcMessageUI.load(this._world!);
+
+    const podiums = this._gameMap.getVotingPodiumPositions();
+    for (const color of Object.values(ColorType)) {
+      const podium = podiums.shift();
+
+      if (!podium) {
+        throw new Error('Not enough podiums');
+      }
+
+      const voteEntity = new Entity({
+        modelUri: `models/players/${color}.gltf`,
+        modelScale: 0.8,
+        name: color.toString(),
+        rigidBodyOptions: {
+          type: RigidBodyType.FIXED, // This makes the entity not move
+          rotation: this._gameMap.getVotingPodiumRotation(),
+        },
+      });
+
+      voteEntity.spawn(this._world!, {
+        x: podium.x,
+        y: podium.y + 1,
+        z: podium.z,
+      });
+
+      this._voteEntities.push(voteEntity);
+    }
   }
 
 }
