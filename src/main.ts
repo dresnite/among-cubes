@@ -84,6 +84,7 @@ export class Main {
     this._world = world;
     world.loadMap(worldMap);
 
+    this._setupWorldLighting();
     this._setupWorldEvents();
     this._setupWorldEntities();
   }
@@ -131,6 +132,12 @@ export class Main {
       session.getGame()?.removePlayer(session)
       this._playerSessionManager.closeSession(player)
     })
+  }
+
+  private _setupWorldLighting(): void {
+    this._world!.setAmbientLightIntensity(5);
+    this._world!.setAmbientLightColor({ r: 20, g: 40, b: 60 });
+    this._world!.setDirectionalLightIntensity(1);
   }
 
   private _setupWorldEntities(): void {
