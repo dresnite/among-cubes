@@ -194,6 +194,7 @@ export class Main {
         modelUri: `models/players/${color}.gltf`,
         modelScale: 0.8,
         name: color.toString(),
+        modelLoopedAnimations: ['jump_loop'],
         rigidBodyOptions: {
           type: RigidBodyType.FIXED, // This makes the entity not move
           rotation: this._gameMap.getVotingPodiumRotation(),
@@ -202,7 +203,7 @@ export class Main {
 
       voteEntity.spawn(this._world!, {
         x: podium.x,
-        y: podium.y + 1,
+        y: podium.y + 1.5,
         z: podium.z,
       });
 
