@@ -1,6 +1,6 @@
 import { Main } from "../Main";
 import { Message } from "../messages/Message";
-import { BROADCASTER_FREQUENCY } from "./config";
+import { BROADCASTER_FREQUENCY, ENABLE_BROADCASTER } from "./config";
 
 export class Broadcaster {
 
@@ -22,6 +22,10 @@ export class Broadcaster {
     }
 
     public handleHeartbeat(): void {
+        if (!ENABLE_BROADCASTER) {
+            return;
+        }
+
         this._timeForNextBroadcast--;
 
         if (this._timeForNextBroadcast <= 0) {
