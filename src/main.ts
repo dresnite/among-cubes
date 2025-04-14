@@ -103,12 +103,6 @@ export class Main {
   }
 
   private _setupWorldEvents(): void {
-    setInterval(() => {
-      this._world?.entityManager.getAllPlayerEntities().forEach((entity: PlayerEntity) => {
-        this._world?.chatManager.sendPlayerMessage(entity.player, `Your rotation is x: ${entity.rotation.x}, y: ${entity.rotation.y}, z: ${entity.rotation.z}, w: ${entity.rotation.w}`);
-      });
-    }, 1000);
-
     this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
       const session = this._playerSessionManager.openSession(player)
 
