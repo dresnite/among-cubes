@@ -7,12 +7,12 @@ import {
   SceneUI,
 } from 'hytopia';
 
-import worldMap from '../assets/maps/themaze.json';
+import worldMap from '../assets/maps/spaceship.json';
 import { PlayerSessionManager } from "./player/PlayerSessionManager";
 import { GameManager } from "./game/GameManager";
 import { Broadcaster } from "./utils/Broadcaster";
 import type { GameMap } from "./map/GameMap";
-import { TheMaze } from "./map/maps/TheMaze";
+import { Spaceship } from "./map/maps/Spaceship";
 import { EMERGENCY_BUTTON_ENTITY_NAME } from "./utils/config";
 import { VoteEntitiesManager } from "./npc/VoteEntitiesManager";
 
@@ -32,7 +32,7 @@ export class Main {
     this._gameManager = new GameManager();
     this._playerSessionManager = new PlayerSessionManager();
     this._broadcaster = new Broadcaster();
-    this._gameMap = new TheMaze();
+    this._gameMap = new Spaceship();
   }
 
 

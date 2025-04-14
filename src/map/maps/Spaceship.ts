@@ -1,10 +1,10 @@
 import type { QuaternionLike, Vector3Like } from "hytopia";
 import { GameMap } from "../GameMap";
 
-export class TheMaze extends GameMap {
+export class Spaceship extends GameMap {
 
     public getMapName(): string {
-        return "The Maze";
+        return "Spaceship";
     }
 
     public getWaitingRoomCoords(): Vector3Like {
