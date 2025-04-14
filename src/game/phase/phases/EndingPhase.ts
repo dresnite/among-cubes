@@ -41,15 +41,16 @@ export class EndingPhase extends Phase {
             return
         }
 
-        for (const playerSession of this._game.getPlayerSessions()) {
-            playerSession.popup(
-                Message.t('NEXT_GAME_STARTING_COUNTDOWN', {
-                    countdown: this._timeToEnd.toString()
-                })
-            );
+        for (const playerSession of Main.getInstance().getPlayerSessionManager().getSessions().values()) {
+            if (playerSession.getGame()?.getUniqueId() === this._game.getUniqueId()) {
+                playerSession.popup(
+                    Message.t('NEXT_GAME_STARTING_COUNTDOWN', {
+                        countdown: this._timeToEnd.toString()
+                    })
+                );
+            }
 
             const isWinner = playerSession.getRole() === PlayerRole.CREW && this._isCrewWin || playerSession.getRole() === PlayerRole.IMPOSTOR && !this._isCrewWin;
-
             playerSession.achievement(
                 Message.t(this._isCrewWin ? 'CREW_WON' : 'IMPOSTOR_WON'),
                 Message.t(isWinner ? 'CONGRATULATIONS_ON_WIN' : 'TRY_HARDER_NEXT_TIME'),
