@@ -16,6 +16,7 @@ import { GameManager } from "./game/GameManager";
 import { Broadcaster } from "./utils/Broadcaster";
 import type { GameMap } from "./map/GameMap";
 import { TheMaze } from "./map/maps/TheMaze";
+import { EMERGENCY_BUTTON_ENTITY_NAME } from "./utils/config";
 
 export class Main {
 
@@ -127,24 +128,10 @@ export class Main {
     const emergencyButtonEntity = new Entity({
       modelUri: 'models/environment/emergency-button.glb',
       modelScale: 2,
-      name: 'emergency-button',
+      name: EMERGENCY_BUTTON_ENTITY_NAME,
       opacity: 0.99,
       rigidBodyOptions: {
         type: RigidBodyType.FIXED, // This makes the entity not move
-        colliders: [
-          Collider.optionsFromModelUri('models/npcs/mindflayer.gltf', 2), // Uses the model's bounding box to create the hitbox collider
-          { // Create a sensor that teleports the player into the game
-            shape: ColliderShape.BLOCK,
-            halfExtents: { x: 1.5, y: 1.05, z: 1.5 }, // size it slightly smaller than the platform the join NPC is standing on
-            isSensor: true,
-            tag: 'emergency-button-sensor',
-            onCollision: (other: BlockType | Entity, started: boolean) => {
-              if (started && other instanceof PlayerEntity) {
-                this._world?.chatManager.sendPlayerMessage(other.player, 'Emergency button pressed!', 'FFE4E1');
-              }
-            },
-          },
-        ],
       },
     });
 

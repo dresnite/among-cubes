@@ -28,5 +28,8 @@ export const en_en = {
     CONGRATULATIONS_ON_WIN: "Congratulations on winning!",
     TRY_HARDER_NEXT_TIME: "Try harder next time!",
     IMPOSTOR_ROLE_BAR: "Impostor{cooldown}",
-    CREW_ROLE_BAR: "Crew"
+    CREW_ROLE_BAR: "Crew",
+    EMERGENCY_MEETING_MESSAGE: "EMERGENCY MEETING!",
+    EMERGENCY_MEETING_ALREADY_CALLED: "You already called an emergency meeting in this game!",
+    DISCUSS_IMPOSTOR: "Vote for the impostor"
 }

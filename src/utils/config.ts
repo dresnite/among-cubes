@@ -4,3 +4,7 @@ export const COUNTDOWN_START_GAME = 10; // seconds
 export const BROADCASTER_FREQUENCY = 60; // seconds
 export const ENDING_GAME_DURATION = 10; // seconds
 export const KNIFE_USE_COOLDOWN = 30; // seconds
+export const TIME_TO_HIDE_EMERGENCY_MEETING_MESSAGE = 5; // seconds
+export const TIME_TO_END_EMERGENCY_MEETING = 10; // seconds
+
+export const EMERGENCY_BUTTON_ENTITY_NAME = 'emergency-button-entity';

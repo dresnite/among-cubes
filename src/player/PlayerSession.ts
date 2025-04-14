@@ -5,6 +5,7 @@ import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent } fro
 import { PlayerRole } from "./PlayerRole";
 import { Main } from "../Main";
 import { Message } from "../messages/Message";
+import { EMERGENCY_BUTTON_ENTITY_NAME } from "../utils/config";
 
 export class PlayerSession {
 
@@ -17,6 +18,7 @@ export class PlayerSession {
     private _knifeUseCooldown: number
     private _playerEntity: PlayerEntity | null
     private _coins: number
+    private _hasPressedEmergencyButton: boolean
 
     constructor(player: Player) {
         this._player = player
@@ -28,6 +30,7 @@ export class PlayerSession {
         this._knifeUseCooldown = 0
         this._playerEntity = null
         this._coins = 0
+        this._hasPressedEmergencyButton = false
     }
 
     public getPlayer(): Player {
@@ -80,6 +83,7 @@ export class PlayerSession {
         this.setRole(PlayerRole.CREW)
         this.setKnifeVisible(false)
         this.setKnifeUseCooldown(0)
+        this.setHasPressedEmergencyButton(false)
         this.resetCoins()
     }
 
@@ -97,6 +101,14 @@ export class PlayerSession {
 
     public setKnifeUseCooldown(cooldown: number) {
         this._knifeUseCooldown = cooldown
+    }
+
+    public hasPressedEmergencyButton(): boolean {
+        return this._hasPressedEmergencyButton
+    }
+
+    public setHasPressedEmergencyButton(hasPressed: boolean) {
+        this._hasPressedEmergencyButton = hasPressed
     }
 
     public setupCamera() {
@@ -157,8 +169,8 @@ export class PlayerSession {
                 input.f = false; // Consume the input
             }
 
-            // Handle left mouse click for impostor kills
-            if (input.ml && this._role === PlayerRole.IMPOSTOR && this._knifeVisible && this._knifeUseCooldown <= 0) {
+            // Handle left mouse click for impostor kills and touching NPCs (the emergency button, the voting statues...)
+            if (input.ml) {
                 // Cast a ray to detect clicked players
                 const ray = Main.getInstance().getWorldOrThrow().simulation.raycast(
                     playerEntity.position,
@@ -167,12 +179,20 @@ export class PlayerSession {
                     { filterExcludeRigidBody: playerEntity.rawRigidBody }
                 );
 
-                if (ray?.hitEntity instanceof PlayerEntity) {
+                if (this._role === PlayerRole.IMPOSTOR && this._knifeVisible && this._knifeUseCooldown <= 0 && ray?.hitEntity instanceof PlayerEntity) {
                     const hitPlayer = ray.hitEntity.player;
                     const hitSession = Main.getInstance().getPlayerSessionManager().getSession(hitPlayer);
                     
                     if (this._game && hitSession?._role === PlayerRole.CREW && hitSession.getGame()?.getUniqueId() === this._game.getUniqueId()) {
                         this._game.getPhase().onDeath(hitSession, this);
+                    }
+                } else {
+                    switch (ray?.hitEntity?.name) {
+                        case EMERGENCY_BUTTON_ENTITY_NAME:
+                            this._game?.getPhase().onEmergencyButtonPressed(this);
+                            break;
+                        default:
+                            break;
                     }
                 }
 

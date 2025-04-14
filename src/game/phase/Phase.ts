@@ -35,6 +35,10 @@ export abstract class Phase {
         // do nothing by default
     }
 
+    public onEmergencyButtonPressed(playerSession: PlayerSession): void {
+        // do nothing by default
+    }
+
     protected sendPlayerJoinAchievement(playerSession: PlayerSession): void {
         for (const gamePlayerSession of this._game.getPlayerSessions()) {
             if (gamePlayerSession.getPlayer().username === playerSession.getPlayer().username) {

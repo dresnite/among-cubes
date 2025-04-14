@@ -6,8 +6,18 @@ import { Main } from "../../../Main";
 import type { PlayerSession } from "../../../player/PlayerSession";
 import { EndingPhase } from "./EndingPhase";
 import { KNIFE_USE_COOLDOWN } from "../../../utils/config";
+import { EmergencyMeetingPhase } from "./EmergencyMeetingPhase";
+import type { Game } from "../../Game";
 
 export class InProgressPhase extends Phase {
+
+    private _sendWelcomeMessages: boolean;
+    
+    constructor(game: Game, sendWelcomeMessages: boolean = true) {
+        super(game);
+
+        this._sendWelcomeMessages = sendWelcomeMessages;
+    }
 
     public getPhaseType(): PhaseType {
         return PhaseType.IN_PROGRESS;
@@ -35,6 +45,10 @@ export class InProgressPhase extends Phase {
             playerSession.getPlayerEntity()?.setPosition(position);
 
             // Set player role and show appropriate message
+            if (!this._sendWelcomeMessages) {
+                return;
+            }
+
             if (index === randomIndex) {
                 playerSession.setRole(PlayerRole.IMPOSTOR);
                 playerSession.achievement(
@@ -69,6 +83,15 @@ export class InProgressPhase extends Phase {
             });
 
             playerSession.updateRoleBar();
+        }
+    }
+
+    public onEmergencyButtonPressed(playerSession: PlayerSession): void {
+        if (playerSession.hasPressedEmergencyButton()) {
+            playerSession.popup(Message.t('EMERGENCY_MEETING_ALREADY_CALLED'), 3000);
+        } else {
+            playerSession.setHasPressedEmergencyButton(true);
+            this._game.setPhase(new EmergencyMeetingPhase(this._game));
         }
     }
 
