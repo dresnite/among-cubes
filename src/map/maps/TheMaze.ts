@@ -37,7 +37,7 @@ export class TheMaze extends GameMap {
     }
 
     public getEmergencyButtonCoords(): Vector3Like {
-        return { x: 1, y: 3, z: 1 };
+        return { x: 1, y: 1.5, z: 1 };
     }
 
 }
