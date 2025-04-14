@@ -1,3 +1,4 @@
+import { Main } from "../../../Main";
 import { Message } from "../../../messages/Message";
 import { PlayerRole } from "../../../player/PlayerRole";
 import type { PlayerSession } from "../../../player/PlayerSession";
@@ -46,6 +47,18 @@ export class EmergencyMeetingPhase extends Phase {
 
     public getPoll(): Poll {
         return this._poll;
+    }
+
+    public onStart(): void {
+        const voteEntitiesManager = Main.getInstance().getVoteEntitiesManager();
+        
+        for (const color of Object.values(ColorType)) {
+            voteEntitiesManager.showDeadSceneUI(color);
+        }
+
+        for (const playerSession of this._game.getPlayerSessions()) {
+            voteEntitiesManager.showAliveSceneUI(playerSession.getColor()!.getType());
+        }
     }
 
     public onHeartbeat(): void {

@@ -210,11 +210,17 @@ export class PlayerSession {
                             }
                             break;
                         default:
-                            const voteEntityNameToColorMap = main.getVoteEntitiesNameToColorMap();
+                            const voteEntityNameToColorMap = main.getVoteEntitiesManager().getVoteEntitiesNameToColorMap();
 
                             if (voteEntityNameToColorMap.has(entityName) && phase instanceof EmergencyMeetingPhase) {
                                 const color = voteEntityNameToColorMap.get(entityName)!;
-                                phase.getPoll().vote(this, color.toString());
+
+                                const isColorAlive = this._game?.getPlayerSessions().some(playerSession => playerSession.getColor()?.getType() === color);
+
+                                if (isColorAlive) {
+                                    phase.getPoll().vote(this, color.toString());
+                                }
+                                
                                 return
                             }
 

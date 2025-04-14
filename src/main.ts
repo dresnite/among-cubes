@@ -13,8 +13,8 @@ import { GameManager } from "./game/GameManager";
 import { Broadcaster } from "./utils/Broadcaster";
 import type { GameMap } from "./map/GameMap";
 import { TheMaze } from "./map/maps/TheMaze";
-import { EMERGENCY_BUTTON_ENTITY_NAME, SKIP_VOTE_ENTITY_NAME } from "./utils/config";
-import { ColorType } from "./game/color/ColorType";
+import { EMERGENCY_BUTTON_ENTITY_NAME } from "./utils/config";
+import { VoteEntitiesManager } from "./npc/VoteEntitiesManager";
 
 export class Main {
 
@@ -25,9 +25,10 @@ export class Main {
   private _playerSessionManager: PlayerSessionManager;
   private _broadcaster: Broadcaster;
   private _gameMap: GameMap;
-  private _voteEntitiesNameToColorMap: Map<string, ColorType> = new Map()
+  private _voteEntitiesManager: VoteEntitiesManager;
 
   constructor() {
+    this._voteEntitiesManager = new VoteEntitiesManager();
     this._gameManager = new GameManager();
     this._playerSessionManager = new PlayerSessionManager();
     this._broadcaster = new Broadcaster();
@@ -75,8 +76,8 @@ export class Main {
     return this._gameMap;
   }
 
-  public getVoteEntitiesNameToColorMap(): Map<string, ColorType> {
-    return this._voteEntitiesNameToColorMap;
+  public getVoteEntitiesManager(): VoteEntitiesManager {
+    return this._voteEntitiesManager;
   }
 
   private _loadGameWorld(world: World): void {
@@ -154,69 +155,7 @@ export class Main {
 
     npcMessageUI.load(this._world!);
 
-    const skipVoteEntity = new Entity({
-      modelUri: 'models/environment/x.glb',
-      modelScale: 1,
-      name: SKIP_VOTE_ENTITY_NAME,
-      opacity: 0.99,
-      rigidBodyOptions: {
-        type: RigidBodyType.FIXED, // This makes the entity not move
-        rotation: this._gameMap.getSkipVoteRotation(),
-      },
-    });
-
-    const skipVoteCoords = this._gameMap.getSkipVoteCoords();
-    skipVoteEntity.spawn(this._world!, {
-      x: skipVoteCoords.x,
-      y: skipVoteCoords.y + 1,
-      z: skipVoteCoords.z,
-    });
-
-    const skipVoteUI = new SceneUI({
-      templateId: 'skip-entity',
-      attachedToEntity: skipVoteEntity,
-      offset: { x: 0, y: 1, z: 0 },
-    });
-
-    skipVoteUI.load(this._world!);
-
-
-    const podiums = this._gameMap.getVotingPodiumPositions();
-    for (const color of Object.values(ColorType)) {
-      const podium = podiums.shift();
-
-      if (!podium) {
-        throw new Error('Not enough podiums');
-      }
-
-      const voteEntity = new Entity({
-        modelUri: `models/players/${color}.gltf`,
-        modelScale: 0.8,
-        name: color.toString(),
-        modelLoopedAnimations: ['jump_loop'],
-        rigidBodyOptions: {
-          type: RigidBodyType.FIXED, // This makes the entity not move
-          rotation: this._gameMap.getVotingPodiumRotation(),
-        },
-      });
-
-      voteEntity.spawn(this._world!, {
-        x: podium.x,
-        y: podium.y + 1.5,
-        z: podium.z,
-      });
-
-      // Create the Scene UI over the NPC
-      const npcMessageUI = new SceneUI({
-        templateId: `${color}-entity`,
-        attachedToEntity: voteEntity,
-        offset: { x: 0, y: 1.75, z: 0 },
-      });
-
-      npcMessageUI.load(this._world!);
-
-      this._voteEntitiesNameToColorMap.set(voteEntity.name, color);
-    }
+    this._voteEntitiesManager.setup()
   }
 
 }
