@@ -99,7 +99,7 @@ export class PlayerSession {
         return this._knifeUseCooldown
     }
 
-    public setKnifeUseCooldown(cooldown: number) {
+    public setKnifeUseCooldown(cooldown: number): void {
         this._knifeUseCooldown = cooldown
     }
 
@@ -107,11 +107,11 @@ export class PlayerSession {
         return this._hasPressedEmergencyButton
     }
 
-    public setHasPressedEmergencyButton(hasPressed: boolean) {
+    public setHasPressedEmergencyButton(hasPressed: boolean): void {
         this._hasPressedEmergencyButton = hasPressed
     }
 
-    public setupCamera() {
+    public setupCamera(): void {
         // Setup a first person camera for the player
         // set first person mode
         this._player.camera.setMode(PlayerCameraMode.FIRST_PERSON);
@@ -123,7 +123,7 @@ export class PlayerSession {
         this._player.camera.setForwardOffset(0);
     }
 
-    public setupEntity() {
+    public setupEntity(): void {
         const world = Main.getInstance().getWorldOrThrow();
         const playerEntities = world.entityManager.getPlayerEntitiesByPlayer(this._player);
 
@@ -157,7 +157,7 @@ export class PlayerSession {
         }
     }
 
-    public setupPlayerEvents(playerEntity: PlayerEntity) {
+    public setupPlayerEvents(playerEntity: PlayerEntity): void {
         playerEntity.controller?.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input }) => {
             if (input.f) {
                 // Only allow toggling knife visibility for impostors
@@ -202,7 +202,7 @@ export class PlayerSession {
         });
     }
 
-    public setupKnifeVisibility() {
+    public setupKnifeVisibility(): void {
         if (!this._knife) {
             return;
         }
@@ -218,18 +218,18 @@ export class PlayerSession {
         }
     }
 
-    public message(message: string) {
+    public message(message: string): void {
         Main.getInstance().getWorldOrThrow().chatManager.sendPlayerMessage(this._player, message);
     }
 
-    public popup(message: string, milliseconds: number = 1000) {
+    public popup(message: string, milliseconds: number = 1000): void {
         this._player.ui.sendData({
             popup: message,
             popupMilliseconds: milliseconds
         })
     }
 
-    public achievement(title: string, subtitle: string, icon: string, milliseconds: number = 1000) {
+    public achievement(title: string, subtitle: string, icon: string, milliseconds: number = 1000): void {
         this._player.ui.sendData({
             achievement: {
                 title: title,
@@ -240,14 +240,14 @@ export class PlayerSession {
         })
     }
 
-    public title(title: string, milliseconds: number = 1000) {
+    public title(title: string, milliseconds: number = 1000): void {
         this._player.ui.sendData({
             title: title,
             titleDuration: milliseconds
         })
     }
 
-    public statusBar({ coins, time, milliseconds }: { coins: number, time?: string, milliseconds: number }) {
+    public statusBar({ coins, time, milliseconds }: { coins: number, time?: string, milliseconds: number }): void {
         this._player.ui.sendData({
             statusBar: {
                 coins,
@@ -257,7 +257,7 @@ export class PlayerSession {
         })
     }
 
-    public roleBar(roleText: string, milliseconds: number = 1000) {
+    public roleBar(roleText: string, milliseconds: number = 1000): void {
         this._player.ui.sendData({
             roleBar: {
                 role: roleText,
