@@ -117,6 +117,10 @@ export class Main {
 
       // Load our game UI for this player
       player.ui.load('ui/index.html');
+
+      player.ui.sendData({
+        openSilenceModal: true
+      });
     });
 
     this._world?.on(PlayerEvent.LEFT_WORLD, ({ player }) => {

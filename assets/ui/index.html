@@ -195,6 +195,18 @@
         silenceDisplay.style.display = 'none';
       }, data.silence.milliseconds || 1000);
     }
+
+    if (data.openSilenceModal) {
+      silenceModal.classList.add('active');
+    }
+  });
+
+  // Add silence modal functionality
+  const silenceModal = document.getElementById('silence-modal');
+  const silenceModalClose = document.getElementById('silence-modal-close');
+
+  silenceModalClose.addEventListener('click', () => {
+    silenceModal.classList.remove('active');
   });
 </script>
 
@@ -247,6 +259,16 @@
   <a id="mobile-jump-button" class="mobile-button">
     <img src="{{CDN_ASSETS_URL}}/icons/jump.png" />
   </a>
+</div>
+
+<div class="silence-modal" id="silence-modal">
+  <div class="silence-modal-content">
+    <img src="{{CDN_ASSETS_URL}}/icons/silence.png" alt="Silence Icon" class="silence-modal-icon" />
+    <h2>Silence Warning</h2>
+    <p class="silence-modal-main">When you see this icon, you must remain silent!</p>
+    <p class="silence-modal-sub">Due to technical limitations, we cannot automatically disable chat. However, chatting during silence periods will result in a ban from the game.</p>
+    <button class="silence-modal-accept" id="silence-modal-close">I accept</button>
+  </div>
 </div>
 
 <style>
@@ -541,5 +563,85 @@
   .basic-scene-ui p {
     font-size: 10px;
     margin: 0;
+  }
+
+  .silence-modal {
+    display: none;
+    position: fixed;
+    font-family: 'system-ui', sans-serif;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .silence-modal.active {
+    display: flex;
+  }
+
+  .silence-modal-content {
+    background: rgba(20, 20, 20, 0.95);
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    position: relative;
+    text-align: center;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    font-family: 'system-ui', sans-serif;
+  }
+
+  .silence-modal-accept {
+    background: #ff3333;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 32px;
+    border-radius: 6px;
+    margin-top: 25px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .silence-modal-accept:hover {
+    background: #ff4444;
+  }
+
+  .silence-modal-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+  }
+
+  .silence-modal h2 {
+    color: #ff3333;
+    font-size: 24px;
+    margin: 0 0 15px 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .silence-modal-main {
+    color: white;
+    font-size: 18px;
+    margin: 0 0 15px 0;
+    font-weight: bold;
+  }
+
+  .silence-modal-sub {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.4;
   }
 </style>
