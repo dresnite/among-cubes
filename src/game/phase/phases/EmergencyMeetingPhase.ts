@@ -92,7 +92,7 @@ export class EmergencyMeetingPhase extends Phase {
         for (const playerSession of this._game.getPlayerSessions()) {
             if (this._poll.hasVoted(playerSession)) {
                 playerSession.popup(Message.t('IMPOSTER_VOTED', {
-                    color: this._poll.getVotedOption(playerSession)!
+                    color: capitalize(this._poll.getVotedOption(playerSession)!)
                 }));
             } else {
                 playerSession.popup(Message.t('DISCUSS_IMPOSTOR'));
