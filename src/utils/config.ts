@@ -9,4 +9,4 @@ export const TIME_TO_END_EMERGENCY_MEETING = 10; // seconds
 
 export const EMERGENCY_BUTTON_ENTITY_NAME = 'emergency-button-entity';
 export const SKIP_VOTE_ENTITY_NAME = 'skip-entity';
-export const ENABLE_BROADCASTER = true;
+export const ENABLE_BROADCASTER = false;
