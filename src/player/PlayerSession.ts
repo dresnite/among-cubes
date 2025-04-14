@@ -7,6 +7,7 @@ import { Main } from "../Main";
 import { Message } from "../messages/Message";
 import { EMERGENCY_BUTTON_ENTITY_NAME, SKIP_VOTE_ENTITY_NAME } from "../utils/config";
 import { EmergencyMeetingPhase } from "../game/phase/phases/EmergencyMeetingPhase";
+import { InProgressPhase } from "../game/phase/phases/InProgressPhase";
 
 export class PlayerSession {
 
@@ -174,8 +175,9 @@ export class PlayerSession {
 
             // Handle left mouse click for impostor kills and touching NPCs (the emergency button, the voting statues...)
             if (input.ml) {
+                const main = Main.getInstance();
                 // Cast a ray to detect clicked players
-                const ray = Main.getInstance().getWorldOrThrow().simulation.raycast(
+                const ray = main.getWorldOrThrow().simulation.raycast(
                     playerEntity.position,
                     this._player.camera.facingDirection,
                     3, // 3-meter range for kills
@@ -184,15 +186,16 @@ export class PlayerSession {
 
                 if (this._role === PlayerRole.IMPOSTOR && this._knifeVisible && this._knifeUseCooldown <= 0 && ray?.hitEntity instanceof PlayerEntity) {
                     const hitPlayer = ray.hitEntity.player;
-                    const hitSession = Main.getInstance().getPlayerSessionManager().getSession(hitPlayer);
+                    const hitSession = main.getPlayerSessionManager().getSession(hitPlayer);
                     
                     if (this._game && hitSession?._role === PlayerRole.CREW && hitSession.getGame()?.getUniqueId() === this._game.getUniqueId()) {
                         this._game.getPhase().onDeath(hitSession, this);
                     }
                 } else {
                     const phase = this._game?.getPhase();
+                    const entityName = ray?.hitEntity?.name || '';
                     
-                    switch (ray?.hitEntity?.name) {
+                    switch (entityName) {
                         case EMERGENCY_BUTTON_ENTITY_NAME:
                             this._game?.getPhase().onEmergencyButtonPressed(this);
                             break;
@@ -202,12 +205,28 @@ export class PlayerSession {
                             }
                             break;
                         default:
-                            const voteEntityNameToColorMap = Main.getInstance().getVoteEntitiesNameToColorMap();
+                            const voteEntityNameToColorMap = main.getVoteEntitiesNameToColorMap();
 
-                            if (voteEntityNameToColorMap.has(ray?.hitEntity?.name || '') && phase instanceof EmergencyMeetingPhase) {
-                                const color = voteEntityNameToColorMap.get(ray!.hitEntity!.name)!;
+                            if (voteEntityNameToColorMap.has(entityName) && phase instanceof EmergencyMeetingPhase) {
+                                const color = voteEntityNameToColorMap.get(entityName)!;
                                 phase.getPoll().vote(this, color.toString());
+                                return
                             }
+
+                            if (phase instanceof InProgressPhase) {
+                                const cadaverManager = phase.getCadaverManager();
+                                const cadaver = cadaverManager.getCadaver(entityName);
+
+                                console.log('cadaver touched by ', this._player.username, ' with entity name ', entityName);
+
+
+                                if (cadaver) {
+                                    cadaver.onTouch(this);
+                                } else {
+                                    console.log('actually no cadaver found for ', entityName);
+                                }
+                            }
+
                             break;
                     }
                 }

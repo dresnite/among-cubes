@@ -7,9 +7,8 @@ import type { PlayerSession } from "../../../player/PlayerSession";
 import { KNIFE_USE_COOLDOWN } from "../../../utils/config";
 import { EmergencyMeetingPhase } from "./EmergencyMeetingPhase";
 import type { Game } from "../../Game";
-import { Entity, RigidBodyType } from "hytopia";
-import { createUniqueId } from "../../../utils/math";
 import { CadaverManager } from "../../cadaver/CadaverManager";
+import type { Cadaver } from "../../cadaver/Cadaver";
 
 export class InProgressPhase extends Phase {
 
@@ -102,7 +101,7 @@ export class InProgressPhase extends Phase {
             playerSession.popup(Message.t('EMERGENCY_MEETING_ALREADY_CALLED'), 3000);
         } else {
             playerSession.setHasPressedEmergencyButton(true);
-            this._game.setPhase(new EmergencyMeetingPhase(this._game));
+            this._game.setPhase(new EmergencyMeetingPhase(this._game, playerSession));
         }
     }
 
@@ -138,6 +137,10 @@ export class InProgressPhase extends Phase {
 
     public onChangePhase(): void {
         this._cadaverManager.clearCadavers();
+    }
+
+    public onCadaverReport(playerSession: PlayerSession, cadaver: Cadaver): void {
+        this._game.setPhase(new EmergencyMeetingPhase(this._game, playerSession, cadaver));
     }
 
 }

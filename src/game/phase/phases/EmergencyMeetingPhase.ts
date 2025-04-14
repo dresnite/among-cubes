@@ -1,7 +1,11 @@
 import { Message } from "../../../messages/Message";
 import { PlayerRole } from "../../../player/PlayerRole";
+import type { PlayerSession } from "../../../player/PlayerSession";
 import { TIME_TO_END_EMERGENCY_MEETING, TIME_TO_HIDE_EMERGENCY_MEETING_MESSAGE } from "../../../utils/config";
 import { Poll } from "../../../utils/Poll";
+import { capitalize } from "../../../utils/text";
+import type { Cadaver } from "../../cadaver/Cadaver";
+import type { Color } from "../../color/Color";
 import { ColorType } from "../../color/ColorType";
 import type { Game } from "../../Game";
 import { Phase } from "../Phase";
@@ -15,15 +19,25 @@ export class EmergencyMeetingPhase extends Phase {
 
     private _poll: Poll;
 
+    private _requesterColor: Color;
+    private _requesterName: string;
+    
+    private _cadaver: Cadaver | null;
+
     public static readonly SKIP_OPTION = 'skip';
 
-    constructor(game: Game) {
+    constructor(game: Game, requester: PlayerSession, cadaver: Cadaver | null = null) {
         super(game);
 
         this._timeToHideEmergencyMeetingMessage = TIME_TO_HIDE_EMERGENCY_MEETING_MESSAGE;
         this._timeToEndEmergencyMeeting = TIME_TO_END_EMERGENCY_MEETING;
 
         this._poll = this._createImpostorPoll();
+
+        this._requesterColor = requester.getColor()!;
+        this._requesterName = requester.getPlayer().username;
+
+        this._cadaver = cadaver;
     }
 
     public getPhaseType(): PhaseType {
@@ -48,7 +62,23 @@ export class EmergencyMeetingPhase extends Phase {
 
     private _displayEmergencyMeetingStartingMessages(): void {
         for (const playerSession of this._game.getPlayerSessions()) {
-            playerSession.title(Message.t('EMERGENCY_MEETING_MESSAGE'));
+            if (this._cadaver) {
+                const bodyColor = this._cadaver.getColor().getType().toString();
+
+                playerSession.title(Message.t('DEAD_BODY_FOUND', {
+                    color: bodyColor
+                }));
+                playerSession.popup(Message.t('DEAD_BODY_FOUND_BY', {
+                    color: capitalize(bodyColor),
+                    requester: this._requesterName
+                }));
+            } else {
+                playerSession.title(Message.t('EMERGENCY_MEETING_MESSAGE'));
+                playerSession.popup(Message.t('EMERGENCY_MEETING_REQUESTED_BY', {
+                    requester: this._requesterName,
+                    color: capitalize(this._requesterColor.getType().toString())
+                }));
+            }
         }
     }
 

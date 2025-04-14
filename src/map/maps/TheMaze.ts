@@ -49,7 +49,7 @@ export class TheMaze extends GameMap {
     }
 
     public getCadaverSpawnY(): number {
-        return 2;
+        return 1.7;
     }
 
 }

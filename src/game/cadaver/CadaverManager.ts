@@ -15,7 +15,19 @@ export class CadaverManager {
     }
 
     public spawnCadaver(playerSession: PlayerSession): void {
-        const cadaver = new Cadaver(playerSession); 
+        const color = playerSession.getColor();
+
+        if (!color) {
+            throw new Error(`Could not spawn cadaver of ${playerSession.getPlayer().username} because they had no color`)
+        }
+
+        const entity = playerSession.getPlayerEntity();
+
+        if (!entity) {
+            throw new Error(`Could not spawn cadaver of ${playerSession.getPlayer().username} because they had no player entity`)
+        }
+
+        const cadaver = new Cadaver(color, entity.position); 
         cadaver.spawn();
         
         this._cadavers.set(cadaver.getUniqueId(), cadaver);

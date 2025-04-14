@@ -33,5 +33,8 @@ export const en_en = {
     EMERGENCY_MEETING_ALREADY_CALLED: "You already called an emergency meeting in this game!",
     DISCUSS_IMPOSTOR: "Vote for the impostor",
     IMPOSTER_VOTED: "You voted for: {color}",
-    YOU_WERE_VOTED_OUT: "You were eliminated from the game!"
+    YOU_WERE_VOTED_OUT: "You were eliminated from the game!",
+    DEAD_BODY_FOUND: "{color} body found!",
+    EMERGENCY_MEETING_REQUESTED_BY: "Emergency meeting requested by {color} ({requester})",
+    DEAD_BODY_FOUND_BY: "{color} body found by {requester}"
 }
