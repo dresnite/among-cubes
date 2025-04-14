@@ -58,17 +58,17 @@
   })
 
   hytopia.registerSceneUITemplate(`skip-entity`, () => {
-      const template = document.getElementById('basic-scene-ui');
-      const clone = template.content.cloneNode(true);
+    const template = document.getElementById('basic-scene-ui');
+    const clone = template.content.cloneNode(true);
 
-      const h1 = clone.querySelector('.basic-scene-ui h1');
-      h1.textContent = 'Skip vote';
+    const h1 = clone.querySelector('.basic-scene-ui h1');
+    h1.textContent = 'Skip vote';
 
-      const p = clone.querySelector('.basic-scene-ui p');
-      p.textContent = 'Tap to not vote'
+    const p = clone.querySelector('.basic-scene-ui p');
+    p.textContent = 'Tap to not vote'
 
-      return clone;
-    });
+    return clone;
+  });
 
   hytopia.onData(data => {
     if (data.roleBar) {
@@ -106,10 +106,6 @@
       window.statusBarTimeout = setTimeout(() => {
         document.getElementById('status-bar-container').style.display = 'none';
       }, data.statusBar.milliseconds || 1000);
-    }
-
-    if (data.role) {
-      document.getElementById('role').textContent = data.role;
     }
 
     if (data.title) {
@@ -182,6 +178,23 @@
         }, data.popupMilliseconds);
       }
     }
+
+    if (data.silence) {
+      const silenceDisplay = document.getElementById('silence-display');
+      silenceDisplay.classList.remove('fade-out');
+      silenceDisplay.classList.add('fade-in');
+      silenceDisplay.style.display = 'flex';
+
+      if (window.silenceTimeout) {
+        clearTimeout(window.silenceTimeout);
+      }
+
+      window.silenceTimeout = setTimeout(() => {
+        silenceDisplay.classList.remove('fade-in');
+        silenceDisplay.classList.add('fade-out');
+        silenceDisplay.style.display = 'none';
+      }, data.silence.milliseconds || 1000);
+    }
   });
 </script>
 
@@ -194,6 +207,10 @@
 </template>
 
 <div class="game-ui">
+  <div class="silence-display" id="silence-display">
+    <img src="{{CDN_ASSETS_URL}}/icons/silence.png" alt="Silence Icon" />
+  </div>
+
   <div class="title-display" id="title-display">
     <div class="title-text" id="title-text"></div>
   </div>
@@ -240,6 +257,30 @@
     height: 100%;
     pointer-events: none;
     z-index: 1000;
+  }
+
+  .silence-display {
+    position: fixed;
+    display: none;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    align-items: center;
+  }
+
+  .silence-display img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .silence-display.fade-in {
+    opacity: 1;
+  }
+
+  .silence-display.fade-out {
+    opacity: 0;
   }
 
   .title-display {
@@ -320,6 +361,7 @@
 
   .role-display {
     position: fixed;
+    display: none;
     bottom: 20px;
     right: 20px;
     background: rgba(0, 0, 0, 0.7);

@@ -306,7 +306,15 @@ export class PlayerSession {
         })
     }
 
-    public updateRoleBar(): void {
+    public silence(milliseconds: number = 1000): void {
+        this._player.ui.sendData({
+            silence: {
+                milliseconds
+            }
+        })
+    }
+
+    public sendRoleBar(): void {
         const message = this._role === PlayerRole.IMPOSTOR ? 'IMPOSTOR_ROLE_BAR' : 'CREW_ROLE_BAR'
         this.roleBar(
             Message.t(message, {

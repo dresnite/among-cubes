@@ -2,6 +2,7 @@ import { Main } from "../Main";
 import { Message } from "../messages/Message";
 import type { PlayerSession } from "../player/PlayerSession";
 import { Game } from "./Game";
+import { EmergencyMeetingPhase } from "./phase/phases/EmergencyMeetingPhase";
 
 export class GameManager {
 
@@ -23,6 +24,10 @@ export class GameManager {
         this._game.getPhase().onHeartbeat();
 
         for (const playerSession of Main.getInstance().getPlayerSessionManager().getSessions().values()) {
+            if (!(playerSession.getGame()?.getPhase() instanceof EmergencyMeetingPhase)) {
+                playerSession.silence();
+            }
+            
             if (!playerSession.getGame()) {
                 playerSession.popup(Message.t('WAITING_FOR_GAME_TO_END'));
             }
