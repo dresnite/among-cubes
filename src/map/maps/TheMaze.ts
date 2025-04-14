@@ -48,4 +48,8 @@ export class TheMaze extends GameMap {
         return { x: 0, y: 0.7, z: 0, w: 0.7 };
     }
 
+    public getCadaverSpawnY(): number {
+        return 2;
+    }
+
 }

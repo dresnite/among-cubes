@@ -7,6 +7,8 @@ import type { PlayerSession } from "../../../player/PlayerSession";
 import { KNIFE_USE_COOLDOWN } from "../../../utils/config";
 import { EmergencyMeetingPhase } from "./EmergencyMeetingPhase";
 import type { Game } from "../../Game";
+import { Entity, RigidBodyType } from "hytopia";
+import { createUniqueId } from "../../../utils/math";
 
 export class InProgressPhase extends Phase {
 
@@ -43,7 +45,7 @@ export class InProgressPhase extends Phase {
             // Set player position
             playerSession.getPlayerEntity()?.setPosition(position);
 
-            
+
             if (!this._firstTimeUsedThisGame) {
                 return;
             }
@@ -98,6 +100,8 @@ export class InProgressPhase extends Phase {
     }
 
     public onDeath(victim: PlayerSession, killer: PlayerSession): void {
+        this._spawnCadaver(victim);
+
         killer.achievement(
             Message.t('KILLED_PLAYER', { victim: victim.getPlayer().username }),
             Message.t('KILLED_PLAYER_SUBTITLE'),
@@ -123,6 +127,42 @@ export class InProgressPhase extends Phase {
 
     public onLeave(playerSession: PlayerSession): void {
         this._game.checkIfGameShouldEnd();
+    }
+
+    private _spawnCadaver(playerSession: PlayerSession): void {
+        console.log('Spawning cadaver for', playerSession.getPlayer().username)
+        const game = playerSession.getGame();
+
+        if (!game) {
+            throw new Error(`Could not spawn cadaver of ${playerSession.getPlayer().username} because they were not in a game`)
+        }
+
+        const color = playerSession.getColor();
+
+        if (!color) {
+            throw new Error(`Could not spawn cadaver of ${playerSession.getPlayer().username} because they had no color`)
+        }
+
+        const cadaverId = createUniqueId();
+
+        const cadaver = new Entity({
+            modelUri: color.getSkinPath(),
+            modelScale: 0.8,
+            name: cadaverId,
+            modelLoopedAnimations: ['sleep'],
+            rigidBodyOptions: {
+                type: RigidBodyType.FIXED, // This makes the entity not move
+            },
+        })
+
+        const position = playerSession.getPlayerEntity()!.position;
+        const main = Main.getInstance();
+
+        cadaver.spawn(main.getWorldOrThrow(), {
+            x: position.x,
+            y: main.getGameMap().getCadaverSpawnY(),
+            z: position.z,
+        });
     }
 
 }

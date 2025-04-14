@@ -36,4 +36,6 @@ export abstract class GameMap {
 
     public abstract getSkipVoteRotation(): QuaternionLike;
 
+    public abstract getCadaverSpawnY(): number;
+
 }
