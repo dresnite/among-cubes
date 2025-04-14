@@ -1,53 +1,32 @@
+import { Main } from "../Main";
+import { Message } from "../messages/Message";
 import type { PlayerSession } from "../player/PlayerSession";
 import { Game } from "./Game";
-import { PhaseType } from "./phase/PhaseType";
 
 export class GameManager {
 
-    private _games: Map<string, Game> = new Map();
+    private _game: Game;
 
     constructor() {
-        this._games = new Map();
+        this._game = new Game();
     }
 
-    public getGames(): Map<string, Game> {
-        return this._games;
-    }
-
-    private _getMostSuitableGame(): Game|null {
-        const openGames = Array.from(this._games.values()).filter(game => game.getPhase().getPhaseType() === PhaseType.WAITING_FOR_PLAYERS);
-
-        if (openGames.length === 0) {
-            return null;
+    public assignPlayerSessionToGame(playerSession: PlayerSession): void {
+        if (!this._game.canBeJoined()) {
+            return;
         }
 
-        let mostSuitableGame: Game|null = null;
+        this._game.addPlayer(playerSession);
+    }
 
-        for (const game of openGames) {
-            if (mostSuitableGame === null || game.getPlayerSessions().length > mostSuitableGame.getPlayerSessions().length) {
-                mostSuitableGame = game;
+    public onHeartbeat(): void {
+        this._game.getPhase().onHeartbeat();
+
+        for (const playerSession of Main.getInstance().getPlayerSessionManager().getSessions().values()) {
+            if (!playerSession.getGame()) {
+                playerSession.popup(Message.t('WAITING_FOR_GAME_TO_END'));
             }
         }
-
-        return mostSuitableGame;
-    }
-
-    private _createGame(): Game {
-        const game = new Game();
-        this._games.set(game.getUniqueId(), game);
-        return game;
-    }
-
-    public assignPlayerSessionToGame(playerSession: PlayerSession): Game {
-        let suitableGame = this._getMostSuitableGame();
-
-        if (!suitableGame) {
-            suitableGame = this._createGame();
-        }
-
-        suitableGame.addPlayer(playerSession);
-
-        return suitableGame;
     }
 
 }

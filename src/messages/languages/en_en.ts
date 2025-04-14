@@ -36,5 +36,6 @@ export const en_en = {
     YOU_WERE_VOTED_OUT: "You were eliminated from the game!",
     DEAD_BODY_FOUND: "{color} body found!",
     EMERGENCY_MEETING_REQUESTED_BY: "Emergency meeting requested by {color} ({requester})",
-    DEAD_BODY_FOUND_BY: "{color} body found by {requester}"
+    DEAD_BODY_FOUND_BY: "{color} body found by {requester}",
+    WAITING_FOR_GAME_TO_END: "Waiting for the current game to end"
 }

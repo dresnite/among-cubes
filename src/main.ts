@@ -97,10 +97,7 @@ export class Main {
 
   private _setupHeartbeat(): void {
     setInterval(() => {
-      for (const game of this._gameManager.getGames().values()) {
-        game.getPhase().onHeartbeat();
-      }
-
+      this._gameManager.onHeartbeat();
       this._broadcaster.handleHeartbeat();
     }, 1000);
   }
@@ -114,8 +111,6 @@ export class Main {
 
     this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
       const session = this._playerSessionManager.openSession(player)
-
-      this._gameManager.assignPlayerSessionToGame(session);
 
       session.setupEntity();
       session.setupCamera();
@@ -180,7 +175,7 @@ export class Main {
     });
 
     skipVoteUI.load(this._world!);
-    
+
 
     const podiums = this._gameMap.getVotingPodiumPositions();
     for (const color of Object.values(ColorType)) {

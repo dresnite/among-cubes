@@ -6,6 +6,7 @@ import { ColorFactory } from "./color/ColorFactory";
 import type { Phase } from "./phase/Phase";
 import { EndingPhase } from "./phase/phases/EndingPhase";
 import { WaitingForPlayersPhase } from "./phase/phases/WaitingForPlayersPhase";
+import { PhaseType } from "./phase/PhaseType";
 
 export class Game {
 
@@ -41,6 +42,10 @@ export class Game {
         this._phase.onChangePhase();
         this._phase = phase;
         this._phase.onStart();
+    }
+
+    public canBeJoined(): boolean {
+        return this._phase.getPhaseType() === PhaseType.WAITING_FOR_PLAYERS && this._availableColors.length > 0;
     }
 
     public restart(): void {

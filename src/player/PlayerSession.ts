@@ -127,38 +127,43 @@ export class PlayerSession {
 
     public setupEntity(): void {
         const world = Main.getInstance().getWorldOrThrow();
-        const playerEntities = world.entityManager.getPlayerEntitiesByPlayer(this._player);
 
-        if (playerEntities.length === 0) {
-            this._playerEntity = new PlayerEntity({
-                player: this._player,
-                name: 'Player',
-                modelUri: this._color!.getSkinPath(),
-                modelLoopedAnimations: ['idle'],
-                modelScale: 0.5,
-            });
-            this._playerEntity.spawn(
-                world, 
-                Main.getInstance().getGameMap().getWaitingRoomCloseCoords()
-            );
+        const spawnPosition = (this._playerEntity) ? this._playerEntity.position : Main.getInstance().getGameMap().getWaitingRoomCloseCoords();
 
-            this._knife = new Entity({
-                name: 'sword',
-                modelUri: 'models/items/sword.gltf',
-                parent: this._playerEntity,
-                parentNodeName: 'hand_right_anchor', // attach it to the hand node of our parent model
-            });
-            
-            // Initially hide the knife
-            this._knifeVisible = false;
-            this.setupKnifeVisibility();
-
-            this.setupPlayerEvents(this._playerEntity)
-
-            //this.teleportToVotingArea();
-        } else {
-            this._playerEntity = playerEntities[0]!;
+        if (this._playerEntity) {
+            this._playerEntity.despawn();
+            this._playerEntity = null;
         }
+
+        if (this._knife && this._knife.isSpawned) {
+            this._knife.despawn();
+            this._knife = null;
+        }
+
+        this._playerEntity = new PlayerEntity({
+            player: this._player,
+            name: 'Player',
+            modelUri: this._color?.getSkinPath() ?? 'models/players/player.gltf',
+            modelLoopedAnimations: ['idle'],
+            modelScale: 0.5,
+        });
+        this._playerEntity.spawn(world, spawnPosition);
+
+        this._knife = new Entity({
+            name: 'sword',
+            modelUri: 'models/items/sword.gltf',
+            parent: this._playerEntity,
+            parentNodeName: 'hand_right_anchor', // attach it to the hand node of our parent model
+        });
+        
+        // Initially hide the knife
+        this._knifeVisible = false;
+        this.setupKnifeVisibility();
+        this.setupPlayerEvents(this._playerEntity)
+
+        this._player.camera.setAttachedToEntity(this._playerEntity);
+
+        //this.teleportToVotingArea();
     }
 
     public setupPlayerEvents(playerEntity: PlayerEntity): void {

@@ -20,6 +20,12 @@ export class WaitingForPlayersPhase extends Phase {
                 maxPlayers: Object.keys(ColorType).length.toString()
             }));
         }
+
+        for (const playerSession of Main.getInstance().getPlayerSessionManager().getSessions().values()) {
+            if (!playerSession.getGame() && this._game.canBeJoined()) {
+                this._game.addPlayer(playerSession);
+            }
+        }
     }
 
     public onJoin(playerSession: PlayerSession): void {
@@ -29,6 +35,12 @@ export class WaitingForPlayersPhase extends Phase {
         if (this._game.getPlayerSessions().length >= MINIMUM_PLAYERS_TO_START_GAME) {
             Main.getInstance().getWorld()?.chatManager.sendBroadcastMessage(Message.t('MINIMUM_PLAYERS_REACHED'))
             this._game.setPhase(new MinimumPlayersReachedPhase(this._game));
+        }
+    }
+
+    public onChangePhase(): void {
+        for (const playerSession of this._game.getPlayerSessions()) {
+            playerSession.setupEntity();
         }
     }
 
