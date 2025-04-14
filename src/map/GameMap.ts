@@ -1,4 +1,4 @@
-import type { Vector3Like } from "hytopia";
+import type { QuaternionLike, Vector3Like } from "hytopia";
 
 export abstract class GameMap {
 
@@ -19,6 +19,8 @@ export abstract class GameMap {
     }
 
     public abstract getVotingPodiumPositions(): Vector3Like[];
+
+    public abstract getVotingPodiumRotation(): QuaternionLike;
 
     private _getRandomCoordsAround(coords: Vector3Like): Vector3Like {
         return {

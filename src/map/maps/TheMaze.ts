@@ -1,4 +1,4 @@
-import type { Vector3Like } from "hytopia";
+import type { QuaternionLike, Vector3Like } from "hytopia";
 import { GameMap } from "../GameMap";
 
 export class TheMaze extends GameMap {
@@ -31,4 +31,9 @@ export class TheMaze extends GameMap {
             { x: 42, y: 1, z: -24 },
         ];
     }
+
+    public getVotingPodiumRotation(): QuaternionLike {
+        return { x: 0, y: -0.7, z: 0, w: 0.7 };
+    }
+    
 }
