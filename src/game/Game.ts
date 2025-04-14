@@ -38,6 +38,7 @@ export class Game {
     }
 
     public setPhase(phase: Phase): void {
+        this._phase.onChangePhase();
         this._phase = phase;
         this._phase.onStart();
     }
