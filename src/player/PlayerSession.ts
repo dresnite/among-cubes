@@ -152,6 +152,8 @@ export class PlayerSession {
             this.setupKnifeVisibility();
 
             this.setupPlayerEvents(this._playerEntity)
+
+            //this.teleportToVotingArea();
         } else {
             this._playerEntity = playerEntities[0]!;
         }

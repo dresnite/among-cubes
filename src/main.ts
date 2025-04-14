@@ -2,7 +2,6 @@ import type { World } from "hytopia";
 import {
   Audio,
   Entity,
-  PlayerEntity,
   PlayerEvent,
   RigidBodyType,
   SceneUI,
@@ -169,6 +168,15 @@ export class Main {
         y: podium.y + 1,
         z: podium.z,
       });
+
+      // Create the Scene UI over the NPC
+      const npcMessageUI = new SceneUI({
+        templateId: `${color}-entity`,
+        attachedToEntity: voteEntity,
+        offset: { x: 0, y: 1.75, z: 0 },
+      });
+
+      npcMessageUI.load(this._world!);
 
       this._voteEntities.push(voteEntity);
     }
