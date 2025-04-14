@@ -1,14 +1,13 @@
 import { Main } from "../Main";
 import { Message } from "../messages/Message";
+import { BROADCASTER_FREQUENCY } from "./config";
 
 export class Broadcaster {
 
-    private _interval: number;
     private _timeForNextBroadcast: number;
     
-    constructor(interval: number) {
-        this._interval = interval;
-        this._timeForNextBroadcast = interval;
+    constructor() {
+        this._timeForNextBroadcast = BROADCASTER_FREQUENCY;
     }
 
     private _getBroadcastableMessages(): string[] {
@@ -27,7 +26,7 @@ export class Broadcaster {
 
         if (this._timeForNextBroadcast <= 0) {
             this._sendBroadcast();
-            this._timeForNextBroadcast = this._interval;
+            this._timeForNextBroadcast = BROADCASTER_FREQUENCY;
         }
     }
 
