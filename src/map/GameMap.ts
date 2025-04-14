@@ -30,4 +30,6 @@ export abstract class GameMap {
         };
     }
 
+    public abstract getEmergencyButtonCoords(): Vector3Like;
+
 }

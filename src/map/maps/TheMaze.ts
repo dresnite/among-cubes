@@ -35,5 +35,9 @@ export class TheMaze extends GameMap {
     public getVotingPodiumRotation(): QuaternionLike {
         return { x: 0, y: -0.7, z: 0, w: 0.7 };
     }
-    
+
+    public getEmergencyButtonCoords(): Vector3Like {
+        return { x: 1, y: 3, z: 1 };
+    }
+
 }

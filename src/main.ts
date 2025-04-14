@@ -141,7 +141,7 @@ export class Main {
       },
     });
 
-    emergencyButtonEntity.spawn(this._world!, { x: 1, y: 3, z: 1 });
+    emergencyButtonEntity.spawn(this._world!, this._gameMap.getEmergencyButtonCoords());
 
     // Create the Scene UI over the NPC
     const npcMessageUI = new SceneUI({
