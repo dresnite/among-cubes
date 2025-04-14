@@ -4,9 +4,10 @@ import {
   Collider,
   ColliderShape,
   Entity,
-  EntityEvent,
   PlayerEntity,
   PlayerEvent,
+  RigidBodyType,
+  SceneUI,
 } from 'hytopia';
 
 import worldMap from '../assets/maps/themaze.json';
@@ -76,9 +77,10 @@ export class Main {
 
   private _loadGameWorld(world: World): void {
     this._world = world;
-
     world.loadMap(worldMap);
+
     this._setupWorldEvents();
+    this._setupWorldEntities();
   }
 
   private _playBackgroundMusic(world: World): void {
@@ -110,39 +112,6 @@ export class Main {
 
       // Load our game UI for this player
       player.ui.load('ui/index.html');
-
-      const coinEntity = new Entity({
-        modelUri: 'models/environment/coin2.glb',
-        opacity: 0.99,
-        modelScale: 0.8,
-        rigidBodyOptions: {
-          enabledRotations: { x: false, y: false, z: false }, // Only allow rotations around Y axis (Yaw)
-          colliders: [ // If we provide colliders, the default collider will not be created.
-            Collider.optionsFromModelUri('models/environment/coin.glb', 0.8),
-            { // Create a sensor to detect players 
-              shape: ColliderShape.CYLINDER,
-              radius: 1,
-              halfHeight: 2,
-              isSensor: true, // This makes the collider not collide with other entities/objects, just sense their intersection
-              tag: 'aggro-sensor',
-              onCollision: (other: BlockType | Entity, started: boolean) => {
-                if (started && other instanceof PlayerEntity) {
-                  this._world?.chatManager.sendPlayerMessage(other.player, 'You found a coin!!', 'FFE4E1');
-                  //coinEntity.despawn();
-                }
-              },
-            },
-          ]
-        },
-      });
-      coinEntity.spawn(this._world!, { x: 10, y: 10, z: 0 });
-
-      coinEntity.on(EntityEvent.ENTITY_COLLISION, ({ otherEntity }) => {
-        if (otherEntity instanceof PlayerEntity) {
-          this._world?.chatManager.sendPlayerMessage(otherEntity.player, 'You found a coin!', 'FFE4E1');
-          coinEntity.despawn();
-        }
-      });
     });
 
     this._world?.on(PlayerEvent.LEFT_WORLD, ({ player }) => {
@@ -152,6 +121,43 @@ export class Main {
       session.getGame()?.removePlayer(session)
       this._playerSessionManager.closeSession(player)
     })
+  }
+
+  private _setupWorldEntities(): void {
+    const emergencyButtonEntity = new Entity({
+      modelUri: 'models/environment/emergency-button.glb',
+      modelScale: 2,
+      name: 'emergency-button',
+      opacity: 0.99,
+      rigidBodyOptions: {
+        type: RigidBodyType.FIXED, // This makes the entity not move
+        colliders: [
+          Collider.optionsFromModelUri('models/npcs/mindflayer.gltf', 2), // Uses the model's bounding box to create the hitbox collider
+          { // Create a sensor that teleports the player into the game
+            shape: ColliderShape.BLOCK,
+            halfExtents: { x: 1.5, y: 1.05, z: 1.5 }, // size it slightly smaller than the platform the join NPC is standing on
+            isSensor: true,
+            tag: 'emergency-button-sensor',
+            onCollision: (other: BlockType | Entity, started: boolean) => {
+              if (started && other instanceof PlayerEntity) {
+                this._world?.chatManager.sendPlayerMessage(other.player, 'Emergency button pressed!', 'FFE4E1');
+              }
+            },
+          },
+        ],
+      },
+    });
+
+    emergencyButtonEntity.spawn(this._world!, { x: 1, y: 1.3, z: 1 });
+
+    // Create the Scene UI over the NPC
+    const npcMessageUI = new SceneUI({
+      templateId: 'emergency-button-entity',
+      attachedToEntity: emergencyButtonEntity,
+      offset: { x: 0, y: 1.75, z: 0 },
+    });
+
+    npcMessageUI.load(this._world!);
   }
 
 }

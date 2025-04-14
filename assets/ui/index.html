@@ -27,6 +27,14 @@
     hytopia.pressInput(' ', false);
   });
 
+  // Register in-game scene UI templates, so server can
+  // instantiate instance with new SceneUI({ templateId: 'emergency-button-entity', ...etc });
+  hytopia.registerSceneUITemplate('emergency-button-entity', () => {
+    const template = document.getElementById('emergency-button-entity');
+    const clone = template.content.cloneNode(true);
+    return clone;
+  });
+
   hytopia.onData(data => {
     if (data.roleBar) {
       document.getElementById('role').textContent = data.roleBar.role || '';
@@ -141,6 +149,14 @@
     }
   });
 </script>
+
+<!-- Template for Emergency Button Scene UI-->
+<template id="emergency-button-entity">
+  <div class="emergency-button-entity">
+    <h1>Emergency Button</h1>
+    <p>Press the button to initiate an emergency meeting</p>
+  </div>
+</template>
 
 <div class="game-ui">
   <div class="title-display" id="title-display">
@@ -417,4 +433,37 @@
   .fade-out {
     opacity: 0;
   }
+
+  .emergency-button-entity {
+    font-family: 'system-ui', sans-serif;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    padding: 12px 20px;
+    color: white;
+    text-align: center;
+    position: relative;
+    margin-bottom: 15px;
+  }
+
+  .emergency-button-entity:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid rgba(0, 0, 0, 0.5);
+  }
+
+  .emergency-button-entity h1 {
+    font-size: 14px;
+    margin: 0 0 8px 0;
+  }
+
+  .emergency-button-entity p {
+    font-size: 10px;
+    margin: 0;
+  }
+
 </style>
