@@ -15,11 +15,14 @@ export class EmergencyMeetingPhase extends Phase {
 
     private _poll: Poll;
 
+    public static readonly SKIP_OPTION = 'skip';
+
     constructor(game: Game) {
         super(game);
 
         this._timeToHideEmergencyMeetingMessage = TIME_TO_HIDE_EMERGENCY_MEETING_MESSAGE;
         this._timeToEndEmergencyMeeting = TIME_TO_END_EMERGENCY_MEETING;
+
         this._poll = this._createImpostorPoll();
     }
 
@@ -57,7 +60,14 @@ export class EmergencyMeetingPhase extends Phase {
         }
 
         for (const playerSession of this._game.getPlayerSessions()) {
-            playerSession.popup(Message.t('DISCUSS_IMPOSTOR'));
+            if (this._poll.hasVoted(playerSession)) {
+                playerSession.popup(Message.t('IMPOSTER_VOTED', {
+                    color: this._poll.getVotedOption(playerSession)!
+                }));
+            } else {
+                playerSession.popup(Message.t('DISCUSS_IMPOSTOR'));
+            }
+
             playerSession.statusBar({
                 coins: playerSession.getCoins(),
                 time: this._timeToEndEmergencyMeeting.toString(),
@@ -67,9 +77,38 @@ export class EmergencyMeetingPhase extends Phase {
     }
 
     private _endEmergencyMeeting(): void {
-        // kick the most voted player here
+        const options = this._poll.getMostVotedOptions()
+
+        if (options.length === 1) {
+            const winnerOption = options.shift()
+
+            if (winnerOption === EmergencyMeetingPhase.SKIP_OPTION) {
+                this._endEmergencyMeetingWithDraw();
+            } else {
+                // kick the winner color 
+                const winnerColor = winnerOption as ColorType;
+                this._endEmergencyMeetingWithKick(winnerColor);
+            }
+        } else {
+            this._endEmergencyMeetingWithDraw();
+        }
 
         this._game.setPhase(new InProgressPhase(this._game, false));
+    }
+
+    private _endEmergencyMeetingWithDraw(): void {
+        // draw
+    }
+
+    private _endEmergencyMeetingWithKick(color: ColorType): void {
+        for (const playerSession of this._game.getPlayerSessions()) {
+            if (playerSession.getColor()?.getType() === color) {
+                playerSession.teleportToWaitingRoom();
+                playerSession.message(Message.t('YOU_WERE_VOTED_OUT'));
+
+                this._game.removePlayer(playerSession);
+            }
+        }
     }
 
     private _setupEmergencyMeeting(): void {
@@ -92,7 +131,7 @@ export class EmergencyMeetingPhase extends Phase {
 
         return new Poll([
             ...colors,
-            'none'
+            EmergencyMeetingPhase.SKIP_OPTION
         ]);
     }
 

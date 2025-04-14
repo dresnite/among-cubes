@@ -48,7 +48,7 @@ export abstract class Phase {
             gamePlayerSession.achievement(
                 Message.t('JOINED_GAME', {
                     player: playerSession.getPlayer().username
-                }), 
+                }),
                 Message.t('JOINED_GAME_SUBTITLE', {
                     playersLeftCount: (MINIMUM_PLAYERS_TO_START_GAME - this._game.getPlayerSessions().length).toString()
                 }),

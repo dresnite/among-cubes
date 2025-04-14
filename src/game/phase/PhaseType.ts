@@ -4,6 +4,5 @@ export enum PhaseType {
     COUNTDOWN = 'countdown',
     IN_PROGRESS = 'in_progress',
     EMERGENCY_MEETING = 'emergency_meeting',
-    VOTING = 'voting',
     ENDING = 'ending',
 }

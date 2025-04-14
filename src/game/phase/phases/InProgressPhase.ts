@@ -4,19 +4,18 @@ import { PlayerRole } from "../../../player/PlayerRole";
 import { Message } from "../../../messages/Message";
 import { Main } from "../../../Main";
 import type { PlayerSession } from "../../../player/PlayerSession";
-import { EndingPhase } from "./EndingPhase";
 import { KNIFE_USE_COOLDOWN } from "../../../utils/config";
 import { EmergencyMeetingPhase } from "./EmergencyMeetingPhase";
 import type { Game } from "../../Game";
 
 export class InProgressPhase extends Phase {
 
-    private _sendWelcomeMessages: boolean;
-    
-    constructor(game: Game, sendWelcomeMessages: boolean = true) {
+    private _firstTimeUsedThisGame: boolean;
+
+    constructor(game: Game, firstTimeUsedThisGame: boolean = true) {
         super(game);
 
-        this._sendWelcomeMessages = sendWelcomeMessages;
+        this._firstTimeUsedThisGame = firstTimeUsedThisGame;
     }
 
     public getPhaseType(): PhaseType {
@@ -44,11 +43,12 @@ export class InProgressPhase extends Phase {
             // Set player position
             playerSession.getPlayerEntity()?.setPosition(position);
 
-            // Set player role and show appropriate message
-            if (!this._sendWelcomeMessages) {
+            
+            if (!this._firstTimeUsedThisGame) {
                 return;
             }
 
+            // Set player role and show appropriate message
             if (index === randomIndex) {
                 playerSession.setRole(PlayerRole.IMPOSTOR);
                 playerSession.achievement(
@@ -72,6 +72,8 @@ export class InProgressPhase extends Phase {
             // Make players face the center
             //playerSession.getPlayer().camera.lookAtPosition(centerPoint);
         });
+
+        this._game.checkIfGameShouldEnd();
     }
 
     public onHeartbeat(): void {
@@ -110,7 +112,7 @@ export class InProgressPhase extends Phase {
 
         victim.message(Message.t('YOU_WERE_KILLED_MESSAGE', { killer: killer.getPlayer().username }));
         victim.teleportToWaitingRoom();
-        
+
         this._game.removePlayer(victim);
 
         killer.setKnifeUseCooldown(KNIFE_USE_COOLDOWN);
@@ -120,18 +122,7 @@ export class InProgressPhase extends Phase {
     }
 
     public onLeave(playerSession: PlayerSession): void {
-        const victimsAlive = this._game.getPlayerSessions().filter(session => session.getRole() === PlayerRole.CREW);
-        const impostorAlive = this._game.getPlayerSessions().filter(session => session.getRole() === PlayerRole.IMPOSTOR);
-        
-        if (victimsAlive.length === 0) {
-            this._game.setPhase(new EndingPhase(this._game, false));
-            return
-        }
-
-        if (impostorAlive.length === 0) {
-            this._game.setPhase(new EndingPhase(this._game, true));
-            return
-        }
+        this._game.checkIfGameShouldEnd();
     }
 
 }

@@ -31,5 +31,7 @@ export const en_en = {
     CREW_ROLE_BAR: "Crew",
     EMERGENCY_MEETING_MESSAGE: "EMERGENCY MEETING!",
     EMERGENCY_MEETING_ALREADY_CALLED: "You already called an emergency meeting in this game!",
-    DISCUSS_IMPOSTOR: "Vote for the impostor"
+    DISCUSS_IMPOSTOR: "Vote for the impostor",
+    IMPOSTER_VOTED: "You voted for: {color}",
+    YOU_WERE_VOTED_OUT: "You were eliminated from the game!"
 }

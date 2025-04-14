@@ -1,8 +1,10 @@
+import { PlayerRole } from "../player/PlayerRole";
 import type { PlayerSession } from "../player/PlayerSession";
 import { createUniqueId } from "../utils/math";
 import type { Color } from "./color/Color";
 import { ColorFactory } from "./color/ColorFactory";
 import type { Phase } from "./phase/Phase";
+import { EndingPhase } from "./phase/phases/EndingPhase";
 import { WaitingForPlayersPhase } from "./phase/phases/WaitingForPlayersPhase";
 
 export class Game {
@@ -47,7 +49,7 @@ export class Game {
 
         this._playerSessions = [];
         this._availableColors = ColorFactory.createColors();
-        
+
         this.setPhase(new WaitingForPlayersPhase(this));
     }
 
@@ -85,6 +87,21 @@ export class Game {
         playerSession.reset();
 
         this._phase.onLeave(playerSession);
+    }
+
+    public checkIfGameShouldEnd(): void {
+        const victimsAlive = this.getPlayerSessions().filter(session => session.getRole() === PlayerRole.CREW);
+        const impostorAlive = this.getPlayerSessions().filter(session => session.getRole() === PlayerRole.IMPOSTOR);
+
+        if (victimsAlive.length === 0) {
+            this.setPhase(new EndingPhase(this, false));
+            return
+        }
+
+        if (impostorAlive.length === 0) {
+            this.setPhase(new EndingPhase(this, true));
+            return
+        }
     }
 
 }

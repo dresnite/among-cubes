@@ -51,6 +51,10 @@ export class Poll {
         return voteCounts;
     }
 
+    public getVotedOption(voter: PlayerSession): string | undefined {
+        return this._voters.get(voter.getPlayer().username);
+    }
+
     // Returns true if the player has voted
     public hasVoted(voter: PlayerSession): boolean {
         return this._voters.has(voter.getPlayer().username);

@@ -106,11 +106,11 @@ export class Main {
   }
 
   private _setupWorldEvents(): void {
-    setInterval(() => {
-      for (const player of this._playerSessionManager.getSessions().values()) {
-        player.message(`Your rotation is x ${player.getPlayerEntity()?.rotation.x} y ${player.getPlayerEntity()?.rotation.y} z ${player.getPlayerEntity()?.rotation.z} w ${player.getPlayerEntity()?.rotation.w}`)
-      }
-    }, 1000);
+    // setInterval(() => {
+    //   for (const player of this._playerSessionManager.getSessions().values()) {
+    //     player.message(`Your rotation is x ${player.getPlayerEntity()?.rotation.x} y ${player.getPlayerEntity()?.rotation.y} z ${player.getPlayerEntity()?.rotation.z} w ${player.getPlayerEntity()?.rotation.w}`)
+    //   }
+    // }, 1000);
 
     this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
       const session = this._playerSessionManager.openSession(player)
