@@ -38,4 +38,6 @@ export abstract class GameMap {
 
     public abstract getCadaverSpawnY(): number;
 
+    public abstract getCoinCoords(): Vector3Like[];
+
 }

@@ -52,4 +52,26 @@ export class Spaceship extends GameMap {
         return 1.7;
     }
 
+    public getCoinCoords(): Vector3Like[] {
+        return [
+            { x: 1, y: 1, z: 18 },
+            { x: -6, y: 1, z: 19 },
+            { x: -26, y: 1, z: 19 },
+            { x: -19, y: 1, z: 6 },
+            { x: -34, y: 1, z: 1 },
+            { x: -35, y: 1, z: 19 },
+            { x: -46, y: 1, z: -43 },
+            { x: -27, y: 1, z: -33 },
+            { x: -18, y: 1, z: -18 },
+            { x: -29, y: 1, z: -39 },
+            { x: -8, y: 1, z: -45 },
+            { x: -7, y: 1, z: -36 },
+            { x: -36, y: 1, z: -19 },
+            { x: -46, y: 1, z: -27 },
+            { x: -7, y: 1, z: -19 },
+            { x: 6, y: 1, z: -35 },
+            { x: 6, y: 1, z: 32 },
+        ];
+    }
+
 }
