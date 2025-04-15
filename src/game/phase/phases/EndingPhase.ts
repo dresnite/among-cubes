@@ -1,7 +1,7 @@
 import { Main } from "../../../Main";
 import { Message } from "../../../messages/Message";
 import { PlayerRole } from "../../../player/PlayerRole";
-import { ENDING_GAME_DURATION } from "../../../utils/config";
+import { ENDING_GAME_DURATION, XP_PER_WIN_AS_IMPOSTOR } from "../../../utils/config";
 import type { Game } from "../../Game";
 import { Phase } from "../Phase";
 import { PhaseType } from "../PhaseType";
@@ -57,6 +57,10 @@ export class EndingPhase extends Phase {
                 'cup.png',
                 1000
             )
+            
+            if (playerSession.getRole() === PlayerRole.CREW) {
+                playerSession.getExperienceManager().addExperience(XP_PER_WIN_AS_IMPOSTOR);
+            }
         }
     }
     

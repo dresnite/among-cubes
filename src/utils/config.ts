@@ -20,5 +20,6 @@ export const COIN_SPAWN_TIME = 10000; // 10 seconds
 export const MAX_LEVEL = 100;
 export const XP_PER_COIN = 50;
 export const XP_PER_KILL = 100;
+export const XP_PER_WIN_AS_IMPOSTOR = 300;
 
 export const ENABLE_BROADCASTER = false;
