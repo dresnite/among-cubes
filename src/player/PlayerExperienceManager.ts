@@ -78,6 +78,7 @@ export class PlayerExperienceManager {
             const persistedData = data as unknown as PlayerPersistedData | undefined;
             this.setExperience(persistedData?.experience || 0);
             this._loaded = true;
+            this._session.sendLevelInfo();
         });
     }
 
