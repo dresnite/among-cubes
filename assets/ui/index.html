@@ -226,6 +226,21 @@
     if (data.openSilenceModal) {
       silenceModal.classList.add('active');
     }
+
+    if (data.levelInfo) {
+      const levelNumber = document.getElementById('level-number');
+      const xpBarFill = document.getElementById('xp-bar-fill');
+      const currentXp = document.getElementById('current-xp');
+      const nextLevelXp = document.getElementById('next-level-xp');
+
+      levelNumber.textContent = data.levelInfo.level;
+      currentXp.textContent = data.levelInfo.currentXp;
+      nextLevelXp.textContent = data.levelInfo.nextLevelXp;
+
+      // Calculate and set XP bar fill percentage
+      const xpPercentage = (data.levelInfo.currentXp / data.levelInfo.nextLevelXp) * 100;
+      xpBarFill.style.width = `${xpPercentage}%`;
+    }
   });
 
   // Add silence modal functionality
@@ -277,6 +292,22 @@
 
   <div class="role-display" id="role-display">
     <span class="role-text" id="role"></span>
+  </div>
+
+  <div class="level-display" id="level-display">
+    <div class="level-info">
+      <span class="level-text">Level </span>
+      <span class="level-number" id="level-number">1</span>
+    </div>
+    <div class="xp-bar">
+      <div class="xp-bar-fill" id="xp-bar-fill"></div>
+      <div class="xp-text">
+        <span id="current-xp">0</span>
+        <span>/</span>
+        <span id="next-level-xp">100</span>
+        <span> XP</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -701,5 +732,72 @@
       opacity: 0;
       transform: translateY(-20px);
     }
+  }
+
+  .level-display {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .level-info {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .level-text {
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .level-number {
+    color: #4CAF50;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .xp-bar {
+    width: 200px;
+    height: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .xp-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(to right, #4CAF50, #45a049);
+    transition: width 0.3s ease;
+  }
+
+  .xp-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #FFFFFF;
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    white-space: nowrap;
   }
 </style>
