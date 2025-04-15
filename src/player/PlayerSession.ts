@@ -10,6 +10,16 @@ import { EmergencyMeetingPhase } from "../game/phase/phases/EmergencyMeetingPhas
 import { InProgressPhase } from "../game/phase/phases/InProgressPhase";
 import { PlayerExperienceManager } from "./PlayerExperienceManager";
 
+/**
+ * Manages a player's session in the game, handling their state, interactions, and UI elements.
+ * This class is responsible for managing player-specific data and functionality including:
+ * - Player role (Impostor/Crew)
+ * - Player color and appearance
+ * - Weapon handling (knife for Impostors)
+ * - Camera and movement controls
+ * - UI interactions and feedback
+ * - Game-specific actions (voting, emergency meetings, etc.)
+ */
 export class PlayerSession {
 
     private _player: Player
@@ -25,6 +35,10 @@ export class PlayerSession {
     private _experienceManager: PlayerExperienceManager
     private _usingSecurityCamera: boolean
 
+    /**
+     * Creates a new PlayerSession instance.
+     * @param player - The Hytopia Player instance to associate with this session
+     */
     constructor(player: Player) {
         this._player = player
         this._game = null
@@ -40,46 +54,89 @@ export class PlayerSession {
         this._usingSecurityCamera = false
     }
 
+    /**
+     * Gets the Hytopia Player instance associated with this session.
+     * @returns The Player instance
+     */
     public getPlayer(): Player {
         return this._player
     }
 
+    /**
+     * Gets the current game instance this player is participating in.
+     * @returns The current Game instance or null if not in a game
+     */
     public getGame(): Game | null {
         return this._game
     }
 
+    /**
+     * Sets the game instance for this player session.
+     * @param game - The Game instance to associate with this session, or null to clear
+     */
     public setGame(game: Game | null) {
         this._game = game
     }
 
+    /**
+     * Gets the player's current color.
+     * @returns The current Color instance or null if not set
+     */
     public getColor(): Color | null {
         return this._color
     }
 
+    /**
+     * Sets the player's color.
+     * @param color - The Color instance to set, or null to clear
+     */
     public setColor(color: Color | null) {
         this._color = color
     }
 
+    /**
+     * Gets the player's current role (Impostor/Crew).
+     * @returns The current PlayerRole or null if not assigned
+     */
     public getRole(): PlayerRole | null {
         return this._role
     }
 
+    /**
+     * Sets the player's role.
+     * @param role - The PlayerRole to assign, or null to clear
+     */
     public setRole(role: PlayerRole | null) {
         this._role = role
     }
 
+    /**
+     * Gets the player's entity instance in the game world.
+     * @returns The PlayerEntity instance or null if not spawned
+     */
     public getPlayerEntity(): PlayerEntity | null {
         return this._playerEntity
     }
 
+    /**
+     * Gets the player's experience manager.
+     * @returns The PlayerExperienceManager instance
+     */
     public getExperienceManager(): PlayerExperienceManager {
         return this._experienceManager
     }
 
+    /**
+     * Gets the player's current coin count.
+     * @returns The number of coins
+     */
     public getCoins(): number {
         return this._coins
     }
 
+    /**
+     * Adds a coin to the player's balance and plays coin collection animation/sound.
+     */
     public addCoin(): void {
         this._coins++
         this.coinAnimation()
@@ -92,6 +149,11 @@ export class PlayerSession {
         coinAudio.play(Main.getInstance().getWorldOrThrow());
     }
 
+    /**
+     * Attempts to spend coins from the player's balance.
+     * @param coins - The number of coins to spend
+     * @returns true if the transaction was successful, false if insufficient funds
+     */
     public useCoins(coins: number): boolean {
         if (this._coins >= coins) {
             this._coins -= coins
@@ -101,10 +163,17 @@ export class PlayerSession {
         return false
     }
 
+    /**
+     * Resets the player's coin balance to zero.
+     */
     public resetCoins(): void {
         this._coins = 0
     }
 
+    /**
+     * Resets all player session data to default values.
+     * This includes game, color, role, knife state, and coins.
+     */
     public reset(): void {
         this.setGame(null)
         this.setColor(null)
@@ -115,38 +184,74 @@ export class PlayerSession {
         this.resetCoins()
     }
 
+    /**
+     * Checks if the knife is currently visible.
+     * @returns true if the knife is visible, false otherwise
+     */
     public getKnifeVisible(): boolean {
         return this._knifeVisible
     }
 
+    /**
+     * Sets the visibility state of the knife.
+     * @param visible - Whether the knife should be visible
+     */
     public setKnifeVisible(visible: boolean) {
         this._knifeVisible = visible
     }
 
+    /**
+     * Gets the current knife use cooldown time.
+     * @returns The remaining cooldown time
+     */
     public getKnifeUseCooldown(): number {
         return this._knifeUseCooldown
     }
 
+    /**
+     * Sets the knife use cooldown time.
+     * @param cooldown - The cooldown time to set
+     */
     public setKnifeUseCooldown(cooldown: number): void {
         this._knifeUseCooldown = cooldown
     }
 
+    /**
+     * Checks if the player has pressed the emergency button.
+     * @returns true if the emergency button has been pressed, false otherwise
+     */
     public hasPressedEmergencyButton(): boolean {
         return this._hasPressedEmergencyButton
     }
 
+    /**
+     * Sets whether the player has pressed the emergency button.
+     * @param hasPressed - The state to set
+     */
     public setHasPressedEmergencyButton(hasPressed: boolean): void {
         this._hasPressedEmergencyButton = hasPressed
     }
 
+    /**
+     * Checks if the player is currently using a security camera.
+     * @returns true if using security camera, false otherwise
+     */
     public isUsingSecurityCamera(): boolean {
         return this._usingSecurityCamera
     }
 
+    /**
+     * Sets whether the player is using a security camera.
+     * @param usingSecurityCamera - The state to set
+     */
     public setUsingSecurityCamera(usingSecurityCamera: boolean): void {
         this._usingSecurityCamera = usingSecurityCamera
     }
 
+    /**
+     * Sets up the player's camera based on their current state.
+     * Handles both security camera view and first-person view.
+     */
     public setupCamera(): void {
         if (this._usingSecurityCamera) {
             this._player.camera.setAttachedToEntity(Main.getInstance().getCameraEntity()!);
@@ -164,6 +269,10 @@ export class PlayerSession {
         }
     }
 
+    /**
+     * Sets up the player's entity in the game world.
+     * This includes spawning the player model, knife, and setting up event handlers.
+     */
     public setupEntity(): void {
         const world = Main.getInstance().getWorldOrThrow();
 
@@ -204,6 +313,11 @@ export class PlayerSession {
         //this.teleportToVotingArea();
     }
 
+    /**
+     * Sets up event handlers for the player entity.
+     * Handles input events for knife usage, voting, emergency meetings, and more.
+     * @param playerEntity - The PlayerEntity to set up events for
+     */
     public setupPlayerEvents(playerEntity: PlayerEntity): void {
         playerEntity.controller?.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input }) => {
             if (input.f) {
@@ -315,6 +429,9 @@ export class PlayerSession {
         });
     }
 
+    /**
+     * Updates the knife visibility state in the game world.
+     */
     public setupKnifeVisibility(): void {
         if (!this._knife) {
             return;
@@ -331,10 +448,19 @@ export class PlayerSession {
         }
     }
 
+    /**
+     * Sends a chat message to the player.
+     * @param message - The message to send
+     */
     public message(message: string): void {
         Main.getInstance().getWorldOrThrow().chatManager.sendPlayerMessage(this._player, message);
     }
 
+    /**
+     * Shows a popup message to the player.
+     * @param message - The message to show
+     * @param milliseconds - Duration to show the message (default: 1000ms)
+     */
     public popup(message: string, milliseconds: number = 1000): void {
         this._player.ui.sendData({
             popup: message,
@@ -342,6 +468,13 @@ export class PlayerSession {
         })
     }
 
+    /**
+     * Shows an achievement notification to the player.
+     * @param title - The achievement title
+     * @param subtitle - The achievement subtitle
+     * @param icon - The icon to display
+     * @param milliseconds - Duration to show the achievement (default: 1000ms)
+     */
     public achievement(title: string, subtitle: string, icon: string, milliseconds: number = 1000): void {
         this._player.ui.sendData({
             achievement: {
@@ -353,6 +486,11 @@ export class PlayerSession {
         })
     }
 
+    /**
+     * Shows a title message to the player.
+     * @param title - The title to show
+     * @param milliseconds - Duration to show the title (default: 1000ms)
+     */
     public title(title: string, milliseconds: number = 1000): void {
         this._player.ui.sendData({
             title: title,
@@ -360,6 +498,10 @@ export class PlayerSession {
         })
     }
 
+    /**
+     * Updates the status bar UI with coins and optional time information.
+     * @param options - Object containing coins, optional time, and duration
+     */
     public statusBar({ coins, time, milliseconds }: { coins: number, time?: string, milliseconds: number }): void {
         this._player.ui.sendData({
             statusBar: {
@@ -370,6 +512,13 @@ export class PlayerSession {
         })
     }
 
+    /**
+     * Shows the role bar UI with role information and optional cooldown.
+     * @param title - The role title
+     * @param subtitle - The role subtitle
+     * @param milliseconds - Duration to show the role bar (default: 1000ms)
+     * @param cooldown - Optional cooldown duration
+     */
     public roleBar(title: string, subtitle: string, milliseconds: number = 1000, cooldown?: number): void {
         this._player.ui.sendData({
             roleBar: {
@@ -381,6 +530,10 @@ export class PlayerSession {
         })
     }
 
+    /**
+     * Shows a silence indicator UI to the player.
+     * @param milliseconds - Duration to show the indicator (default: 1000ms)
+     */
     public silence(milliseconds: number = 1000): void {
         this._player.ui.sendData({
             silence: {
@@ -389,6 +542,9 @@ export class PlayerSession {
         })
     }
 
+    /**
+     * Updates and displays the role bar based on the player's current role and knife cooldown.
+     */
     public sendRoleBar(): void {
         const message = this._role === PlayerRole.IMPOSTOR ? 'IMPOSTOR_ROLE_BAR' : 'CREW_ROLE_BAR'
 
@@ -408,18 +564,27 @@ export class PlayerSession {
         }
     }
 
+    /**
+     * Plays the coin collection animation in the UI.
+     */
     public coinAnimation(): void {
         this._player.ui.sendData({
             coinAnimation: true
         });
     }
 
+    /**
+     * Opens the silence modal UI.
+     */
     public openSilenceModal(): void {
         this._player.ui.sendData({
             openSilenceModal: true
         });
     }
 
+    /**
+     * Sends the player's current level information to the UI.
+     */
     public sendLevelInfo(): void {
         const level = this._experienceManager.getLevel();
 
@@ -432,10 +597,16 @@ export class PlayerSession {
         })
     }
 
+    /**
+     * Teleports the player to the waiting room area.
+     */
     public teleportToWaitingRoom(): void {
         this._playerEntity?.setPosition(Main.getInstance().getGameMap().getWaitingRoomCloseCoords());
     }
 
+    /**
+     * Teleports the player to the voting area.
+     */
     public teleportToVotingArea(): void {
         this._playerEntity?.setPosition(Main.getInstance().getGameMap().getVotingAreaCloseCoords());
     }
