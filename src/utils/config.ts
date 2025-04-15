@@ -22,4 +22,6 @@ export const XP_PER_COIN = 50;
 export const XP_PER_KILL = 100;
 export const XP_PER_WIN_AS_IMPOSTOR = 300;
 
+export const TELEPORT_STATION_COST = 10;
+
 export const ENABLE_BROADCASTER = false;

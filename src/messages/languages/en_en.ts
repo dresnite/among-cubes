@@ -44,6 +44,7 @@ export const en_en = {
     NOT_THE_IMPOSTOR: "{impostor} was NOT the impostor",
     NOBODY_WAS_ELIMINATED: "Nobody was eliminated",
     SECURITY_CAMERA_NO_COINS: "Not enough coins! The camera costs {cost} coins.",
+    TELEPORT_STATION_NO_COINS: "Not enough coins! Teleporting costs {cost} coins.",
     LEFT_CLICK_TO_LEAVE_CAMERA: "Left click to leave camera",
     KNIFE_READY: "Knife ready",
     KNIFE_COOLDOWN: "Knife on cooldown ({cooldown})",

@@ -19,6 +19,7 @@ import type { GameMap } from "./map/GameMap";
 import { Spaceship } from "./map/maps/Spaceship";
 import { CAMERA_ENTITY_NAME, COIN_ENTITY_NAME, COIN_SPAWN_TIME, COMPUTER_ENTITY_NAME, EMERGENCY_BUTTON_ENTITY_NAME, XP_PER_COIN } from "./utils/config";
 import { VoteEntitiesManager } from "./npc/VoteEntitiesManager";
+import { TeleportStationManager } from "./npc/TeleportStationManager";
 
 /**
  * Main game class that serves as the core controller for the Among Cubes game.
@@ -43,6 +44,8 @@ export class Main {
   private _voteEntitiesManager: VoteEntitiesManager;
   /** Reference to the security camera entity */
   private _cameraEntity: Entity | null = null;
+  /** Manages teleport stations */
+  private _teleportStationManager: TeleportStationManager;
 
   /**
    * Initializes core game components and managers.
@@ -54,6 +57,7 @@ export class Main {
     this._playerSessionManager = new PlayerSessionManager();
     this._broadcaster = new Broadcaster();
     this._gameMap = new Spaceship();
+    this._teleportStationManager = new TeleportStationManager(this._gameMap);
   }
 
   /**
@@ -144,6 +148,14 @@ export class Main {
   }
 
   /**
+   * Gets the teleport station manager instance.
+   * @returns The TeleportStationManager instance
+   */
+  public getTeleportStationManager(): TeleportStationManager {
+    return this._teleportStationManager;
+  }
+
+  /**
    * Loads the game world and sets up core world systems.
    * @param world - The world instance to load
    */
@@ -185,7 +197,10 @@ export class Main {
    */
   private _setupWorldEvents(): void {
     this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
+      
       const session = this._playerSessionManager.openSession(player)
+
+      
       
       session.getExperienceManager().load()
       session.setupEntity();

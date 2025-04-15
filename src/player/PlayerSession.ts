@@ -417,6 +417,12 @@ export class PlayerSession {
                                 } else {
                                     console.log('actually no cadaver found for ', entityName);
                                 }
+
+                                const teleportStation = main.getTeleportStationManager().getStation(entityName);
+
+                                if (teleportStation) {
+                                    teleportStation.use(this);
+                                }
                             }
 
                             break;

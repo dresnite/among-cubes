@@ -44,4 +44,9 @@ export abstract class GameMap {
 
     public abstract getComputerCoords(): Vector3Like;
 
+    public abstract getTeleportStations(): {
+        station1: { position: Vector3Like, rotation: QuaternionLike, teleportTarget: Vector3Like };
+        station2: { position: Vector3Like, rotation: QuaternionLike, teleportTarget: Vector3Like };
+    }[];
+
 }
