@@ -99,6 +99,7 @@ export class EmergencyMeetingPhase extends Phase {
                 }));
                 playerSession.popup(Message.t('DEAD_BODY_FOUND_BY', {
                     color: capitalize(bodyColor),
+                    requesterColor: capitalize(this._requesterColor.getType().toString()),
                     requester: this._requesterName
                 }));
             } else {
