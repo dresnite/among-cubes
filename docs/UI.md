@@ -1,4 +1,4 @@
-# Hytopia UI Documentation
+# Among Cubes UI Documentation
 
 Most UI elements in Among Cubes are ephemeral, meaning they automatically disappear after a certain duration (typically 1000 milliseconds/1 second by default, unless specified otherwise). Here's a detailed breakdown of each UI element:
 
