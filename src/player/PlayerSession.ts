@@ -5,7 +5,7 @@ import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent } fro
 import { PlayerRole } from "./PlayerRole";
 import { Main } from "../Main";
 import { Message } from "../messages/Message";
-import { EMERGENCY_BUTTON_ENTITY_NAME, SKIP_VOTE_ENTITY_NAME } from "../utils/config";
+import { COIN_ENTITY_NAME, EMERGENCY_BUTTON_ENTITY_NAME, SKIP_VOTE_ENTITY_NAME } from "../utils/config";
 import { EmergencyMeetingPhase } from "../game/phase/phases/EmergencyMeetingPhase";
 import { InProgressPhase } from "../game/phase/phases/InProgressPhase";
 
@@ -73,6 +73,7 @@ export class PlayerSession {
 
     public addCoin(): void {
         this._coins++
+        this.coinAnimation()
     }
 
     public resetCoins(): void {
@@ -220,7 +221,7 @@ export class PlayerSession {
                                 if (isColorAlive) {
                                     phase.getPoll().vote(this, color.toString());
                                 }
-                                
+
                                 return
                             }
 
@@ -327,6 +328,12 @@ export class PlayerSession {
                 cooldown: (this._knifeUseCooldown > 0) ? ` (${this._knifeUseCooldown.toString()})` : ' (Knife ready)'
             })
         )
+    }
+
+    public coinAnimation(): void {
+        this._player.ui.sendData({
+            coinAnimation: true
+        });
     }
 
     public teleportToWaitingRoom(): void {

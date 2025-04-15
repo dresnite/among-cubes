@@ -1,4 +1,4 @@
-import type { World } from "hytopia";
+import type { Vector3Like, World } from "hytopia";
 import {
   Audio,
   Entity,
@@ -6,6 +6,10 @@ import {
   RigidBodyType,
   SceneUI,
   EntityEvent,
+  ColliderShape,
+  type Player,
+  type BlockType,
+  PlayerEntity,
 } from 'hytopia';
 
 import worldMap from '../assets/maps/spaceship.json';
@@ -14,7 +18,7 @@ import { GameManager } from "./game/GameManager";
 import { Broadcaster } from "./utils/Broadcaster";
 import type { GameMap } from "./map/GameMap";
 import { Spaceship } from "./map/maps/Spaceship";
-import { COIN_ENTITY_NAME, EMERGENCY_BUTTON_ENTITY_NAME } from "./utils/config";
+import { COIN_ENTITY_NAME, COIN_SPAWN_TIME, EMERGENCY_BUTTON_ENTITY_NAME } from "./utils/config";
 import { VoteEntitiesManager } from "./npc/VoteEntitiesManager";
 
 export class Main {
@@ -164,45 +168,73 @@ export class Main {
     npcMessageUI.load(this._world!);
 
     for (const coinCoords of this._gameMap.getCoinCoords()) {
-      const coinEntity = new Entity({
-        modelUri: 'models/environment/coin.glb',
-        modelScale: 1,
-        name: COIN_ENTITY_NAME,
-        opacity: 0.99,
-        rigidBodyOptions: {
-          type: RigidBodyType.KINEMATIC_POSITION, // Changed to KINEMATIC_POSITION for controlled movement
-        },
-      });
-
-      const spawnPosition = {
-        x: coinCoords.x,
-        y: coinCoords.y + 1,
-        z: coinCoords.z,
-      };
-
-      coinEntity.spawn(this._world!, spawnPosition);
-
-      // Add floating and rotation animation
-      coinEntity.on(EntityEvent.TICK, ({ tickDeltaMs }) => {
-        const rotationSpeed = 0.001; // radians per ms
-        const floatHeight = 0.2; // meters
-        const floatSpeed = 0.001; // Hz
-
-        // Update position with floating motion
-        const newY = spawnPosition.y + Math.sin(Date.now() * floatSpeed) * floatHeight;
-        coinEntity.setPosition({
-          x: coinEntity.position.x,
-          y: newY,
-          z: coinEntity.position.z,
-        });
-
-        // Update rotation around Y axis
-        const yRotation = (Date.now() * rotationSpeed) % (Math.PI * 2);
-        coinEntity.setRotation({ x: 0, y: Math.sin(yRotation / 2), z: 0, w: Math.cos(yRotation / 2) });
-      });
+      this._spawnCoin(coinCoords);
     }
 
     this._voteEntitiesManager.setup()
+  }
+
+  private _spawnCoin(coinCoords: Vector3Like): void {
+    const coinEntity = new Entity({
+      modelUri: 'models/environment/coin.glb',
+      modelScale: 1,
+      name: COIN_ENTITY_NAME,
+      opacity: 0.99,
+      rigidBodyOptions: {
+        type: RigidBodyType.KINEMATIC_POSITION,
+        colliders: [
+          {
+            shape: ColliderShape.CYLINDER,
+            radius: 0.5,
+            halfHeight: 0.5,
+            isSensor: true,
+            onCollision: (other: Entity | BlockType, started: boolean) => {
+              if (started && other instanceof PlayerEntity) {
+                // Find player session and add coin
+                const playerSession = this._playerSessionManager.getSession(other.player);
+                if (playerSession) {
+                  playerSession.addCoin();
+
+                  // Despawn the coin
+                  coinEntity.despawn();
+
+                  // Respawn after 15 seconds
+                  setTimeout(() => {
+                    this._spawnCoin(coinCoords);
+                  }, COIN_SPAWN_TIME);
+                }
+              }
+            }
+          }]
+      },
+    });
+
+    const spawnPosition = {
+      x: coinCoords.x,
+      y: coinCoords.y + 1,
+      z: coinCoords.z,
+    };
+
+    coinEntity.spawn(this._world!, spawnPosition);
+
+    // Add floating and rotation animation
+    coinEntity.on(EntityEvent.TICK, ({ tickDeltaMs }) => {
+      const rotationSpeed = 0.001; // radians per ms
+      const floatHeight = 0.2; // meters
+      const floatSpeed = 0.001; // Hz
+
+      // Update position with floating motion
+      const newY = spawnPosition.y + Math.sin(Date.now() * floatSpeed) * floatHeight;
+      coinEntity.setPosition({
+        x: coinEntity.position.x,
+        y: newY,
+        z: coinEntity.position.z,
+      });
+
+      // Update rotation around Y axis
+      const yRotation = (Date.now() * rotationSpeed) % (Math.PI * 2);
+      coinEntity.setRotation({ x: 0, y: Math.sin(yRotation / 2), z: 0, w: Math.cos(yRotation / 2) });
+    });
   }
 
 }

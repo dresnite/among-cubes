@@ -122,6 +122,19 @@
       }, data.statusBar.milliseconds || 1000);
     }
 
+    if (data.coinAnimation) {
+      const coinContainer = document.getElementById('coin-container');
+      const coinPlus = document.createElement('div');
+      coinPlus.className = 'coin-plus';
+      coinPlus.textContent = '+';
+      coinContainer.appendChild(coinPlus);
+
+      // Remove the element after animation completes
+      coinPlus.addEventListener('animationend', () => {
+        coinPlus.remove();
+      });
+    }
+
     if (data.title) {
       const titleDisplay = document.getElementById('title-display');
       const titleText = document.getElementById('title-text');
@@ -253,7 +266,9 @@
   <div class="status-bar-container" id="status-bar-container">
     <div class="status-bar-display">
       <img class="wh-24" src="{{CDN_ASSETS_URL}}/icons/coin.png" alt="Coins" />
-      <span class="golden-text" id="coins"></span>
+      <div id="coin-container" class="coin-container">
+        <span class="golden-text" id="coins"></span>
+      </div>
 
       <img class="wh-28" src="{{CDN_ASSETS_URL}}/icons/clock.png" alt="Time" id="time-icon" />
       <span class="white-text text-2xl underline" id="time"></span>
@@ -657,5 +672,34 @@
     font-size: 14px;
     margin: 0;
     line-height: 1.4;
+  }
+
+  .coin-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .coin-plus {
+    position: absolute;
+    right: -12px;
+    bottom: 0;
+    color: #FFD700;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    animation: coinPlusAnimation 1s ease-out forwards;
+    pointer-events: none;
+  }
+
+  @keyframes coinPlusAnimation {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
   }
 </style>

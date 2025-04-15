@@ -10,5 +10,6 @@ export const TIME_TO_END_EMERGENCY_MEETING = 10; // seconds
 export const EMERGENCY_BUTTON_ENTITY_NAME = 'emergency-button-entity';
 export const SKIP_VOTE_ENTITY_NAME = 'skip-entity';
 export const COIN_ENTITY_NAME = 'coin-entity';
+export const COIN_SPAWN_TIME = 10000; // 10 seconds
 
 export const ENABLE_BROADCASTER = false;
