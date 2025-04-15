@@ -77,12 +77,16 @@ export class EmergencyMeetingPhase extends Phase {
         } else if (this._timeToHideEmergencyMeetingMessage < 0) {
             this._runEmergencyMeeting();
         } else {
-            if (!this._alarmSound.isPlaying) {
-                this._alarmSound.play(Main.getInstance().getWorldOrThrow());
-            }
-
-            this._displayEmergencyMeetingStartingMessages();
+            this._startingEmergencyMeeting();
         }
+    }
+
+    private _startingEmergencyMeeting(): void {
+        if (!this._alarmSound.isPlaying) {
+            this._alarmSound.play(Main.getInstance().getWorldOrThrow());
+        }
+
+        this._displayEmergencyMeetingStartingMessages();
     }
 
     private _displayEmergencyMeetingStartingMessages(): void {
