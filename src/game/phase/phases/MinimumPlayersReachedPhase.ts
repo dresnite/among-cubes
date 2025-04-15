@@ -30,6 +30,12 @@ export class MinimumPlayersReachedPhase extends Phase {
                     countdown: (this._countdown + COUNTDOWN_START_GAME - 1).toString()
                 }));
             }
+
+            for (const playerSession of Main.getInstance().getPlayerSessionManager().getSessions().values()) {
+                if (!playerSession.getGame() && this._game.canBeJoined()) {
+                    this._game.addPlayer(playerSession);
+                }
+            }
         } else {
             this._game.setPhase(new CountdownPhase(this._game));
         }
@@ -48,6 +54,12 @@ export class MinimumPlayersReachedPhase extends Phase {
         if (this._game.getPlayerSessions().length < MINIMUM_PLAYERS_TO_START_GAME) {
             Main.getInstance().getWorld()?.chatManager.sendBroadcastMessage(Message.t('COULD_NOT_START_WITH_MINIMUM_PLAYERS'))
             this._game.setPhase(new WaitingForPlayersPhase(this._game));
+        }
+    }
+
+    public onChangePhase(): void {
+        for (const playerSession of this._game.getPlayerSessions()) {
+            playerSession.setupEntity();
         }
     }
     

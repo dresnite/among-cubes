@@ -45,7 +45,7 @@ export class Game {
     }
 
     public canBeJoined(): boolean {
-        return this._phase.getPhaseType() === PhaseType.WAITING_FOR_PLAYERS && this._availableColors.length > 0;
+        return (this._phase.getPhaseType() === PhaseType.WAITING_FOR_PLAYERS || this._phase.getPhaseType() === PhaseType.MINIMUM_PLAYERS_REACHED) && this._availableColors.length > 0;
     }
 
     public restart(): void {
