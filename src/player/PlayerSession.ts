@@ -409,11 +409,13 @@ export class PlayerSession {
     }
 
     public sendLevelInfo(): void {
+        const level = this._experienceManager.getLevel();
+
         this._player.ui.sendData({
             levelInfo: {
-                level: this._experienceManager.getLevel(),
-                currentXp: this._experienceManager.getExperience(),
-                nextLevelXp: this._experienceManager.getNecessaryExperienceForNextLevel()
+                level,
+                currentXp: this._experienceManager.getExperience() - (level === 1 ? 0 : this._experienceManager.getNecessaryExperienceForLevel(level)),
+                nextLevelXp: this._experienceManager.getNecessaryExperienceForNextLevel() - this._experienceManager.getNecessaryExperienceForLevel(level) + ((level === 1) ? this._experienceManager.getNecessaryExperienceForLevel(level) : 0)
             }
         })
     }
