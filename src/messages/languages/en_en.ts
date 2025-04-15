@@ -39,5 +39,7 @@ export const en_en = {
     DEAD_BODY_FOUND_BY: "{color} body found by {requester}",
     WAITING_FOR_GAME_TO_END: "Waiting for the current game to end",
     VOTE_SKIPPED: "You skipped the vote",
-    READY_TO_START_GAME: "The game is ready to start!"
+    READY_TO_START_GAME: "The game is ready to start!",
+    WAS_THE_IMPOSTOR: "{impostor} was the impostor",
+    NOT_THE_IMPOSTOR: "{impostor} is NOT the impostor"
 }

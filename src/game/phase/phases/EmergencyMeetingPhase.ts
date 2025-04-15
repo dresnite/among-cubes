@@ -23,7 +23,7 @@ export class EmergencyMeetingPhase extends Phase {
 
     private _requesterColor: Color;
     private _requesterName: string;
-    
+
     private _cadaver: Cadaver | null;
 
     private _alarmSound: Audio;
@@ -59,7 +59,7 @@ export class EmergencyMeetingPhase extends Phase {
 
     public onStart(): void {
         const voteEntitiesManager = Main.getInstance().getVoteEntitiesManager();
-        
+
         for (const color of Object.values(ColorType)) {
             voteEntitiesManager.showDeadSceneUI(color);
         }
@@ -121,7 +121,7 @@ export class EmergencyMeetingPhase extends Phase {
         for (const playerSession of this._game.getPlayerSessions()) {
             if (this._poll.hasVoted(playerSession)) {
                 const voted = this._poll.getVotedOption(playerSession)!
-                
+
                 if (voted === EmergencyMeetingPhase.SKIP_OPTION) {
                     playerSession.popup(Message.t('VOTE_SKIPPED'));
                 } else {
@@ -150,7 +150,6 @@ export class EmergencyMeetingPhase extends Phase {
             if (winnerOption === EmergencyMeetingPhase.SKIP_OPTION) {
                 this._endEmergencyMeetingWithDraw();
             } else {
-                // kick the winner color 
                 const winnerColor = winnerOption as ColorType;
                 this._endEmergencyMeetingWithKick(winnerColor);
             }
@@ -170,6 +169,22 @@ export class EmergencyMeetingPhase extends Phase {
             if (playerSession.getColor()?.getType() === color) {
                 playerSession.teleportToWaitingRoom();
                 playerSession.message(Message.t('YOU_WERE_VOTED_OUT'));
+
+                for (const gamePlayerSession of this._game.getPlayerSessions()) {
+                    if (gamePlayerSession.getPlayer().username === playerSession.getPlayer().username) {
+                        continue;
+                    }
+
+                    if (playerSession.getRole() === PlayerRole.IMPOSTOR) {
+                        gamePlayerSession.title(Message.t('WAS_THE_IMPOSTOR', {
+                            impostor: capitalize(color.toString())
+                        }), 5000);
+                    } else {
+                        gamePlayerSession.title(Message.t('NOT_THE_IMPOSTOR', {
+                            impostor: capitalize(color.toString())
+                        }), 5000);
+                    }
+                }
 
                 this._game.removePlayer(playerSession);
             }
