@@ -37,5 +37,7 @@ export const en_en = {
     DEAD_BODY_FOUND: "{color} body found!",
     EMERGENCY_MEETING_REQUESTED_BY: "Emergency meeting requested by {color} ({requester})",
     DEAD_BODY_FOUND_BY: "{color} body found by {requester}",
-    WAITING_FOR_GAME_TO_END: "Waiting for the current game to end"
+    WAITING_FOR_GAME_TO_END: "Waiting for the current game to end",
+    VOTE_SKIPPED: "You skipped the vote",
+    READY_TO_START_GAME: "The game is ready to start!"
 }

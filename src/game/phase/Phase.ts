@@ -49,12 +49,14 @@ export abstract class Phase {
                 continue;
             }
 
+            const playersLeft = (MINIMUM_PLAYERS_TO_START_GAME - this._game.getPlayerSessions().length);
+
             gamePlayerSession.achievement(
                 Message.t('JOINED_GAME', {
                     player: playerSession.getPlayer().username
                 }),
-                Message.t('JOINED_GAME_SUBTITLE', {
-                    playersLeftCount: (MINIMUM_PLAYERS_TO_START_GAME - this._game.getPlayerSessions().length).toString()
+                Message.t((playersLeft > 0) ? 'JOINED_GAME_SUBTITLE' : 'READY_TO_START_GAME', {
+                    playersLeftCount: playersLeft.toString()
                 }),
                 'player.png',
                 4000

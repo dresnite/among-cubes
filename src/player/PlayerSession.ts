@@ -1,7 +1,7 @@
 import type { Player } from "hytopia";
 import type { Color } from "../game/color/Color";
 import type { Game } from "../game/Game";
-import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent } from "hytopia";
+import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent, Audio } from "hytopia";
 import { PlayerRole } from "./PlayerRole";
 import { Main } from "../Main";
 import { Message } from "../messages/Message";
@@ -74,6 +74,13 @@ export class PlayerSession {
     public addCoin(): void {
         this._coins++
         this.coinAnimation()
+        
+        const coinAudio = new Audio({
+            uri: 'audio/sfx/misc/coin.mp3',
+            volume: 0.1,
+            position: this._playerEntity?.position,
+        });
+        coinAudio.play(Main.getInstance().getWorldOrThrow());
     }
 
     public resetCoins(): void {
@@ -208,6 +215,12 @@ export class PlayerSession {
                         case SKIP_VOTE_ENTITY_NAME:
                             if (phase instanceof EmergencyMeetingPhase) {
                                 phase.getPoll().vote(this, 'skip');
+                                const voteAudio = new Audio({
+                                    uri: 'audio/sfx/misc/spacial-click.mp3',
+                                    volume: 0.1,
+                                    position: this._playerEntity?.position,
+                                });
+                                voteAudio.play(Main.getInstance().getWorldOrThrow());
                             }
                             break;
                         default:
@@ -220,6 +233,12 @@ export class PlayerSession {
 
                                 if (isColorAlive) {
                                     phase.getPoll().vote(this, color.toString());
+                                    const voteAudio = new Audio({
+                                        uri: 'audio/sfx/misc/spacial-click.mp3',
+                                        volume: 0.1,
+                                        position: this._playerEntity?.position,
+                                    });
+                                    voteAudio.play(Main.getInstance().getWorldOrThrow());
                                 }
 
                                 return

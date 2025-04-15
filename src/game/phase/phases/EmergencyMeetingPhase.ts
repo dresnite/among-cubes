@@ -1,3 +1,4 @@
+import { Audio } from "hytopia";
 import { Main } from "../../../Main";
 import { Message } from "../../../messages/Message";
 import { PlayerRole } from "../../../player/PlayerRole";
@@ -25,6 +26,8 @@ export class EmergencyMeetingPhase extends Phase {
     
     private _cadaver: Cadaver | null;
 
+    private _alarmSound: Audio;
+
     public static readonly SKIP_OPTION = 'skip';
 
     constructor(game: Game, requester: PlayerSession, cadaver: Cadaver | null = null) {
@@ -39,6 +42,11 @@ export class EmergencyMeetingPhase extends Phase {
         this._requesterName = requester.getPlayer().username;
 
         this._cadaver = cadaver;
+
+        this._alarmSound = new Audio({
+            uri: 'audio/sfx/ui/alarm.mp3',
+            volume: 0.1,
+        });
     }
 
     public getPhaseType(): PhaseType {
@@ -69,6 +77,10 @@ export class EmergencyMeetingPhase extends Phase {
         } else if (this._timeToHideEmergencyMeetingMessage < 0) {
             this._runEmergencyMeeting();
         } else {
+            if (!this._alarmSound.isPlaying) {
+                this._alarmSound.play(Main.getInstance().getWorldOrThrow());
+            }
+
             this._displayEmergencyMeetingStartingMessages();
         }
     }
@@ -104,9 +116,15 @@ export class EmergencyMeetingPhase extends Phase {
 
         for (const playerSession of this._game.getPlayerSessions()) {
             if (this._poll.hasVoted(playerSession)) {
-                playerSession.popup(Message.t('IMPOSTER_VOTED', {
-                    color: capitalize(this._poll.getVotedOption(playerSession)!)
-                }));
+                const voted = this._poll.getVotedOption(playerSession)!
+                
+                if (voted === EmergencyMeetingPhase.SKIP_OPTION) {
+                    playerSession.popup(Message.t('VOTE_SKIPPED'));
+                } else {
+                    playerSession.popup(Message.t('IMPOSTER_VOTED', {
+                        color: capitalize(voted)
+                    }));
+                }
             } else {
                 playerSession.popup(Message.t('DISCUSS_IMPOSTOR'));
             }
@@ -155,6 +173,10 @@ export class EmergencyMeetingPhase extends Phase {
     }
 
     private _setupEmergencyMeeting(): void {
+        if (this._alarmSound.isPlaying) {
+            this._alarmSound.pause();
+        }
+
         for (const playerSession of this._game.getPlayerSessions()) {
             playerSession.teleportToVotingArea();
 

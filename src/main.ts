@@ -7,7 +7,6 @@ import {
   SceneUI,
   EntityEvent,
   ColliderShape,
-  type Player,
   type BlockType,
   PlayerEntity,
 } from 'hytopia';
@@ -96,7 +95,7 @@ export class Main {
 
   private _playBackgroundMusic(world: World): void {
     new Audio({
-      uri: 'audio/music/among-cubes-theme.mp3',
+      uri: 'audio/music/shadows-on-the-wall.mp3',
       loop: true,
       volume: 0.1,
     }).play(world);
