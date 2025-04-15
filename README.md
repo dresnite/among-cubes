@@ -27,3 +27,18 @@ During these meetings, players share information, defend themselves, and ultimat
 ## Developer documentation
 
 If you want to contribute or understand how the project works internally, go to the [Developer Documentation](docs/README.md).
+
+## Built with AI
+
+Among Cubes showcases the power of modern AI tools in game development. Nearly every aspect of the game was created using AI (even this documentation):
+
+- **Code**: Developed using Cursor IDE with Sonnet 3.5, which provided intelligent code completion and generation while maintaining clean architecture and best practices
+
+- **3D Models**: Created using [ChatGPT](https://chat.openai.com/) for conceptualization and [AssetHero](https://assethero.gbusto.com/model) for 3D model generation, including characters, props, and environmental assets
+
+- **Music**: Original soundtrack composed by [Suno AI](suno.com), creating an atmospheric and engaging audio experience
+
+The only component not originally created with AI was the game map, which was built using the Hytopia world editor. However, with Hytopia's recent release of their AI-driven world editor, even map creation can now be fully automated with AI assistance.
+
+This project demonstrates how AI tools can be effectively combined to create a complete and polished game while maintaining high quality standards across all components.
+
