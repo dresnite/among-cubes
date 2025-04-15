@@ -23,6 +23,7 @@ export class PlayerSession {
     private _coins: number
     private _hasPressedEmergencyButton: boolean
     private _experienceManager: PlayerExperienceManager
+    private _usingSecurityCamera: boolean
 
     constructor(player: Player) {
         this._player = player
@@ -36,6 +37,7 @@ export class PlayerSession {
         this._coins = 0
         this._hasPressedEmergencyButton = false
         this._experienceManager = new PlayerExperienceManager(this)
+        this._usingSecurityCamera = false
     }
 
     public getPlayer(): Player {
@@ -128,16 +130,29 @@ export class PlayerSession {
         this._hasPressedEmergencyButton = hasPressed
     }
 
+    public isUsingSecurityCamera(): boolean {
+        return this._usingSecurityCamera
+    }
+
+    public setUsingSecurityCamera(usingSecurityCamera: boolean): void {
+        this._usingSecurityCamera = usingSecurityCamera
+    }
+
     public setupCamera(): void {
-        // Setup a first person camera for the player
-        // set first person mode
-        this._player.camera.setMode(PlayerCameraMode.FIRST_PERSON);
-        // shift camrea up on Y axis so we see from "head" perspective.
-        this._player.camera.setOffset({ x: 0, y: 0.4, z: 0 });
-        // hide the head node from the model so we don't see it in the camera, this is just hidden for the controlling player.
-        this._player.camera.setModelHiddenNodes(['head', 'neck', 'torso']);
-        // Shift the camera forward so we are looking slightly in front of where the player is looking.
-        this._player.camera.setForwardOffset(0);
+        if (this._usingSecurityCamera) {
+            this._player.camera.setAttachedToEntity(Main.getInstance().getCameraEntity()!);
+            this._player.camera.setForwardOffset(1);
+        } else {
+            this._player.camera.setAttachedToEntity(this._playerEntity!);
+            // Setup a first person camera for the player
+            // set first person mode
+            this._player.camera.setMode(PlayerCameraMode.FIRST_PERSON);
+            // shift camrea up on Y axis so we see from "head" perspective.
+            this._player.camera.setOffset({ x: 0, y: 0.4, z: 0 });
+            // hide the head node from the model so we don't see it in the camera, this is just hidden for the controlling player.
+            this._player.camera.setModelHiddenNodes(['head', 'neck', 'torso']);
+            this._player.camera.setForwardOffset(0);
+        }
     }
 
     public setupEntity(): void {
@@ -175,8 +190,7 @@ export class PlayerSession {
         this._knifeVisible = false;
         this.setupKnifeVisibility();
         this.setupPlayerEvents(this._playerEntity)
-
-        this._player.camera.setAttachedToEntity(this._playerEntity);
+        this.setupCamera();
 
         //this.teleportToVotingArea();
     }
@@ -195,6 +209,11 @@ export class PlayerSession {
 
             // Handle left mouse click for impostor kills and touching NPCs (the emergency button, the voting statues...)
             if (input.ml) {
+                if (this._usingSecurityCamera) {
+                    this._usingSecurityCamera = false;
+                    this.setupCamera();
+                }
+
                 const main = Main.getInstance();
                 // Cast a ray to detect clicked players
                 const ray = main.getWorldOrThrow().simulation.raycast(

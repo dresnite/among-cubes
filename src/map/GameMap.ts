@@ -40,4 +40,6 @@ export abstract class GameMap {
 
     public abstract getCoinCoords(): Vector3Like[];
 
+    public abstract getCameraCoords(): Vector3Like;
+
 }
