@@ -5,7 +5,7 @@ import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent, Audi
 import { PlayerRole } from "./PlayerRole";
 import { Main } from "../Main";
 import { Message } from "../messages/Message";
-import { COMPUTER_ENTITY_NAME, EMERGENCY_BUTTON_ENTITY_NAME, SECURITY_CAMERA_COST, SKIP_VOTE_ENTITY_NAME } from "../utils/config";
+import { COMPUTER_ENTITY_NAME, EMERGENCY_BUTTON_ENTITY_NAME, KNIFE_USE_COOLDOWN, SECURITY_CAMERA_COST, SKIP_VOTE_ENTITY_NAME } from "../utils/config";
 import { EmergencyMeetingPhase } from "../game/phase/phases/EmergencyMeetingPhase";
 import { InProgressPhase } from "../game/phase/phases/InProgressPhase";
 import { PlayerExperienceManager } from "./PlayerExperienceManager";
@@ -370,10 +370,12 @@ export class PlayerSession {
         })
     }
 
-    public roleBar(roleText: string, milliseconds: number = 1000): void {
+    public roleBar(title: string, subtitle: string, milliseconds: number = 1000, cooldown?: number): void {
         this._player.ui.sendData({
             roleBar: {
-                role: roleText,
+                role: title,
+                subtitle: subtitle,
+                cooldown: cooldown,
                 milliseconds
             }
         })
@@ -389,11 +391,21 @@ export class PlayerSession {
 
     public sendRoleBar(): void {
         const message = this._role === PlayerRole.IMPOSTOR ? 'IMPOSTOR_ROLE_BAR' : 'CREW_ROLE_BAR'
-        this.roleBar(
-            Message.t(message, {
-                cooldown: (this._knifeUseCooldown > 0) ? ` (${this._knifeUseCooldown.toString()})` : ' (Knife ready)'
+
+        if (this._role === PlayerRole.IMPOSTOR) {
+            const subtitle = this._knifeUseCooldown <= 0 ? Message.t('KNIFE_READY') : Message.t('KNIFE_COOLDOWN', {
+                cooldown: this._knifeUseCooldown.toString()
             })
-        )
+
+            if (this._knifeUseCooldown === KNIFE_USE_COOLDOWN - 1) {
+                this.roleBar(Message.t(message), subtitle, 1000, this._knifeUseCooldown * 1000)
+            } else {
+                this.roleBar(Message.t(message), subtitle, 1000)
+            }
+            
+        } else {
+            this.roleBar(Message.t(message), '', 1000)
+        }
     }
 
     public coinAnimation(): void {

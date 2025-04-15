@@ -101,7 +101,23 @@
   hytopia.onData(data => {
     if (data.roleBar) {
       document.getElementById('role').textContent = data.roleBar.role || '';
+      document.getElementById('role-subtitle').textContent = data.roleBar.subtitle || '';
       document.getElementById('role-display').style.display = 'flex';
+
+      const cooldownElement = document.getElementById('role-cooldown');
+      
+      if (data.roleBar.cooldown) {
+        cooldownElement.style.animation = `cooldownProgress ${data.roleBar.cooldown}ms linear`;
+        cooldownElement.style.transform = 'scaleX(1)';
+        
+        const resetCooldown = () => {
+          cooldownElement.style.animation = '';
+          cooldownElement.style.transform = 'scaleX(0)';
+          cooldownElement.removeEventListener('animationend', resetCooldown);
+        };
+        
+        cooldownElement.addEventListener('animationend', resetCooldown);
+      }
 
       if (window.roleTimeout) {
         clearTimeout(window.roleTimeout);
@@ -305,7 +321,11 @@
   </div>
 
   <div class="role-display" id="role-display">
-    <span class="role-text" id="role"></span>
+    <div class="role-content">
+      <span class="role-text" id="role"></span>
+      <span class="role-subtitle" id="role-subtitle"></span>
+    </div>
+    <div class="role-cooldown" id="role-cooldown"></div>
   </div>
 
   <div class="level-display" id="level-display">
@@ -462,19 +482,55 @@
     right: 20px;
     background: rgba(0, 0, 0, 0.7);
     border-radius: 8px;
-    padding: 8px 16px;
+    padding: 6px 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     border: 2px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+
+  .role-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .role-text {
     color: #4CAF50;
     font-family: 'Arial', sans-serif;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 16px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     text-transform: uppercase;
     letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  .role-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .role-cooldown {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #4CAF50;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform linear;
+  }
+
+  @keyframes cooldownProgress {
+    from {
+      transform: scaleX(1);
+    }
+    to {
+      transform: scaleX(0);
+    }
   }
 
   /* Existing mobile controls styles */

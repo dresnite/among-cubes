@@ -27,7 +27,7 @@ export const en_en = {
     NEXT_GAME_STARTING_COUNTDOWN: "Next game in {countdown} seconds",
     CONGRATULATIONS_ON_WIN: "Congratulations on winning!",
     TRY_HARDER_NEXT_TIME: "Try harder next time!",
-    IMPOSTOR_ROLE_BAR: "Impostor{cooldown}",
+    IMPOSTOR_ROLE_BAR: "Impostor",
     CREW_ROLE_BAR: "Crew",
     EMERGENCY_MEETING_MESSAGE: "EMERGENCY MEETING!",
     EMERGENCY_MEETING_ALREADY_CALLED: "You already called an emergency meeting in this game!",
@@ -43,5 +43,7 @@ export const en_en = {
     WAS_THE_IMPOSTOR: "{impostor} was the impostor",
     NOT_THE_IMPOSTOR: "{impostor} is NOT the impostor",
     SECURITY_CAMERA_NO_COINS: "Not enough coins! The camera costs {cost} coins.",
-    LEFT_CLICK_TO_LEAVE_CAMERA: "Left click to leave camera"
+    LEFT_CLICK_TO_LEAVE_CAMERA: "Left click to leave camera",
+    KNIFE_READY: "Knife ready",
+    KNIFE_COOLDOWN: "Knife on cooldown ({cooldown})"
 }
