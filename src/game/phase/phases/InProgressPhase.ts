@@ -4,7 +4,7 @@ import { PlayerRole } from "../../../player/PlayerRole";
 import { Message } from "../../../messages/Message";
 import { Main } from "../../../Main";
 import type { PlayerSession } from "../../../player/PlayerSession";
-import { KNIFE_USE_COOLDOWN } from "../../../utils/config";
+import { KNIFE_USE_COOLDOWN, XP_PER_KILL } from "../../../utils/config";
 import { EmergencyMeetingPhase } from "./EmergencyMeetingPhase";
 import type { Game } from "../../Game";
 import { CadaverManager } from "../../cadaver/CadaverManager";
@@ -115,7 +115,7 @@ export class InProgressPhase extends Phase {
             5000
         );
 
-        killer.getExperienceManager().addExperience(50);
+        killer.getExperienceManager().addExperience(XP_PER_KILL);
 
         victim.title(
             Message.t('YOU_WERE_KILLED', { killer: killer.getPlayer().username }),
