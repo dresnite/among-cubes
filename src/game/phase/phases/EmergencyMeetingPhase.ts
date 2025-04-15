@@ -72,12 +72,12 @@ export class EmergencyMeetingPhase extends Phase {
     public onHeartbeat(): void {
         this._timeToHideEmergencyMeetingMessage--;
 
-        if (this._timeToHideEmergencyMeetingMessage === 0) {
-            this._setupEmergencyMeeting();
-        } else if (this._timeToHideEmergencyMeetingMessage < 0) {
-            this._runEmergencyMeeting();
-        } else {
+        if (this._timeToHideEmergencyMeetingMessage > 0) {
             this._startingEmergencyMeeting();
+        } else if (this._timeToHideEmergencyMeetingMessage === 0) {
+            this._setupEmergencyMeeting();
+        } else {
+            this._runEmergencyMeeting();
         }
     }
 
@@ -117,6 +117,11 @@ export class EmergencyMeetingPhase extends Phase {
 
         if (this._timeToEndEmergencyMeeting <= 0) {
             return this._endEmergencyMeeting()
+        } else if(this._poll.getVoteCount() === this._game.getPlayerSessions().length) {
+            for (const playerSession of this._game.getPlayerSessions()) {
+                playerSession.message(Message.t('ALL_PLAYERS_VOTED'));
+            }
+            return this._endEmergencyMeeting();
         }
 
         for (const playerSession of this._game.getPlayerSessions()) {
@@ -162,7 +167,9 @@ export class EmergencyMeetingPhase extends Phase {
     }
 
     private _endEmergencyMeetingWithDraw(): void {
-        // draw
+        for (const playerSession of this._game.getPlayerSessions()) {
+            playerSession.title(Message.t('NOBODY_WAS_ELIMINATED'), 5000);
+        }
     }
 
     private _endEmergencyMeetingWithKick(color: ColorType): void {

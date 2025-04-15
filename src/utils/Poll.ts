@@ -16,6 +16,10 @@ export class Poll {
         this._options = options;
     }
 
+    public getVoteCount(): number {
+        return this._voters.size;
+    }
+
     // Returns an array with the most voted option, or the options with the same number of votes
     public getMostVotedOptions(): string[] {
         const voteCounts = this.getOptionsWithNumberOfVotes();
