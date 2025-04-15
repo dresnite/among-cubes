@@ -115,6 +115,8 @@ export class InProgressPhase extends Phase {
             5000
         );
 
+        killer.getExperienceManager().addExperience(50);
+
         victim.title(
             Message.t('YOU_WERE_KILLED', { killer: killer.getPlayer().username }),
             5000

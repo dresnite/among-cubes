@@ -5,9 +5,10 @@ import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent, Audi
 import { PlayerRole } from "./PlayerRole";
 import { Main } from "../Main";
 import { Message } from "../messages/Message";
-import { COIN_ENTITY_NAME, EMERGENCY_BUTTON_ENTITY_NAME, SKIP_VOTE_ENTITY_NAME } from "../utils/config";
+import { EMERGENCY_BUTTON_ENTITY_NAME, SKIP_VOTE_ENTITY_NAME } from "../utils/config";
 import { EmergencyMeetingPhase } from "../game/phase/phases/EmergencyMeetingPhase";
 import { InProgressPhase } from "../game/phase/phases/InProgressPhase";
+import { PlayerExperienceManager } from "./PlayerExperienceManager";
 
 export class PlayerSession {
 
@@ -21,6 +22,7 @@ export class PlayerSession {
     private _playerEntity: PlayerEntity | null
     private _coins: number
     private _hasPressedEmergencyButton: boolean
+    private _experienceManager: PlayerExperienceManager
 
     constructor(player: Player) {
         this._player = player
@@ -33,6 +35,7 @@ export class PlayerSession {
         this._playerEntity = null
         this._coins = 0
         this._hasPressedEmergencyButton = false
+        this._experienceManager = new PlayerExperienceManager(this)
     }
 
     public getPlayer(): Player {
@@ -67,6 +70,10 @@ export class PlayerSession {
         return this._playerEntity
     }
 
+    public getExperienceManager(): PlayerExperienceManager {
+        return this._experienceManager
+    }
+
     public getCoins(): number {
         return this._coins
     }
@@ -74,7 +81,7 @@ export class PlayerSession {
     public addCoin(): void {
         this._coins++
         this.coinAnimation()
-        
+
         const coinAudio = new Audio({
             uri: 'audio/sfx/misc/coin.mp3',
             volume: 0.1,
@@ -163,7 +170,7 @@ export class PlayerSession {
             parent: this._playerEntity,
             parentNodeName: 'hand_right_anchor', // attach it to the hand node of our parent model
         });
-        
+
         // Initially hide the knife
         this._knifeVisible = false;
         this.setupKnifeVisibility();
@@ -200,14 +207,14 @@ export class PlayerSession {
                 if (this._role === PlayerRole.IMPOSTOR && this._knifeVisible && this._knifeUseCooldown <= 0 && ray?.hitEntity instanceof PlayerEntity) {
                     const hitPlayer = ray.hitEntity.player;
                     const hitSession = main.getPlayerSessionManager().getSession(hitPlayer);
-                    
+
                     if (this._game && hitSession?._role === PlayerRole.CREW && hitSession.getGame()?.getUniqueId() === this._game.getUniqueId()) {
                         this._game.getPhase().onDeath(hitSession, this);
                     }
                 } else {
                     const phase = this._game?.getPhase();
                     const entityName = ray?.hitEntity?.name || '';
-                    
+
                     switch (entityName) {
                         case EMERGENCY_BUTTON_ENTITY_NAME:
                             this._game?.getPhase().onEmergencyButtonPressed(this);
@@ -353,6 +360,22 @@ export class PlayerSession {
         this._player.ui.sendData({
             coinAnimation: true
         });
+    }
+
+    public openSilenceModal(): void {
+        this._player.ui.sendData({
+            openSilenceModal: true
+        });
+    }
+
+    public sendLevelInfo(): void {
+        this._player.ui.sendData({
+            levelInfo: {
+                level: this._experienceManager.getLevel(),
+                currentXp: this._experienceManager.getExperience(),
+                nextLevelXp: this._experienceManager.getNecessaryExperienceForNextLevel()
+            }
+        })
     }
 
     public teleportToWaitingRoom(): void {

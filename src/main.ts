@@ -17,7 +17,7 @@ import { GameManager } from "./game/GameManager";
 import { Broadcaster } from "./utils/Broadcaster";
 import type { GameMap } from "./map/GameMap";
 import { Spaceship } from "./map/maps/Spaceship";
-import { COIN_ENTITY_NAME, COIN_SPAWN_TIME, EMERGENCY_BUTTON_ENTITY_NAME } from "./utils/config";
+import { COIN_ENTITY_NAME, COIN_SPAWN_TIME, EMERGENCY_BUTTON_ENTITY_NAME, XP_PER_COIN } from "./utils/config";
 import { VoteEntitiesManager } from "./npc/VoteEntitiesManager";
 
 export class Main {
@@ -117,6 +117,7 @@ export class Main {
 
     this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
       const session = this._playerSessionManager.openSession(player)
+      session.getExperienceManager().load()
 
       session.setupEntity();
       session.setupCamera();
@@ -124,15 +125,14 @@ export class Main {
       // Load our game UI for this player
       player.ui.load('ui/index.html');
 
-      player.ui.sendData({
-        openSilenceModal: true
-      });
+      session.openSilenceModal()
     });
 
     this._world?.on(PlayerEvent.LEFT_WORLD, ({ player }) => {
       this._world?.entityManager.getPlayerEntitiesByPlayer(player).forEach(entity => entity.despawn());
 
       const session = this._playerSessionManager.getSessionOrThrow(player)
+      session.getExperienceManager().save()
       session.getGame()?.removePlayer(session)
       this._playerSessionManager.closeSession(player)
     })
@@ -198,6 +198,7 @@ export class Main {
                 const playerSession = this._playerSessionManager.getSession(other.player);
                 if (playerSession) {
                   playerSession.addCoin();
+                  playerSession.getExperienceManager().addExperience(XP_PER_COIN);
 
                   // Despawn the coin
                   coinEntity.despawn();
