@@ -36,7 +36,7 @@ export class InProgressPhase extends Phase {
 
         // Calculate circle parameters so the players can spawn around the circle
         const radius = 5; // 5 units radius for the circle
-        const centerPoint = Main.getInstance().getGameMap().getMapSpawnCoords();
+        const centerPoint = Main.getInstance().getGameMap().getEmergencyButtonCoords();
         const angleStep = (2 * Math.PI) / playerSessions.length;
 
         playerSessions.forEach((playerSession, index) => {
@@ -51,6 +51,11 @@ export class InProgressPhase extends Phase {
             // Set player position
             playerSession.getPlayerEntity()?.setPosition(position);
 
+            // Set camera to look at the center point
+            // this is not 100% accurate, since the body does not rotate with the camera
+            // BUT when the player moves, the body readjusts itself
+            // TODO: Find a better way to do this
+            playerSession.getPlayer()?.camera.lookAtPosition(centerPoint);
 
             if (!this._firstTimeUsedThisGame) {
                 return;
