@@ -139,9 +139,14 @@ export class Main {
   }
 
   private _setupWorldLighting(): void {
-    this._world!.setAmbientLightIntensity(5);
-    this._world!.setAmbientLightColor({ r: 20, g: 40, b: 60 });
-    this._world!.setDirectionalLightIntensity(1);
+    // Set very low ambient light to simulate darkness of space
+    this._world?.setAmbientLightIntensity(3);
+    // Deep blue tint for ambient light
+    this._world!.setAmbientLightColor({ r: 10, g: 10, b: 40 });
+    // Bright directional light to simulate distant stars/sun
+    this._world!.setDirectionalLightIntensity(1.5);
+    // Add slight blue tint to directional light
+    this._world!.setDirectionalLightColor({ r: 200, g: 200, b: 255 });
   }
 
   private _setupWorldEntities(): void {
