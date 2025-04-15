@@ -436,10 +436,6 @@ export class PlayerSession {
         this._playerEntity?.setPosition(Main.getInstance().getGameMap().getWaitingRoomCloseCoords());
     }
 
-    public teleportToSpawnCoords(): void {
-        this._playerEntity?.setPosition(Main.getInstance().getGameMap().getMapSpawnCoords());
-    }
-
     public teleportToVotingArea(): void {
         this._playerEntity?.setPosition(Main.getInstance().getGameMap().getVotingAreaCloseCoords());
     }
