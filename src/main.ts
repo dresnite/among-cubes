@@ -20,18 +20,34 @@ import { Spaceship } from "./map/maps/Spaceship";
 import { CAMERA_ENTITY_NAME, COIN_ENTITY_NAME, COIN_SPAWN_TIME, COMPUTER_ENTITY_NAME, EMERGENCY_BUTTON_ENTITY_NAME, XP_PER_COIN } from "./utils/config";
 import { VoteEntitiesManager } from "./npc/VoteEntitiesManager";
 
+/**
+ * Main game class that serves as the core controller for the Among Cubes game.
+ * Implements the Singleton pattern to ensure only one instance exists.
+ * Manages the game world, entities, players, and core game systems.
+ */
 export class Main {
-
+  /** Singleton instance of the Main class */
   private static _instance: Main | null = null;
 
+  /** Reference to the game world */
   private _world: World | null = null;
+  /** Manages game state and core game logic */
   private _gameManager: GameManager;
+  /** Manages player sessions and their states */
   private _playerSessionManager: PlayerSessionManager;
+  /** Handles broadcasting messages to players */
   private _broadcaster: Broadcaster;
+  /** Manages the game map and its features */
   private _gameMap: GameMap;
+  /** Manages voting-related entities and mechanics */
   private _voteEntitiesManager: VoteEntitiesManager;
+  /** Reference to the security camera entity */
   private _cameraEntity: Entity | null = null;
 
+  /**
+   * Initializes core game components and managers.
+   * This constructor is private and should only be called through getInstance().
+   */
   constructor() {
     this._voteEntitiesManager = new VoteEntitiesManager();
     this._gameManager = new GameManager();
@@ -40,7 +56,11 @@ export class Main {
     this._gameMap = new Spaceship();
   }
 
-
+  /**
+   * Initializes the game world and sets up core systems.
+   * This is the main entry point for starting the game.
+   * @param world - The Hytopia world instance to initialize
+   */
   public static initialize(world: World) {
     const loader = Main.getInstance();
 
@@ -49,6 +69,11 @@ export class Main {
     loader._setupHeartbeat();
   }
 
+  /**
+   * Gets the singleton instance of the Main class.
+   * Creates a new instance if one doesn't exist.
+   * @returns The singleton instance of Main
+   */
   public static getInstance(): Main {
     if (!Main._instance) {
       Main._instance = new Main();
@@ -57,10 +82,19 @@ export class Main {
     return Main._instance;
   }
 
+  /**
+   * Gets the current world instance.
+   * @returns The current world instance or null if not initialized
+   */
   public getWorld(): World | null {
     return this._world;
   }
 
+  /**
+   * Gets the current world instance or throws if not initialized.
+   * @throws Error if world is not initialized
+   * @returns The current world instance
+   */
   public getWorldOrThrow(): World {
     if (!this._world) {
       throw new Error('World not loaded');
@@ -69,26 +103,50 @@ export class Main {
     return this._world;
   }
 
+  /**
+   * Gets the game manager instance.
+   * @returns The GameManager instance
+   */
   public getGameManager(): GameManager {
     return this._gameManager;
   }
 
+  /**
+   * Gets the player session manager instance.
+   * @returns The PlayerSessionManager instance
+   */
   public getPlayerSessionManager(): PlayerSessionManager {
     return this._playerSessionManager;
   }
 
+  /**
+   * Gets the game map instance.
+   * @returns The GameMap instance
+   */
   public getGameMap(): GameMap {
     return this._gameMap;
   }
 
+  /**
+   * Gets the vote entities manager instance.
+   * @returns The VoteEntitiesManager instance
+   */
   public getVoteEntitiesManager(): VoteEntitiesManager {
     return this._voteEntitiesManager;
   }
 
+  /**
+   * Gets the camera entity instance.
+   * @returns The camera Entity instance or null if not initialized
+   */
   public getCameraEntity(): Entity | null {
     return this._cameraEntity;
   }
 
+  /**
+   * Loads the game world and sets up core world systems.
+   * @param world - The world instance to load
+   */
   private _loadGameWorld(world: World): void {
     this._world = world;
     world.loadMap(worldMap);
@@ -98,6 +156,10 @@ export class Main {
     this._setupWorldEntities();
   }
 
+  /**
+   * Initializes and plays the background music.
+   * @param world - The world instance to play music in
+   */
   private _playBackgroundMusic(world: World): void {
     new Audio({
       uri: 'audio/music/shadows-on-the-wall.mp3',
@@ -106,6 +168,10 @@ export class Main {
     }).play(world);
   }
 
+  /**
+   * Sets up the game heartbeat system for periodic updates.
+   * Runs every second to update game state and broadcast messages.
+   */
   private _setupHeartbeat(): void {
     setInterval(() => {
       this._gameManager.onHeartbeat();
@@ -113,13 +179,11 @@ export class Main {
     }, 1000);
   }
 
+  /**
+   * Sets up world event handlers for player join/leave events.
+   * Manages player sessions, UI, and experience tracking.
+   */
   private _setupWorldEvents(): void {
-    // setInterval(() => {
-    //   for (const player of this._playerSessionManager.getSessions().values()) {
-    //     player.message(`Your rotation is x ${player.getPlayerEntity()?.rotation.x} y ${player.getPlayerEntity()?.rotation.y} z ${player.getPlayerEntity()?.rotation.z} w ${player.getPlayerEntity()?.rotation.w}`)
-    //   }
-    // }, 1000);
-
     this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
       const session = this._playerSessionManager.openSession(player)
       
@@ -142,6 +206,10 @@ export class Main {
     })
   }
 
+  /**
+   * Sets up the world lighting system.
+   * Configures ambient and directional lighting to create a space atmosphere.
+   */
   private _setupWorldLighting(): void {
     // Set very low ambient light to simulate darkness of space
     this._world?.setAmbientLightIntensity(3);
@@ -153,6 +221,13 @@ export class Main {
     this._world!.setDirectionalLightColor({ r: 200, g: 200, b: 255 });
   }
 
+  /**
+   * Sets up all core world entities including:
+   * - Security camera
+   * - Computer terminal
+   * - Emergency button
+   * - Collectible coins
+   */
   private _setupWorldEntities(): void {
     this._cameraEntity = new Entity({
       modelUri: 'models/environment/camera.glb',
@@ -216,6 +291,12 @@ export class Main {
     this._voteEntitiesManager.setup()
   }
 
+  /**
+   * Spawns a collectible coin entity at the specified coordinates.
+   * The coin includes collision detection for collection and respawns after a delay.
+   * Also adds floating and rotation animations to the coin.
+   * @param coinCoords - The coordinates to spawn the coin at
+   */
   private _spawnCoin(coinCoords: Vector3Like): void {
     const coinEntity = new Entity({
       modelUri: 'models/environment/coin.glb',
@@ -279,5 +360,4 @@ export class Main {
       coinEntity.setRotation({ x: 0, y: Math.sin(yRotation / 2), z: 0, w: Math.cos(yRotation / 2) });
     });
   }
-
 }
