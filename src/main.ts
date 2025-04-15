@@ -57,7 +57,7 @@ export class Main {
     this._playerSessionManager = new PlayerSessionManager();
     this._broadcaster = new Broadcaster();
     this._gameMap = new Spaceship();
-    this._teleportStationManager = new TeleportStationManager(this._gameMap);
+    this._teleportStationManager = new TeleportStationManager();
   }
 
   /**
@@ -166,6 +166,8 @@ export class Main {
     this._setupWorldLighting();
     this._setupWorldEvents();
     this._setupWorldEntities();
+
+    this._teleportStationManager.setupStations();
   }
 
   /**
@@ -196,6 +198,15 @@ export class Main {
    * Manages player sessions, UI, and experience tracking.
    */
   private _setupWorldEvents(): void {
+    this._world?.chatManager.registerCommand('pos', (player) => {
+      const session = this._playerSessionManager.getSessionOrThrow(player);
+      const position = session.getPlayerEntity()?.position;
+      const rotation = session.getPlayerEntity()?.rotation;
+
+      this._world?.chatManager.sendPlayerMessage(player, `Position: x - ${position?.x}, y - ${position?.y}, z - ${position?.z}`);
+      this._world?.chatManager.sendPlayerMessage(player, `Rotation: x - ${rotation?.x}, y - ${rotation?.y}, z - ${rotation?.z}, w - ${rotation?.w}`);
+    })
+    
     this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
       
       const session = this._playerSessionManager.openSession(player)

@@ -70,7 +70,7 @@ export class Spaceship extends GameMap {
             { x: -46, y: 1, z: -27 },
             { x: -7, y: 1, z: -19 },
             { x: 6, y: 1, z: -35 },
-            { x: 6, y: 1, z: 32 },
+            { x: -4, y: 1, z: 32 },
         ];
     }
 
@@ -85,8 +85,8 @@ export class Spaceship extends GameMap {
     public getTeleportStations(): { station1: { position: Vector3Like; rotation: QuaternionLike; teleportTarget: Vector3Like; }; station2: { position: Vector3Like; rotation: QuaternionLike; teleportTarget: Vector3Like; }; }[] {
         return [
             {
-                station1: { position: { x: -46.5, y: 6, z: 0.5 }, rotation: { x: 0, y: 0, z: 0, w: 0 }, teleportTarget: { x: -46.5, y: 6, z: 0.5 } },
-                station2: { position: { x: -46.5, y: 6, z: 0.5 }, rotation: { x: 0, y: 0, z: 0, w: 0 }, teleportTarget: { x: -46.5, y: 6, z: 0.5 } },
+                station1: { position: { x: 6.5, y: 2.5, z: 33 }, rotation: { x: 0, y: 0, z: 0, w: 0 }, teleportTarget: { x: 2, y: 2, z: 33 } },
+                station2: { position: { x: -32.5, y: 2.5, z: -14 }, rotation: { x: 0, y: 0, z: 0, w: 0 }, teleportTarget: { x: -36, y: 2, z: -14 } },
             }
         ];
     }

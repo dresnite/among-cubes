@@ -1,4 +1,4 @@
-import { Entity, Quaternion, RigidBodyType, SceneUI, type Vector3Like } from "hytopia";
+import { Entity, RigidBodyType, SceneUI, type QuaternionLike, type Vector3Like } from "hytopia";
 import { createUniqueId } from "../utils/math";
 import { Main } from "../Main";
 import type { PlayerSession } from "../player/PlayerSession";
@@ -25,6 +25,10 @@ export class TeleportStation {
         return this._stationLinked;
     }
 
+    public getTeleportTarget(): Vector3Like {
+        return this._teleportTarget;
+    }
+
     public setStationLinked(station: TeleportStation): void {
         this._stationLinked = station;
     }
@@ -36,7 +40,7 @@ export class TeleportStation {
         }
 
         if (session.useCoins(TELEPORT_STATION_COST)) {
-            session.getPlayerEntity()?.setPosition(this._teleportTarget);
+            session.getPlayerEntity()?.setPosition(this._stationLinked.getTeleportTarget());
         } else {
             session.popup(Message.t("TELEPORT_STATION_NO_COINS", {
                 cost: TELEPORT_STATION_COST.toString()
@@ -44,27 +48,30 @@ export class TeleportStation {
         }
     }
 
-    public spawn(position: Vector3Like, rotation: Quaternion): void {
+    public spawn(position: Vector3Like, rotation: QuaternionLike): void {
+        console.log(`Spawning teleport station ${this._uniqueId} at ${position.x}, ${position.y}, ${position.z}`);
+
         const world = Main.getInstance().getWorldOrThrow();
 
         this._entity = new Entity({
-            modelUri: 'models/environment/camera.glb',
-            modelScale: 1,
+            modelUri: 'models/environment/teleport-station.glb',
+            modelScale: 4,
             name: this._uniqueId,
             opacity: 0.99,
             rigidBodyOptions: {
                 type: RigidBodyType.FIXED, // This makes the entity not move
-                rotation: rotation,
+                rotation,
             },
         });
 
         this._entity.spawn(world, position);
+        this._entity.setRotation(rotation);
 
         // Create the Scene UI over the NPC
         const sceneUI = new SceneUI({
             templateId: 'teleport-station-entity',
             attachedToEntity: this._entity,
-            offset: { x: 0, y: 1.75, z: 0 },
+            offset: { x: 0, y: 2.5, z: 0 },
         });
 
         sceneUI.load(world);
