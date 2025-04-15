@@ -84,6 +84,20 @@
     return clone;
   });
 
+  hytopia.registerSceneUITemplate(`computer-entity`, () => {
+    const template = document.getElementById('basic-scene-ui');
+    const clone = template.content.cloneNode(true);
+
+    const h1 = clone.querySelector('.basic-scene-ui h1');
+    h1.style.color = 'gold';
+    h1.textContent = 'Security Camera';
+
+    const p = clone.querySelector('.basic-scene-ui p');
+    p.textContent = 'Costs 5 coins to use'
+
+    return clone;
+  });
+
   hytopia.onData(data => {
     if (data.roleBar) {
       document.getElementById('role').textContent = data.roleBar.role || '';

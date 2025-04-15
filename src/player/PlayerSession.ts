@@ -5,7 +5,7 @@ import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent, Audi
 import { PlayerRole } from "./PlayerRole";
 import { Main } from "../Main";
 import { Message } from "../messages/Message";
-import { EMERGENCY_BUTTON_ENTITY_NAME, SKIP_VOTE_ENTITY_NAME } from "../utils/config";
+import { COMPUTER_ENTITY_NAME, EMERGENCY_BUTTON_ENTITY_NAME, SECURITY_CAMERA_COST, SKIP_VOTE_ENTITY_NAME } from "../utils/config";
 import { EmergencyMeetingPhase } from "../game/phase/phases/EmergencyMeetingPhase";
 import { InProgressPhase } from "../game/phase/phases/InProgressPhase";
 import { PlayerExperienceManager } from "./PlayerExperienceManager";
@@ -90,6 +90,15 @@ export class PlayerSession {
             position: this._playerEntity?.position,
         });
         coinAudio.play(Main.getInstance().getWorldOrThrow());
+    }
+
+    public useCoins(coins: number): boolean {
+        if (this._coins >= coins) {
+            this._coins -= coins
+            return true
+        }
+
+        return false
     }
 
     public resetCoins(): void {
@@ -235,6 +244,18 @@ export class PlayerSession {
                     const entityName = ray?.hitEntity?.name || '';
 
                     switch (entityName) {
+                        case COMPUTER_ENTITY_NAME:
+                            if (phase instanceof InProgressPhase) {
+                                if (this.useCoins(SECURITY_CAMERA_COST)) {
+                                    this.setUsingSecurityCamera(true);
+                                    this.setupCamera();
+                                } else {
+                                    this.popup(Message.t('SECURITY_CAMERA_NO_COINS', {
+                                        cost: SECURITY_CAMERA_COST.toString()
+                                    }));
+                                }
+                            }
+                            break;
                         case EMERGENCY_BUTTON_ENTITY_NAME:
                             this._game?.getPhase().onEmergencyButtonPressed(this);
                             break;

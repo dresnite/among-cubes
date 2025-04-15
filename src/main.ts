@@ -17,7 +17,7 @@ import { GameManager } from "./game/GameManager";
 import { Broadcaster } from "./utils/Broadcaster";
 import type { GameMap } from "./map/GameMap";
 import { Spaceship } from "./map/maps/Spaceship";
-import { CAMERA_ENTITY_NAME, COIN_ENTITY_NAME, COIN_SPAWN_TIME, EMERGENCY_BUTTON_ENTITY_NAME, XP_PER_COIN } from "./utils/config";
+import { CAMERA_ENTITY_NAME, COIN_ENTITY_NAME, COIN_SPAWN_TIME, COMPUTER_ENTITY_NAME, EMERGENCY_BUTTON_ENTITY_NAME, XP_PER_COIN } from "./utils/config";
 import { VoteEntitiesManager } from "./npc/VoteEntitiesManager";
 
 export class Main {
@@ -166,6 +166,28 @@ export class Main {
 
     this._cameraEntity.spawn(this._world!, this._gameMap.getCameraCoords());
 
+    const computerEntity = new Entity({
+      modelUri: 'models/environment/computer.glb',
+      modelScale: 1.8,
+      name: COMPUTER_ENTITY_NAME,
+      opacity: 0.99,
+      rigidBodyOptions: {
+        type: RigidBodyType.FIXED, // This makes the entity not move
+      },
+    });
+
+    computerEntity.spawn(this._world!, this._gameMap.getComputerCoords());
+
+    // Create the Scene UI over the NPC
+    const computerMessageUI = new SceneUI({
+      templateId: 'computer-entity',
+      attachedToEntity: computerEntity,
+      offset: { x: 0, y: 1.75, z: 0 },
+    });
+
+    computerMessageUI.load(this._world!);
+    
+
     const emergencyButtonEntity = new Entity({
       modelUri: 'models/environment/emergency-button.glb',
       modelScale: 2,
@@ -215,9 +237,6 @@ export class Main {
                 if (playerSession) {
                   playerSession.addCoin();
                   playerSession.getExperienceManager().addExperience(XP_PER_COIN);
-
-                  playerSession.setUsingSecurityCamera(true);
-                  playerSession.setupCamera();
 
                   // Despawn the coin
                   coinEntity.despawn();

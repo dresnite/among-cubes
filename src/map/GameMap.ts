@@ -42,4 +42,6 @@ export abstract class GameMap {
 
     public abstract getCameraCoords(): Vector3Like;
 
+    public abstract getComputerCoords(): Vector3Like;
+
 }

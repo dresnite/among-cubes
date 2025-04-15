@@ -78,4 +78,8 @@ export class Spaceship extends GameMap {
         return { x: -46.5, y: 6, z: 0.5 };
     }
 
+    public getComputerCoords(): Vector3Like {
+        return { x: -26, y: 2, z: -18 };
+    }
+
 }

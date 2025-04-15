@@ -93,6 +93,10 @@ export class InProgressPhase extends Phase {
             });
 
             playerSession.sendRoleBar();
+
+            if (playerSession.isUsingSecurityCamera()) {
+                playerSession.popup(Message.t('LEFT_CLICK_TO_LEAVE_CAMERA'));
+            }
         }
     }
 
@@ -106,6 +110,11 @@ export class InProgressPhase extends Phase {
     }
 
     public onDeath(victim: PlayerSession, killer: PlayerSession): void {
+        if (victim.isUsingSecurityCamera()) {
+            victim.setUsingSecurityCamera(false);
+            victim.setupCamera();
+        }
+
         this._cadaverManager.spawnCadaver(victim);
 
         killer.achievement(
@@ -139,6 +148,13 @@ export class InProgressPhase extends Phase {
 
     public onChangePhase(): void {
         this._cadaverManager.clearCadavers();
+
+        for (const playerSession of this._game.getPlayerSessions()) {
+            if (playerSession.isUsingSecurityCamera()) {
+                playerSession.setUsingSecurityCamera(false);
+                playerSession.setupCamera();
+            }
+        }
     }
 
     public onCadaverReport(playerSession: PlayerSession, cadaver: Cadaver): void {

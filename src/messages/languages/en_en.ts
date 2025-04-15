@@ -41,5 +41,7 @@ export const en_en = {
     VOTE_SKIPPED: "You skipped the vote",
     READY_TO_START_GAME: "The game is ready to start!",
     WAS_THE_IMPOSTOR: "{impostor} was the impostor",
-    NOT_THE_IMPOSTOR: "{impostor} is NOT the impostor"
+    NOT_THE_IMPOSTOR: "{impostor} is NOT the impostor",
+    SECURITY_CAMERA_NO_COINS: "Not enough coins! The camera costs {cost} coins.",
+    LEFT_CLICK_TO_LEAVE_CAMERA: "Left click to leave camera"
 }
