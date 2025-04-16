@@ -11,6 +11,7 @@ export class EndingPhase extends Phase {
 
     private _timeToEnd: number;
     private _isCrewWin: boolean;
+    private _isVictoryRewardGiven: boolean = false;
 
     constructor(game: Game, isCrewWin: boolean) {
         super(game);
@@ -58,8 +59,9 @@ export class EndingPhase extends Phase {
                 1000
             )
             
-            if (playerSession.getRole() === PlayerRole.CREW) {
+            if (playerSession.getRole() === PlayerRole.IMPOSTOR && !this._isVictoryRewardGiven) {
                 playerSession.getExperienceManager().addExperience(XP_PER_WIN_AS_IMPOSTOR);
+                this._isVictoryRewardGiven = true;
             }
         }
     }
