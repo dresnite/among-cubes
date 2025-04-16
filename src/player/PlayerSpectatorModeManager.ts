@@ -100,6 +100,12 @@ export class PlayerSpectatorModeManager {
             return
         }
 
+        if (!this._spectating.getGame()) {
+            this.stopSpectating()
+            this._session.message(Message.t('SPECTATOR_MODE_PLAYER_DIED'))
+            return
+        }
+
         this._session.popup(
             Message.t('SPECTATOR_MODE_TITLE'),
             Message.t('SPECTATOR_MODE_SUBTITLE')

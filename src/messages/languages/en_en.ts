@@ -55,4 +55,5 @@ export const en_en = {
     SPECTATOR_MODE_GAME_ENDED: "» The game ended while you were spectating",
     SPECTATOR_MODE_TITLE: "Spectator mode",
     SPECTATOR_MODE_SUBTITLE: "F: Next player - R: Exit",
+    SPECTATOR_MODE_PLAYER_DIED: "» The player you were spectating died",
 }
