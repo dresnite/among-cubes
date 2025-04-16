@@ -20,7 +20,7 @@ export const COIN_SPAWN_TIME = 10000; // 10 seconds
 export const MAX_LEVEL = 100;
 export const XP_PER_COIN = 50;
 export const XP_PER_KILL = 100;
-export const XP_PER_WIN_AS_IMPOSTOR = 300;
+export const XP_PER_WIN_AS_IMPOSTOR = 10; // rn this XP is sent multiple times when the impostor wins, so having a low number is the best way to not give the imposter a huge XP gain for now
 
 export const TELEPORT_STATION_COST = 10;
 
