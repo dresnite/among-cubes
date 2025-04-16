@@ -29,7 +29,10 @@ export class GameManager {
             }
             
             if (!playerSession.getGame()) {
-                playerSession.popup(Message.t('WAITING_FOR_GAME_TO_END'));
+                playerSession.popup(
+                    Message.t('WAITING_FOR_GAME_TO_END'),
+                    Message.t('WAITING_FOR_GAME_TO_END_SUBTITLE')
+                );
             }
         }
     }
