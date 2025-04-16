@@ -465,12 +465,16 @@ export class PlayerSession {
     /**
      * Shows a popup message to the player.
      * @param message - The message to show
+     * @param subtitle - The subtitle to show
      * @param milliseconds - Duration to show the message (default: 1000ms)
      */
-    public popup(message: string, milliseconds: number = 1000): void {
+    public popup(message: string, subtitle: string | null = null, milliseconds: number = 1000): void {
         this._player.ui.sendData({
-            popup: message,
-            popupMilliseconds: milliseconds
+            popup: {
+                title: message,
+                subtitle: subtitle,
+                milliseconds: milliseconds
+            }
         })
     }
 

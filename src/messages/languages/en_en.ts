@@ -45,7 +45,8 @@ export const en_en = {
     NOBODY_WAS_ELIMINATED: "Nobody was eliminated",
     SECURITY_CAMERA_NO_COINS: "Not enough coins! The camera costs {cost} coins.",
     TELEPORT_STATION_NO_COINS: "Not enough coins! Teleporting costs {cost} coins.",
-    LEFT_CLICK_TO_LEAVE_CAMERA: "Left click to leave camera",
+    LEFT_CLICK_TO_LEAVE_CAMERA: "You are using the security camera",
+    LEFT_CLICK_TO_LEAVE_CAMERA_SUBTITLE: "Left click to leave",
     KNIFE_READY: "Knife ready",
     KNIFE_COOLDOWN: "Knife on cooldown ({cooldown})",
     ALL_PLAYERS_VOTED: "» All players voted, ending emergency meeting..."

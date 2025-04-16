@@ -233,7 +233,20 @@
 
     if (data.popup) {
       const popup = document.getElementById('popup-message');
-      popup.textContent = data.popup;
+      const popupTitle = document.createElement('div');
+      popupTitle.className = 'popup-title';
+      popupTitle.textContent = data.popup.title || data.popup; // Support both new and old format
+
+      popup.innerHTML = ''; // Clear existing content
+      popup.appendChild(popupTitle);
+
+      if (data.popup.subtitle) {
+        const popupSubtitle = document.createElement('div');
+        popupSubtitle.className = 'popup-subtitle';
+        popupSubtitle.textContent = data.popup.subtitle;
+        popup.appendChild(popupSubtitle);
+      }
+
       popup.classList.remove('fade-out');
       popup.classList.add('fade-in');
 
@@ -242,12 +255,11 @@
         clearTimeout(window.currentPopupTimeout);
       }
 
-      if (data.popupMilliseconds) {
-        window.currentPopupTimeout = setTimeout(() => {
-          popup.classList.remove('fade-in');
-          popup.classList.add('fade-out');
-        }, data.popupMilliseconds);
-      }
+      const milliseconds = data.popup.milliseconds || data.popupMilliseconds || 3000;
+      window.currentPopupTimeout = setTimeout(() => {
+        popup.classList.remove('fade-in');
+        popup.classList.add('fade-out');
+      }, milliseconds);
     }
 
     if (data.silence) {
@@ -595,12 +607,9 @@
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.85);
-    color: #FFFFFF;
     padding: 16px 24px;
     border-radius: 12px;
     font-family: 'Arial', sans-serif;
-    font-size: 18px;
-    font-weight: bold;
     text-align: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     border: 2px solid rgba(255, 255, 255, 0.15);
@@ -611,6 +620,18 @@
     max-width: 80%;
     white-space: pre-wrap;
     word-wrap: break-word;
+  }
+
+  .popup-title {
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .popup-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
   }
 
   .achievement-display {

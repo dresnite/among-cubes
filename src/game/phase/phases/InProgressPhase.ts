@@ -100,14 +100,17 @@ export class InProgressPhase extends Phase {
             playerSession.sendRoleBar();
 
             if (playerSession.isUsingSecurityCamera()) {
-                playerSession.popup(Message.t('LEFT_CLICK_TO_LEAVE_CAMERA'));
+                playerSession.popup(
+                    Message.t('LEFT_CLICK_TO_LEAVE_CAMERA'),
+                    Message.t('LEFT_CLICK_TO_LEAVE_CAMERA_SUBTITLE')
+                );
             }
         }
     }
 
     public onEmergencyButtonPressed(playerSession: PlayerSession): void {
         if (playerSession.hasPressedEmergencyButton()) {
-            playerSession.popup(Message.t('EMERGENCY_MEETING_ALREADY_CALLED'), 3000);
+            playerSession.popup(Message.t('EMERGENCY_MEETING_ALREADY_CALLED'), null, 3000);
         } else {
             playerSession.setHasPressedEmergencyButton(true);
             this._game.setPhase(new EmergencyMeetingPhase(this._game, playerSession));

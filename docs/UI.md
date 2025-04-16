@@ -34,10 +34,10 @@ playerSession.title("Game Starting!", 3000);
 - **Location**: Bottom center of screen
 - **Behavior**: Ephemeral
 - **Default Duration**: 1000ms (1 second)
-- **Method**: `popup(message: string, milliseconds: number = 1000)`
+- **Method**: `popup(message: string, subtitle: string | null, milliseconds: number = 1000)`
 - **Usage Example**:
 ```typescript
-playerSession.popup("You found a coin!", 1000);
+playerSession.popup("You found a coin!", "Optional popup subtitle", 1000);
 ```
 
 ![UI Overview 2](images/ui-2.png)
