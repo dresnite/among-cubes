@@ -350,6 +350,16 @@ export class PlayerSession {
      */
     public setupPlayerEvents(playerEntity: PlayerEntity): void {
         playerEntity.controller?.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input }) => {
+
+            // prevent player from moving while spectating or using security camera
+            if ((input.w || input.a || input.s || input.d) && (this._spectatorModeManager.isSpectating() || this._usingSecurityCamera)) {
+                input.w = false
+                input.a = false
+                input.s = false
+                input.d = false
+                return
+            }
+
             if (input.r && this._spectatorModeManager.isSpectating()) {
                 input.r = false; // Consume the input
                 this._spectatorModeManager.stopSpectating()
