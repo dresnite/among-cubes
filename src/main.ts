@@ -206,13 +206,13 @@ export class Main {
       this._world?.chatManager.sendPlayerMessage(player, `Position: x - ${position?.x}, y - ${position?.y}, z - ${position?.z}`);
       this._world?.chatManager.sendPlayerMessage(player, `Rotation: x - ${rotation?.x}, y - ${rotation?.y}, z - ${rotation?.z}, w - ${rotation?.w}`);
     })
-    
+
     this._world?.on(PlayerEvent.JOINED_WORLD, ({ player }) => {
-      
+
       const session = this._playerSessionManager.openSession(player)
 
-      
-      
+
+
       session.getExperienceManager().load()
       session.setupEntity();
 
@@ -287,7 +287,7 @@ export class Main {
     });
 
     computerMessageUI.load(this._world!);
-    
+
 
     const emergencyButtonEntity = new Entity({
       modelUri: 'models/environment/emergency-button.glb',

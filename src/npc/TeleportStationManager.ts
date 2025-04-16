@@ -16,7 +16,7 @@ export class TeleportStationManager {
 
         for (const stationPair of Main.getInstance().getGameMap().getTeleportStations()) {
             console.log('Loading station...')
-            
+
             const station1 = new TeleportStation(stationPair.station1.teleportTarget);
             const station2 = new TeleportStation(stationPair.station2.teleportTarget);
 

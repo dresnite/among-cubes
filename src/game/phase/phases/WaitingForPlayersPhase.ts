@@ -31,7 +31,7 @@ export class WaitingForPlayersPhase extends Phase {
     public onJoin(playerSession: PlayerSession): void {
         this.sendPlayerJoinAchievement(playerSession);
         this.makeSurePlayersHaveNoKnife();
-        
+
         if (this._game.getPlayerSessions().length >= MINIMUM_PLAYERS_TO_START_GAME) {
             Main.getInstance().getWorld()?.chatManager.sendBroadcastMessage(Message.t('MINIMUM_PLAYERS_REACHED'))
             this._game.setPhase(new MinimumPlayersReachedPhase(this._game));

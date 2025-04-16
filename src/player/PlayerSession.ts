@@ -609,7 +609,7 @@ export class PlayerSession {
             } else {
                 this.roleBar(Message.t(message), subtitle, 1000)
             }
-            
+
         } else {
             this.roleBar(Message.t(message), '', 1000)
         }

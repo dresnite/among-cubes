@@ -14,6 +14,6 @@ export class ColorFactory {
             new Color(ColorType.White),
             new Color(ColorType.Yellow),
         ]
-    }   
+    }
 
 }

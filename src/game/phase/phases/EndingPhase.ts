@@ -58,12 +58,12 @@ export class EndingPhase extends Phase {
                 'cup.png',
                 1000
             )
-            
+
             if (playerSession.getRole() === PlayerRole.IMPOSTOR && !this._isVictoryRewardGiven) {
                 playerSession.getExperienceManager().addExperience(XP_PER_WIN_AS_IMPOSTOR);
                 this._isVictoryRewardGiven = true;
             }
         }
     }
-    
+
 }

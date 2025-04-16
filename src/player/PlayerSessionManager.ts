@@ -9,14 +9,14 @@ export class PlayerSessionManager {
         return this._sessions
     }
 
-    public getSession(player: Player): PlayerSession|null {
+    public getSession(player: Player): PlayerSession | null {
         return this._sessions.get(player.username) ?? null
     }
 
     public getSessionOrThrow(player: Player): PlayerSession {
         const session = this._sessions.get(player.username)
 
-        if(!session) {
+        if (!session) {
             throw new Error(`Couldn't retrieve the session of ${player.username}`)
         }
 
@@ -32,7 +32,7 @@ export class PlayerSessionManager {
     public closeSession(player: Player) {
         const session = this._sessions.get(player.username)
 
-        if(session) {
+        if (session) {
             session.setIsOnline(false)
             this._sessions.delete(player.username)
         } else {

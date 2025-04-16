@@ -62,5 +62,5 @@ export class MinimumPlayersReachedPhase extends Phase {
             playerSession.setupEntity();
         }
     }
-    
+
 }   

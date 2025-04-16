@@ -114,7 +114,7 @@ export class VoteEntitiesManager {
     public showDeadSceneUI(color: ColorType): void {
         const aliveSceneUI = this._voteEntitiesNameToAliveSceneUIMap.get(color.toString());
         const deadSceneUI = this._voteEntitiesNameToDeadSceneUIMap.get(color.toString());
-        
+
         if (aliveSceneUI?.isLoaded) {
             aliveSceneUI.unload();
         }

@@ -36,7 +36,7 @@ export class Cadaver {
 
         const game = playerSession.getGame();
 
-        if(!game) {
+        if (!game) {
             return;
         }
 
@@ -46,7 +46,7 @@ export class Cadaver {
             phase.onCadaverReport(playerSession, this);
         }
     }
-    
+
     public spawn(): void {
         console.log('spawning cadaver with id', this._uniqueId, ' and color', this._color.getSkinPath());
 
@@ -56,7 +56,7 @@ export class Cadaver {
             name: this._uniqueId,
             modelLoopedAnimations: ['sleep'],
             rigidBodyOptions: {
-                type: RigidBodyType.FIXED, 
+                type: RigidBodyType.FIXED,
             },
         })
 

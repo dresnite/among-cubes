@@ -117,7 +117,7 @@ export class EmergencyMeetingPhase extends Phase {
 
         if (this._timeToEndEmergencyMeeting <= 0) {
             return this._endEmergencyMeeting()
-        } else if(this._poll.getVoteCount() === this._game.getPlayerSessions().length) {
+        } else if (this._poll.getVoteCount() === this._game.getPlayerSessions().length) {
             for (const playerSession of this._game.getPlayerSessions()) {
                 playerSession.message(Message.t('ALL_PLAYERS_VOTED'));
             }

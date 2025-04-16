@@ -91,6 +91,6 @@ export class PlayerExperienceManager {
             experience: this._experience,
         });
     }
-    
+
 }
 

@@ -6,7 +6,7 @@ import { Message } from "../messages/Message"
 import type { PlayerSession } from "./PlayerSession"
 
 export class PlayerSpectatorModeManager {
-    
+
     /**
      * The session of the player who is spectating
      */
@@ -74,7 +74,7 @@ export class PlayerSpectatorModeManager {
         const playerSessions = game.getPlayerSessions().sort(() => Math.random() - 0.5)
         const nextPlayerSession = playerSessions.find(session => session.getPlayer().username !== this._session.getPlayer().username && session.getColor() !== this._spectating?.getColor())
 
-        if(!nextPlayerSession) {
+        if (!nextPlayerSession) {
             return
         }
 
@@ -82,7 +82,7 @@ export class PlayerSpectatorModeManager {
     }
 
     public hearbeat(): void {
-        if(!this._spectating) {
+        if (!this._spectating) {
             return
         }
 
@@ -94,14 +94,14 @@ export class PlayerSpectatorModeManager {
             return
         }
 
-        if(!this._spectating.isOnline()) {
+        if (!this._spectating.isOnline()) {
             this.stopSpectating()
             this._session.message(Message.t('SPECTATOR_MODE_DISCONNECTED'))
             return
         }
 
         this._session.popup(
-            Message.t('SPECTATOR_MODE_TITLE'), 
+            Message.t('SPECTATOR_MODE_TITLE'),
             Message.t('SPECTATOR_MODE_SUBTITLE')
         )
     }

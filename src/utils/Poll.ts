@@ -23,8 +23,8 @@ export class Poll {
     // Returns an array with the most voted option, or the options with the same number of votes
     public getMostVotedOptions(): string[] {
         const voteCounts = this.getOptionsWithNumberOfVotes();
-        
-        // Find the highest vote count
+
+        // Find the highest vßote count
         let maxVotes = 0;
         for (const count of voteCounts.values()) {
             if (count > maxVotes) {
