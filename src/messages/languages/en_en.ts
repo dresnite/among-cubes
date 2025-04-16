@@ -50,5 +50,9 @@ export const en_en = {
     LEFT_CLICK_TO_LEAVE_CAMERA_SUBTITLE: "Left click to leave",
     KNIFE_READY: "Knife ready",
     KNIFE_COOLDOWN: "Knife on cooldown ({cooldown})",
-    ALL_PLAYERS_VOTED: "» All players voted, ending emergency meeting..."
+    ALL_PLAYERS_VOTED: "» All players voted, ending emergency meeting...",
+    SPECTATOR_MODE_DISCONNECTED: "» The player you were spectating left the game",
+    SPECTATOR_MODE_GAME_ENDED: "» The game ended while you were spectating",
+    SPECTATOR_MODE_TITLE: "Spectator mode",
+    SPECTATOR_MODE_SUBTITLE: "F: Next player - R: Exit",
 }

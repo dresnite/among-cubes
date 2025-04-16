@@ -12,6 +12,10 @@ export class GameManager {
         this._game = new Game();
     }
 
+    public getGame(): Game {
+        return this._game;
+    }
+
     public assignPlayerSessionToGame(playerSession: PlayerSession): void {
         if (!this._game.canBeJoined()) {
             return;
@@ -31,9 +35,11 @@ export class GameManager {
             if (!playerSession.getGame()) {
                 playerSession.popup(
                     Message.t('WAITING_FOR_GAME_TO_END'),
-                    Message.t('WAITING_FOR_GAME_TO_END_SUBTITLE')
+                    this._game.isBeingPlayed() ? Message.t('WAITING_FOR_GAME_TO_END_SUBTITLE') : null
                 );
             }
+
+            playerSession.getSpectatorModeManager().hearbeat()
         }
     }
 

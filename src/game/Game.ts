@@ -4,7 +4,9 @@ import { createUniqueId } from "../utils/math";
 import type { Color } from "./color/Color";
 import { ColorFactory } from "./color/ColorFactory";
 import type { Phase } from "./phase/Phase";
+import { EmergencyMeetingPhase } from "./phase/phases/EmergencyMeetingPhase";
 import { EndingPhase } from "./phase/phases/EndingPhase";
+import { InProgressPhase } from "./phase/phases/InProgressPhase";
 import { WaitingForPlayersPhase } from "./phase/phases/WaitingForPlayersPhase";
 import { PhaseType } from "./phase/PhaseType";
 
@@ -84,6 +86,14 @@ export class Game {
      */
     public canBeJoined(): boolean {
         return (this._phase.getPhaseType() === PhaseType.WAITING_FOR_PLAYERS || this._phase.getPhaseType() === PhaseType.MINIMUM_PLAYERS_REACHED) && this._availableColors.length > 0;
+    }
+
+    /**
+     * Checks if the game is being played.
+     * @returns True if the game is being played, false otherwise
+     */
+    public isBeingPlayed(): boolean {
+        return this._phase instanceof InProgressPhase || this._phase instanceof EmergencyMeetingPhase
     }
 
     /**

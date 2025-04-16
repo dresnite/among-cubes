@@ -9,6 +9,7 @@ import { COMPUTER_ENTITY_NAME, EMERGENCY_BUTTON_ENTITY_NAME, KNIFE_USE_COOLDOWN,
 import { EmergencyMeetingPhase } from "../game/phase/phases/EmergencyMeetingPhase";
 import { InProgressPhase } from "../game/phase/phases/InProgressPhase";
 import { PlayerExperienceManager } from "./PlayerExperienceManager";
+import { PlayerSpectatorModeManager } from "./PlayerSpectatorModeManager";
 
 /**
  * Manages a player's session in the game, handling their state, interactions, and UI elements.
@@ -35,7 +36,7 @@ export class PlayerSession {
     private _experienceManager: PlayerExperienceManager
     private _usingSecurityCamera: boolean
     private _isOnline: boolean
-
+    private _spectatorModeManager: PlayerSpectatorModeManager
     /**
      * Creates a new PlayerSession instance.
      * @param player - The Hytopia Player instance to associate with this session
@@ -54,6 +55,7 @@ export class PlayerSession {
         this._experienceManager = new PlayerExperienceManager(this)
         this._usingSecurityCamera = false
         this._isOnline = true
+        this._spectatorModeManager = new PlayerSpectatorModeManager(this)
     }
 
     /**
@@ -263,13 +265,27 @@ export class PlayerSession {
     }
 
     /**
+     * Gets the spectator mode manager for the player.
+     * @returns The PlayerSpectatorModeManager instance
+     */
+    public getSpectatorModeManager(): PlayerSpectatorModeManager {
+        return this._spectatorModeManager
+    }
+
+    /**
      * Sets up the player's camera based on their current state.
      * Handles both security camera view and first-person view.
      */
     public setupCamera(): void {
-        if (this._usingSecurityCamera) {
+        if (this._spectatorModeManager.isSpectating()) {
+            this._player.camera.setMode(PlayerCameraMode.THIRD_PERSON);
+            this._player.camera.setAttachedToEntity(this._spectatorModeManager.getSpectating()!.getPlayerEntity()!);
+            this._player.camera.setForwardOffset(-1);
+            this._player.camera.setModelHiddenNodes([]);
+        } else if (this._usingSecurityCamera) {
             this._player.camera.setAttachedToEntity(Main.getInstance().getCameraEntity()!);
             this._player.camera.setForwardOffset(1);
+            this._player.camera.setModelHiddenNodes([]);
         } else {
             this._player.camera.setAttachedToEntity(this._playerEntity!);
             // Setup a first person camera for the player
@@ -334,14 +350,25 @@ export class PlayerSession {
      */
     public setupPlayerEvents(playerEntity: PlayerEntity): void {
         playerEntity.controller?.on(BaseEntityControllerEvent.TICK_WITH_PLAYER_INPUT, ({ input }) => {
-            if (input.f) {
-                // Only allow toggling knife visibility for impostors
-                if (this._role === PlayerRole.IMPOSTOR) {
-                    this._knifeVisible = !this._knifeVisible;
-                    this.setupKnifeVisibility();
-                }
+            if (input.r && this._spectatorModeManager.isSpectating()) {
+                input.r = false; // Consume the input
+                this._spectatorModeManager.stopSpectating()
+                this.setupCamera()
+                return
+            }
 
+
+            if (input.f) {// Only allow toggling knife visibility for impostors and spectating
                 input.f = false; // Consume the input
+
+                if (this._game) {
+                    if (this._role === PlayerRole.IMPOSTOR) {
+                        this._knifeVisible = !this._knifeVisible;
+                        this.setupKnifeVisibility();
+                    }
+                } else {
+                    this._spectatorModeManager.spectateRandomPlayer()
+                }
             }
 
             // Handle left mouse click for impostor kills and touching NPCs (the emergency button, the voting statues...)
