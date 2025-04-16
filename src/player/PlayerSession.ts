@@ -34,6 +34,7 @@ export class PlayerSession {
     private _hasPressedEmergencyButton: boolean
     private _experienceManager: PlayerExperienceManager
     private _usingSecurityCamera: boolean
+    private _isOnline: boolean
 
     /**
      * Creates a new PlayerSession instance.
@@ -52,6 +53,7 @@ export class PlayerSession {
         this._hasPressedEmergencyButton = false
         this._experienceManager = new PlayerExperienceManager(this)
         this._usingSecurityCamera = false
+        this._isOnline = true
     }
 
     /**
@@ -246,6 +248,18 @@ export class PlayerSession {
      */
     public setUsingSecurityCamera(usingSecurityCamera: boolean): void {
         this._usingSecurityCamera = usingSecurityCamera
+    }
+
+    /**
+     * Checks if the player is online.
+     * @returns true if the player is online, false otherwise
+     */
+    public isOnline(): boolean {
+        return this._isOnline
+    }
+
+    public setIsOnline(isOnline: boolean): void {
+        this._isOnline = isOnline
     }
 
     /**

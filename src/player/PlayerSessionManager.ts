@@ -30,7 +30,14 @@ export class PlayerSessionManager {
     }
 
     public closeSession(player: Player) {
-        this._sessions.delete(player.username)
+        const session = this._sessions.get(player.username)
+
+        if(session) {
+            session.setIsOnline(false)
+            this._sessions.delete(player.username)
+        } else {
+            throw new Error(`Couldn't close the session of ${player.username}`)
+        }
     }
 
 }
