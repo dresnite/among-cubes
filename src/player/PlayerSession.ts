@@ -610,7 +610,7 @@ export class PlayerSession {
         const message = this._role === PlayerRole.IMPOSTOR ? 'IMPOSTOR_ROLE_BAR' : 'CREW_ROLE_BAR'
 
         if (this._role === PlayerRole.IMPOSTOR) {
-            const subtitle = this._knifeUseCooldown <= 0 ? Message.t('KNIFE_READY') : Message.t('KNIFE_COOLDOWN', {
+            const subtitle = this._knifeUseCooldown <= 0 ? Message.t(this._knifeVisible ? 'KNIFE_READY_VISIBLE' : 'KNIFE_READY') : Message.t('KNIFE_COOLDOWN', {
                 cooldown: this._knifeUseCooldown.toString()
             })
 
