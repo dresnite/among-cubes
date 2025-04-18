@@ -104,10 +104,16 @@ export class EmergencyMeetingPhase extends Phase {
                 }));
             } else {
                 playerSession.title(Message.t('EMERGENCY_MEETING_MESSAGE'));
-                playerSession.popup(Message.t('EMERGENCY_MEETING_REQUESTED_BY', {
-                    requester: this._requesterName,
-                    color: capitalize(this._requesterColor.getType().toString())
-                }));
+                playerSession.popup(
+                    Message.t('EMERGENCY_MEETING_REQUESTED_BY', {
+                        requester: this._requesterName,
+                        color: capitalize(this._requesterColor.getType().toString())
+                    }),
+                    Message.t('EMERGENCY_MEETING_REQUESTED_BY_SUBTITLE', {
+                        requester: this._requesterName,
+                        color: capitalize(this._requesterColor.getType().toString())
+                    })
+                );
             }
         }
     }
