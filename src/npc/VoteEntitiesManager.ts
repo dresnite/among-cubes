@@ -1,5 +1,5 @@
 import { Entity, RigidBodyType, SceneUI } from "hytopia";
-import { Main } from "../Main";
+import { Main } from "../main";
 import { SKIP_VOTE_ENTITY_NAME } from "../utils/config";
 import { ColorType } from "../game/color/ColorType";
 

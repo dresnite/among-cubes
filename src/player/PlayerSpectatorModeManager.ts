@@ -1,7 +1,7 @@
 import { ColorType } from "../game/color/ColorType"
 import { EmergencyMeetingPhase } from "../game/phase/phases/EmergencyMeetingPhase"
 import { InProgressPhase } from "../game/phase/phases/InProgressPhase"
-import { Main } from "../Main"
+import { Main } from "../main"
 import { Message } from "../messages/Message"
 import type { PlayerSession } from "./PlayerSession"
 

@@ -1,4 +1,4 @@
-import { Main } from "../Main";
+import { Main } from "../main";
 import type { GameMap } from "../map/GameMap";
 import { TeleportStation } from "./TeleportStation";
 

@@ -1,4 +1,4 @@
-import { Main } from "../Main";
+import { Main } from "../main";
 import { Message } from "../messages/Message";
 import { BROADCASTER_FREQUENCY, ENABLE_BROADCASTER } from "./config";
 

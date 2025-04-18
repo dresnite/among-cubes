@@ -1,4 +1,4 @@
-import { Main } from "../Main";
+import { Main } from "../main";
 import { Message } from "../messages/Message";
 import type { PlayerSession } from "../player/PlayerSession";
 import { Game } from "./Game";

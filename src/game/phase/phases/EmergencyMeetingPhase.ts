@@ -1,5 +1,5 @@
 import { Audio } from "hytopia";
-import { Main } from "../../../Main";
+import { Main } from "../../../main";
 import { Message } from "../../../messages/Message";
 import { PlayerRole } from "../../../player/PlayerRole";
 import type { PlayerSession } from "../../../player/PlayerSession";

@@ -3,7 +3,7 @@ import type { Color } from "../game/color/Color";
 import type { Game } from "../game/Game";
 import { Entity, PlayerCameraMode, PlayerEntity, BaseEntityControllerEvent, Audio } from "hytopia";
 import { PlayerRole } from "./PlayerRole";
-import { Main } from "../Main";
+import { Main } from "../main";
 import { Message } from "../messages/Message";
 import { COMPUTER_ENTITY_NAME, EMERGENCY_BUTTON_ENTITY_NAME, KNIFE_USE_COOLDOWN, SECURITY_CAMERA_COST, SKIP_VOTE_ENTITY_NAME } from "../utils/config";
 import { EmergencyMeetingPhase } from "../game/phase/phases/EmergencyMeetingPhase";

@@ -1,4 +1,4 @@
-import { Main } from "../../../Main";
+import { Main } from "../../../main";
 import { Message } from "../../../messages/Message";
 import type { PlayerSession } from "../../../player/PlayerSession";
 import { MINIMUM_PLAYERS_TO_START_GAME } from "../../../utils/config";

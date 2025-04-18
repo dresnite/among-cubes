@@ -1,6 +1,6 @@
 import { Entity, RigidBodyType, SceneUI, type QuaternionLike, type Vector3Like } from "hytopia";
 import { createUniqueId } from "../utils/math";
-import { Main } from "../Main";
+import { Main } from "../main";
 import type { PlayerSession } from "../player/PlayerSession";
 import { TELEPORT_STATION_COST } from "../utils/config";
 import { Message } from "../messages/Message";

@@ -1,7 +1,7 @@
 import { Entity, RigidBodyType, Vector3, type Vector3Like } from "hytopia";
 import type { PlayerSession } from "../../player/PlayerSession";
 import { createUniqueId } from "../../utils/math";
-import { Main } from "../../Main";
+import { Main } from "../../main";
 import { InProgressPhase } from "../phase/phases/InProgressPhase";
 import type { Color } from "../color/Color";
 

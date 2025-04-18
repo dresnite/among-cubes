@@ -1,4 +1,4 @@
-import { Main } from "../../../Main";
+import { Main } from "../../../main";
 import { Message } from "../../../messages/Message";
 import { PlayerRole } from "../../../player/PlayerRole";
 import { ENDING_GAME_DURATION, XP_PER_WIN_AS_IMPOSTOR } from "../../../utils/config";
