@@ -97,11 +97,18 @@ export class EmergencyMeetingPhase extends Phase {
                 playerSession.title(Message.t('DEAD_BODY_FOUND', {
                     color: bodyColor
                 }));
-                playerSession.popup(Message.t('DEAD_BODY_FOUND_BY', {
-                    color: capitalize(bodyColor),
-                    requesterColor: capitalize(this._requesterColor.getType().toString()),
-                    requester: this._requesterName
-                }));
+                playerSession.popup(
+                    Message.t('DEAD_BODY_FOUND_BY', {
+                        color: capitalize(bodyColor),
+                        requesterColor: capitalize(this._requesterColor.getType().toString()),
+                        requester: this._requesterName
+                    }),
+                    Message.t('DEAD_BODY_FOUND_BY_SUBTITLE', {
+                        color: capitalize(bodyColor),
+                        requesterColor: capitalize(this._requesterColor.getType().toString()),
+                        requester: this._requesterName
+                    })
+                );
             } else {
                 playerSession.title(Message.t('EMERGENCY_MEETING_MESSAGE'));
                 playerSession.popup(
