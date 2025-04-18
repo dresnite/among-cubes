@@ -28,7 +28,7 @@ export class GameManager {
         this._game.getPhase().onHeartbeat();
 
         for (const playerSession of Main.getInstance().getPlayerSessionManager().getSessions().values()) {
-            if (!(playerSession.getGame()?.getPhase() instanceof EmergencyMeetingPhase)) {
+            if (!this._game.isBeingPlayed() || !(playerSession.getGame()?.getPhase() instanceof EmergencyMeetingPhase)) {
                 playerSession.silence();
             }
 
